@@ -827,3 +827,43 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('offline', show);
   window.addEventListener('online',  hide);
 })();
+
+// ═══════════════════════════════════════════════════════════
+//   VIDEO INTERSECTION OBSERVER
+//   Play .mp4 videos only when visible; pause when scrolled out
+// ═══════════════════════════════════════════════════════════
+function initVideoObserver() {
+  const videos = document.querySelectorAll('video');
+  if (!videos.length) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const video = entry.target;
+      if (entry.isIntersecting) {
+        // Only autoplay if it's not inside the modal (modal has its own controls)
+        if (!video.closest('.product-modal')) {
+          video.play().catch(() => {}); // catch if browser blocks autoplay
+        }
+      } else {
+        video.pause();
+      }
+    });
+  }, { threshold: 0.4 });
+
+  videos.forEach(v => {
+    v.removeAttribute('autoplay'); // ensure no autoplay attribute
+    observer.observe(v);
+  });
+}
+
+// Re-run video observer whenever new content is injected (sheet products)
+const _origHandleSheet = typeof handleSheetProducts === 'function' ? handleSheetProducts : null;
+if (_origHandleSheet) {
+  window.handleSheetProducts = function(products) {
+    _origHandleSheet(products);
+    setTimeout(initVideoObserver, 200);
+  };
+}
+
+// Run once on load for any static videos
+document.addEventListener('DOMContentLoaded', initVideoObserver);

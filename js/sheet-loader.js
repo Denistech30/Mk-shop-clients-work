@@ -210,7 +210,7 @@ function _normalizeRow(raw, rowIndex) {
       k.trim().toLowerCase() === `photo${n}` ||
       k.trim().toLowerCase() === `media${n}`
     );
-    if (key && raw[key]) extraImages.push(String(raw[key]).trim());
+    if (key && raw[key]) extraImages.push(_optimizeImageUrl(String(raw[key]).trim()));
   }
 
   return {
@@ -219,8 +219,8 @@ function _normalizeRow(raw, rowIndex) {
     price:       typeof price === 'number' ? price : null,
     oldPrice:    _get(raw, 'oldPrice'),
     category:    String(_get(raw, 'category') || '').trim(),
-    mediaUrl:    String(_get(raw, 'mediaUrl') || '').trim(),
-    extraImages, // additional image URLs from Image2, Image3, etc.
+    mediaUrl:    _optimizeImageUrl(String(_get(raw, 'mediaUrl') || '').trim()),
+    extraImages,
     description: String(_get(raw, 'description') || '').trim(),
     badge:       _get(raw, 'badge'),
     badgeText:   _get(raw, 'badgeText'),
@@ -229,4 +229,33 @@ function _normalizeRow(raw, rowIndex) {
     flags,
     raw,
   };
+}
+
+// ─── Image URL optimizer ──────────────────────────────────
+/**
+ * Appends compression params to known image CDN URLs.
+ * Unsplash: adds ?w=600&q=80
+ * Others passed through unchanged.
+ */
+function _optimizeImageUrl(url) {
+  if (!url) return url;
+  try {
+    const u = new URL(url);
+    // Unsplash
+    if (u.hostname.includes('unsplash.com') || u.hostname.includes('images.unsplash.com')) {
+      if (!u.searchParams.has('w')) u.searchParams.set('w', '600');
+      if (!u.searchParams.has('q')) u.searchParams.set('q', '80');
+      if (!u.searchParams.has('fm')) u.searchParams.set('fm', 'webp');
+      return u.toString();
+    }
+    // Pexels
+    if (u.hostname.includes('images.pexels.com')) {
+      if (!u.searchParams.has('w')) u.searchParams.set('w', '600');
+      if (!u.searchParams.has('h')) u.searchParams.set('h', '800');
+      return u.toString();
+    }
+  } catch {
+    // Not a valid URL, return as-is
+  }
+  return url;
 }

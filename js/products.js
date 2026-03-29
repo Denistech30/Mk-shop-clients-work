@@ -653,6 +653,7 @@ function _renderMediaSlide(url, label, placeholderHTML, isActive) {
   return `
     <div class="modal-slide ${activeClass}">
       <img src="${url}" alt="${label}" loading="lazy"
+           width="600" height="800"
            style="width:100%;height:100%;object-fit:cover;"
            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
       ${placeholderHTML}
@@ -857,6 +858,7 @@ function renderSheetProductCard(product, index) {
 
   const mediaHTML = cardProduct.mediaUrl
     ? `<img src="${cardProduct.mediaUrl}" alt="${cardProduct.name}" loading="lazy"
+            width="600" height="800"
             style="width:100%;height:100%;object-fit:cover;"
             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
        <div class="product-placeholder" style="background:${cardProduct.gradient};display:none;">
