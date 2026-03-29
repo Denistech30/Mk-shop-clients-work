@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ── Primary SEO ── -->
+  <title>MK Shop – Mode Premium à Douala, Cameroun</title>
+  <meta name="description" content="MK Shop – Votre boutique mode de confiance à Douala. Robes, ensembles, chaussures, sacs à main et perruques premium. Commandez facilement via WhatsApp, livraison dans tout Douala.">
+  <meta name="keywords" content="mode Douala, boutique Cameroun, robes africaines, perruques premium, chaussures femme, sacs à main, vêtements enfants, MK Shop">
+  <meta name="author" content="MK Shop Douala">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mkshop.cm/" />
+
+  <!-- ── Open Graph (Facebook, WhatsApp, Instagram) ── -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="MK Shop" />
+  <meta property="og:title" content="MK Shop – Mode Premium à Douala, Cameroun" />
+  <meta property="og:description" content="Robes, ensembles, chaussures, sacs à main et perruques premium. Commandez via WhatsApp, livraison dans tout Douala." />
+  <meta property="og:url" content="https://mkshop.cm/" />
+  <meta property="og:image" content="https://mkshop.cm/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="MK Shop – Boutique Mode Premium Douala" />
+  <meta property="og:locale" content="fr_CM" />
+
+  <!-- ── Twitter / X Card ── -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="MK Shop – Mode Premium à Douala, Cameroun" />
+  <meta name="twitter:description" content="Robes, ensembles, chaussures, sacs à main et perruques premium. Commandez via WhatsApp, livraison dans tout Douala." />
+  <meta name="twitter:image" content="https://mkshop.cm/og-image.jpg" />
+
+  <!-- ── WhatsApp specific (uses og: tags above, but this helps) ── -->
+  <meta property="og:image:type" content="image/jpeg" />
+
+  <!-- ── Theme color (browser chrome on mobile) ── -->
+  <meta name="theme-color" content="#c9a84c" />
+
+  <!-- ── Structured data (Google rich results) ── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ClothingStore",
+    "name": "MK Shop",
+    "description": "Boutique mode premium à Douala, Cameroun. Robes, ensembles, chaussures, sacs à main et perruques.",
+    "url": "https://mkshop.cm/",
+    "image": "https://mkshop.cm/og-image.jpg",
+    "telephone": "+237600000000",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Douala",
+      "addressCountry": "CM"
+    },
+    "openingHours": "Mo-Sa 08:00-20:00",
+    "sameAs": [
+      "https://wa.me/237600000000"
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Offline banner (hidden by default, shown by SW logic) -->
+  <div class="offline-banner" id="offlineBanner" style="display:none;">
+    <i class="fas fa-wifi-slash"></i>
+    Vous êtes hors ligne. Certains produits peuvent ne pas se charger avant la reconnexion.
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       ANNOUNCEMENT BAR
+  ══════════════════════════════════════════ -->
+  <div class="announcement-bar">
+    <div class="announcement-inner">
+      <span><i class="fas fa-star"></i> Livraison disponible à Douala &nbsp;|&nbsp; Commandez via WhatsApp <i class="fas fa-check-circle"></i> &nbsp;|&nbsp; Nouvelles collections chaque semaine <i class="fas fa-shopping-bag"></i></span>
+      <span><i class="fas fa-star"></i> Livraison disponible à Douala &nbsp;|&nbsp; Commandez via WhatsApp <i class="fas fa-check-circle"></i> &nbsp;|&nbsp; Nouvelles collections chaque semaine <i class="fas fa-shopping-bag"></i></span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       NAVIGATION
+  ══════════════════════════════════════════ -->
+  <header class="header" id="header">
+    <nav class="navbar">
+      <div class="nav-left">
+        <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+
+      <a href="#" class="logo">
+        <span class="logo-mk">MK</span>
+        <span class="logo-shop">SHOP</span>
+        <span class="logo-sub">Douala · Cameroun</span>
+      </a>
+
+      <div class="nav-right">
+        <button class="nav-icon" id="searchToggle" aria-label="Search">
+          <i class="fas fa-search"></i>
+        </button>
+        <button class="nav-icon cart-btn" id="cartToggle" aria-label="Cart">
+          <i class="fas fa-shopping-bag"></i>
+          <span class="cart-count" id="cartCount">0</span>
+        </button>
+        <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20voudrais%20commander." target="_blank" class="whatsapp-nav-btn">
+          <i class="fab fa-whatsapp"></i>
+          <span>Commander</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Desktop Nav Links -->
+    <nav class="nav-links-bar">
+      <a href="#femme" class="nav-link active">Femme</a>
+      <a href="#homme" class="nav-link">Homme</a>
+      <a href="#enfants" class="nav-link">Enfants</a>
+      <a href="#chaussures" class="nav-link">Chaussures</a>
+      <a href="#sacs" class="nav-link">Sacs à Main</a>
+      <a href="#perruques" class="nav-link">Perruques</a>
+      <a href="#promos" class="nav-link promo-link"><i class="fas fa-fire"></i> Promos</a>
+    </nav>
+  </header>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" id="menuClose"><i class="fas fa-times"></i></button>
+    <div class="mobile-menu-logo">
+      <span class="logo-mk">MK</span><span class="logo-shop">SHOP</span>
+    </div>
+    <nav class="mobile-nav-links">
+      <a href="#femme" class="mobile-nav-link" data-close><i class="fas fa-female"></i> Femme</a>
+      <a href="#homme" class="mobile-nav-link" data-close><i class="fas fa-male"></i> Homme</a>
+      <a href="#enfants" class="mobile-nav-link" data-close><i class="fas fa-child"></i> Enfants</a>
+      <a href="#chaussures" class="mobile-nav-link" data-close><i class="fas fa-shoe-prints"></i> Chaussures</a>
+      <a href="#sacs" class="mobile-nav-link" data-close><i class="fas fa-shopping-bag"></i> Sacs à Main</a>
+      <a href="#perruques" class="mobile-nav-link" data-close><i class="fas fa-spa"></i> Perruques</a>
+      <a href="#promos" class="mobile-nav-link promo-link" data-close><i class="fas fa-fire"></i> Promos du Jour</a>
+    </nav>
+    <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!" target="_blank" class="mobile-whatsapp-btn">
+      <i class="fab fa-whatsapp"></i> Contacter sur WhatsApp
+    </a>
+  </div>
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Search Bar -->
+  <div class="search-bar" id="searchBar">
+    <div class="search-inner">
+      <input type="text" id="searchInput" placeholder="Rechercher des produits..." autocomplete="off" />
+      <button class="search-close" id="searchClose"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       HERO SECTION
+  ══════════════════════════════════════════ -->
+  <section class="hero" id="hero">
+    <div class="hero-slider" id="heroSlider">
+
+      <!-- Slide 1 – Women -->
+      <div class="hero-slide active" style="background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 40%, #1a0a2e 100%);">
+        <div class="hero-bg-pattern"></div>
+        <div class="hero-content">
+          <div class="hero-text">
+            <p class="hero-eyebrow"><i class="fas fa-magic"></i> Nouvelle Collection 2025</p>
+            <h1 class="hero-title">
+              Femme<br/>
+              <em>Élégante</em>
+            </h1>
+            <p class="hero-subtitle">Découvrez les robes, tenues et ensembles qui subliment chaque femme de Douala.</p>
+            <div class="hero-actions">
+              <a href="#femme" class="btn-hero-primary">Explorer la Collection</a>
+              <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20suis%20int%C3%A9ress%C3%A9e%20par%20la%20collection%20femme." target="_blank" class="btn-hero-secondary">
+                <i class="fab fa-whatsapp"></i> Commander Maintenant
+              </a>
+            </div>
+            <div class="hero-stats">
+              <div class="stat"><span class="stat-num">500+</span><span class="stat-label">Produits</span></div>
+              <div class="stat-divider"></div>
+              <div class="stat"><span class="stat-num">1K+</span><span class="stat-label">Clientes Satisfaites</span></div>
+              <div class="stat-divider"></div>
+              <div class="stat"><span class="stat-num">5<i class="fas fa-star" style="font-size:0.7em;"></i></span><span class="stat-label">Qualité Premium</span></div>
+            </div>
+          </div>
+          <div class="hero-visual">
+            <div class="hero-image-frame">
+              <div class="hero-img-placeholder women-hero">
+                <i class="fas fa-female"></i>
+                <span>Mode Femme</span>
+              </div>
+              <div class="hero-badge badge-new">NEW</div>
+              <div class="hero-badge badge-sale">-30%</div>
+            </div>
+            <div class="floating-card fc1">
+              <i class="fas fa-fire"></i>
+              <div>
+                <strong>Trending</strong>
+                <span>Robes d'été</span>
+              </div>
+            </div>
+            <div class="floating-card fc2">
+              <i class="fas fa-star"></i>
+              <div>
+                <strong>Top Vendu</strong>
+                <span>Ensemble 2 pièces</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 2 – Sale -->
+      <div class="hero-slide" style="background: linear-gradient(135deg, #0d1117 0%, #161b22 40%, #0d1117 100%);">
+        <div class="hero-bg-pattern"></div>
+        <div class="hero-content">
+          <div class="hero-text">
+            <p class="hero-eyebrow"><i class="fas fa-fire"></i> Offres Spéciales</p>
+            <h1 class="hero-title">
+              Promos<br/>
+              <em>Incroyables</em>
+            </h1>
+            <p class="hero-subtitle">Jusqu'à 50% de réduction sur une sélection de perruques, sacs et chaussures cette semaine!</p>
+            <div class="hero-actions">
+              <a href="#promos" class="btn-hero-primary">Voir les Promos</a>
+              <a href="https://wa.me/237600000000?text=Bonjour!%20Quelles%20sont%20vos%20promotions%20du%20jour?" target="_blank" class="btn-hero-secondary">
+                <i class="fab fa-whatsapp"></i> Demander les Promos
+              </a>
+            </div>
+            <div class="countdown-wrapper">
+              <p class="countdown-label"><i class="fas fa-clock"></i> Offre expire dans:</p>
+              <div class="countdown" id="countdown">
+                <div class="cd-block"><span id="cd-h">00</span><small>Heures</small></div>
+                <div class="cd-colon">:</div>
+                <div class="cd-block"><span id="cd-m">00</span><small>Minutes</small></div>
+                <div class="cd-colon">:</div>
+                <div class="cd-block"><span id="cd-s">00</span><small>Secondes</small></div>
+              </div>
+            </div>
+          </div>
+          <div class="hero-visual">
+            <div class="hero-image-frame sale-frame">
+              <div class="hero-img-placeholder sale-hero">
+                <i class="fas fa-tags"></i>
+                <span>Meilleures Offres</span>
+              </div>
+              <div class="sale-burst">
+                <span>JUSQU'À</span>
+                <strong>50%</strong>
+                <span>OFF</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3 – Wigs -->
+      <div class="hero-slide" style="background: linear-gradient(135deg, #1a0a0a 0%, #3d0f1f 40%, #1a0a0a 100%);">
+        <div class="hero-bg-pattern"></div>
+        <div class="hero-content">
+          <div class="hero-text">
+            <p class="hero-eyebrow"><i class="fas fa-spa"></i> Collection Perruques</p>
+            <h1 class="hero-title">
+              Perruques<br/>
+              <em>Premium</em>
+            </h1>
+            <p class="hero-subtitle">Cheveux naturels, synthétiques, lace front... Toutes les tendances pour sublimer votre beauté.</p>
+            <div class="hero-actions">
+              <a href="#perruques" class="btn-hero-primary">Voir les Perruques</a>
+              <a href="https://wa.me/237600000000?text=Bonjour!%20Je%20voudrais%20voir%20votre%20collection%20de%20perruques." target="_blank" class="btn-hero-secondary">
+                <i class="fab fa-whatsapp"></i> Commander
+              </a>
+            </div>
+          </div>
+          <div class="hero-visual">
+            <div class="hero-image-frame wig-frame">
+              <div class="hero-img-placeholder wig-hero">
+                <i class="fas fa-spa"></i>
+                <span>Perruques Premium</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Slider Controls -->
+    <button class="hero-prev" id="heroPrev"><i class="fas fa-chevron-left"></i></button>
+    <button class="hero-next" id="heroNext"><i class="fas fa-chevron-right"></i></button>
+    <div class="hero-dots" id="heroDots">
+      <button class="hero-dot active"></button>
+      <button class="hero-dot"></button>
+      <button class="hero-dot"></button>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       TRUST BAR
+  ══════════════════════════════════════════ -->
+  <section class="trust-bar">
+    <div class="trust-item">
+      <i class="fas fa-shipping-fast"></i>
+      <div><strong>Livraison Rapide</strong><span>Toute Douala</span></div>
+    </div>
+    <div class="trust-item">
+      <i class="fab fa-whatsapp"></i>
+      <div><strong>Commande WhatsApp</strong><span>Simple & Rapide</span></div>
+    </div>
+    <div class="trust-item">
+      <i class="fas fa-gem"></i>
+      <div><strong>Qualité Premium</strong><span>Sélection Exclusive</span></div>
+    </div>
+    <div class="trust-item">
+      <i class="fas fa-headset"></i>
+      <div><strong>Support 7j/7</strong><span>Toujours Disponible</span></div>
+    </div>
+    <div class="trust-item">
+      <i class="fas fa-undo"></i>
+      <div><strong>Échange Facile</strong><span>Satisfaite ou Échangée</span></div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       CATEGORY SHOWCASE
+  ══════════════════════════════════════════ -->
+  <section class="categories-section">
+    <div class="section-header">
+      <p class="section-eyebrow">Nos Catégories</p>
+      <h2 class="section-title">Tout ce dont vous avez besoin</h2>
+      <p class="section-subtitle">De la mode femme aux accessoires tendance, découvrez notre sélection premium.</p>
+    </div>
+    <div class="categories-grid">
+      <a href="#femme" class="cat-card cat-large women-cat">
+        <div class="cat-bg">
+          <div class="cat-icon-bg"><i class="fas fa-female"></i></div>
+        </div>
+        <div class="cat-overlay"></div>
+        <div class="cat-content">
+          <h3>Mode Femme</h3>
+          <p>Robes · Ensembles · Tops</p>
+          <span class="cat-badge">200+ articles</span>
+        </div>
+        <div class="cat-arrow"><i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a href="#homme" class="cat-card men-cat">
+        <div class="cat-bg"><div class="cat-icon-bg"><i class="fas fa-male"></i></div></div>
+        <div class="cat-overlay"></div>
+        <div class="cat-content">
+          <h3>Mode Homme</h3>
+          <p>Chemises · Costumes</p>
+          <span class="cat-badge">80+ articles</span>
+        </div>
+        <div class="cat-arrow"><i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a href="#enfants" class="cat-card kids-cat">
+        <div class="cat-bg"><div class="cat-icon-bg"><i class="fas fa-child"></i></div></div>
+        <div class="cat-overlay"></div>
+        <div class="cat-content">
+          <h3>Enfants</h3>
+          <p>Bébé · Fille · Garçon</p>
+          <span class="cat-badge">60+ articles</span>
+        </div>
+        <div class="cat-arrow"><i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a href="#chaussures" class="cat-card shoes-cat">
+        <div class="cat-bg"><div class="cat-icon-bg"><i class="fas fa-shoe-prints"></i></div></div>
+        <div class="cat-overlay"></div>
+        <div class="cat-content">
+          <h3>Chaussures</h3>
+          <p>Talons · Sandales · Sneakers</p>
+          <span class="cat-badge">100+ articles</span>
+        </div>
+        <div class="cat-arrow"><i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a href="#sacs" class="cat-card bags-cat">
+        <div class="cat-bg"><div class="cat-icon-bg"><i class="fas fa-shopping-bag"></i></div></div>
+        <div class="cat-overlay"></div>
+        <div class="cat-content">
+          <h3>Sacs à Main</h3>
+          <p>Luxe · Casual · Soirée</p>
+          <span class="cat-badge">70+ articles</span>
+        </div>
+        <div class="cat-arrow"><i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a href="#perruques" class="cat-card wigs-cat">
+        <div class="cat-bg"><div class="cat-icon-bg"><i class="fas fa-spa"></i></div></div>
+        <div class="cat-overlay"></div>
+        <div class="cat-content">
+          <h3>Perruques</h3>
+          <p>Naturelle · Synthétique · Lace</p>
+          <span class="cat-badge">90+ articles</span>
+        </div>
+        <div class="cat-arrow"><i class="fas fa-arrow-right"></i></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       FEATURED / TRENDING (Women)
+  ══════════════════════════════════════════ -->
+  <section class="products-section" id="femme">
+    <div class="section-header">
+      <p class="section-eyebrow"><i class="fas fa-star"></i> Bestsellers</p>
+      <h2 class="section-title">Mode Femme – Top Ventes</h2>
+      <p class="section-subtitle">Les tenues les plus aimées par nos clientes de Douala</p>
+    </div>
+    <div class="products-filter">
+      <button class="filter-btn active" data-filter="all">Tous</button>
+      <button class="filter-btn" data-filter="robe">Robes</button>
+      <button class="filter-btn" data-filter="ensemble">Ensembles</button>
+      <button class="filter-btn" data-filter="top">Tops & Jupes</button>
+      <button class="filter-btn" data-filter="soiree">Soirée</button>
+    </div>
+    <div class="products-grid" id="womenGrid">
+      <!-- Products injected by JS -->
+    </div>
+    <div class="section-cta">
+      <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20voudrais%20voir%20toute%20la%20collection%20femme." target="_blank" class="btn-see-more">
+        <i class="fab fa-whatsapp"></i> Voir Toute la Collection sur WhatsApp
+      </a>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       PROMO BANNER
+  ══════════════════════════════════════════ -->
+  <section class="promo-banner" id="promos">
+    <div class="promo-content">
+      <div class="promo-text">
+        <p class="promo-eyebrow"><i class="fas fa-fire"></i> Offre Limitée</p>
+        <h2>Flash Sale – Cette Semaine Seulement!</h2>
+        <p>Profitez de réductions exceptionnelles sur nos collections. Contactez-nous sur WhatsApp pour accéder aux prix spéciaux.</p>
+        <div class="promo-tags">
+          <span>Perruques -40%</span>
+          <span>Sacs -30%</span>
+          <span>Chaussures -25%</span>
+          <span>Robes -35%</span>
+        </div>
+        <a href="https://wa.me/237600000000?text=Bonjour!%20Je%20voudrais%20profiter%20des%20promos%20flash%20de%20MK%20Shop!" target="_blank" class="btn-promo">
+          <i class="fab fa-whatsapp"></i> Profiter de l'Offre Maintenant
+        </a>
+      </div>
+      <div class="promo-visual">
+        <div class="promo-circle">
+          <span class="promo-pct">50%</span>
+          <span class="promo-off">OFF</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       MEN'S SECTION
+  ══════════════════════════════════════════ -->
+  <section class="products-section dark-section" id="homme">
+    <div class="section-header">
+      <p class="section-eyebrow"><i class="fas fa-tshirt"></i> Nouvelle Arrivée</p>
+      <h2 class="section-title">Mode Homme</h2>
+      <p class="section-subtitle">Style moderne pour l'homme camerounais d'aujourd'hui</p>
+    </div>
+    <div class="products-grid" id="menGrid"></div>
+    <div class="section-cta">
+      <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20suis%20int%C3%A9ress%C3%A9%20par%20la%20collection%20homme." target="_blank" class="btn-see-more">
+        <i class="fab fa-whatsapp"></i> Commander sur WhatsApp
+      </a>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       CHILDREN SECTION
+  ══════════════════════════════════════════ -->
+  <section class="products-section" id="enfants">
+    <div class="section-header">
+      <p class="section-eyebrow"><i class="fas fa-child"></i> Adorable</p>
+      <h2 class="section-title">Mode Enfants</h2>
+      <p class="section-subtitle">Des tenues mignons et confortables pour vos petits trésors</p>
+    </div>
+    <div class="products-grid" id="kidsGrid"></div>
+    <div class="section-cta">
+      <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20cherche%20des%20v%C3%AAtements%20pour%20enfants." target="_blank" class="btn-see-more">
+        <i class="fab fa-whatsapp"></i> Commander sur WhatsApp
+      </a>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       SHOES SECTION
+  ══════════════════════════════════════════ -->
+  <section class="products-section dark-section" id="chaussures">
+    <div class="section-header">
+      <p class="section-eyebrow"><i class="fas fa-shoe-prints"></i> Tendance</p>
+      <h2 class="section-title">Chaussures</h2>
+      <p class="section-subtitle">Des chaussures qui font parler à chaque pas</p>
+    </div>
+    <div class="products-grid" id="shoesGrid"></div>
+    <div class="section-cta">
+      <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20cherche%20des%20chaussures." target="_blank" class="btn-see-more">
+        <i class="fab fa-whatsapp"></i> Commander sur WhatsApp
+      </a>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       HANDBAGS SECTION
+  ══════════════════════════════════════════ -->
+  <section class="products-section" id="sacs">
+    <div class="section-header">
+      <p class="section-eyebrow"><i class="fas fa-shopping-bag"></i> Luxueux</p>
+      <h2 class="section-title">Sacs à Main</h2>
+      <p class="section-subtitle">L'accessoire qui complète chaque tenue avec élégance</p>
+    </div>
+    <div class="products-grid" id="bagsGrid"></div>
+    <div class="section-cta">
+      <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20voudrais%20voir%20vos%20sacs%20%C3%A0%20main." target="_blank" class="btn-see-more">
+        <i class="fab fa-whatsapp"></i> Commander sur WhatsApp
+      </a>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       WIGS SECTION
+  ══════════════════════════════════════════ -->
+  <section class="products-section dark-section" id="perruques">
+    <div class="section-header">
+      <p class="section-eyebrow"><i class="fas fa-spa"></i> Collection Star</p>
+      <h2 class="section-title">Perruques Premium</h2>
+      <p class="section-subtitle">De vraies perruques de qualité pour toutes les occasions</p>
+    </div>
+    <div class="products-grid" id="wigsGrid"></div>
+    <div class="section-cta">
+      <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20suis%20int%C3%A9ress%C3%A9e%20par%20vos%20perruques." target="_blank" class="btn-see-more">
+        <i class="fab fa-whatsapp"></i> Commander sur WhatsApp
+      </a>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       TESTIMONIALS
+  ══════════════════════════════════════════ -->
+  <section class="testimonials-section">
+    <div class="section-header">
+      <p class="section-eyebrow"><i class="fas fa-comments"></i> Avis Clients</p>
+      <h2 class="section-title">Ce que disent nos clientes</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <p>"J'ai commandé une robe via WhatsApp et elle est arrivée le même jour! La qualité est incroyable. MK Shop est ma boutique préférée à Douala!"</p>
+        <div class="t-author">
+          <div class="t-avatar">A</div>
+          <div><strong>Aminata K.</strong><span>Bonanjo, Douala</span></div>
+        </div>
+      </div>
+      <div class="testimonial-card featured">
+        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <p>"La perruque lace front que j'ai achetée chez MK Shop est tellement naturelle! Tout le monde me demande si c'est mes vrais cheveux. Je recommande à 1000%!"</p>
+        <div class="t-author">
+          <div class="t-avatar">M</div>
+          <div><strong>Marie-Claire N.</strong><span>Akwa, Douala</span></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <p>"Le service est très professionnel. J'ai commandé des chaussures et un sac pour un mariage. Ils m'ont aidée à choisir sur WhatsApp. Super boutique!"</p>
+        <div class="t-author">
+          <div class="t-avatar">C</div>
+          <div><strong>Christelle F.</strong><span>Makepe, Douala</span></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <p>"Les vêtements enfants sont adorables et très bien cousus. Ma fille adore sa nouvelle robe. Prix raisonnable et livraison rapide!"</p>
+        <div class="t-author">
+          <div class="t-avatar">S</div>
+          <div><strong>Sandra B.</strong><span>Logpom, Douala</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       WHY CHOOSE US
+  ══════════════════════════════════════════ -->
+  <section class="why-us-section">
+    <div class="why-us-inner">
+      <div class="why-us-text">
+        <p class="section-eyebrow"><i class="fas fa-magic"></i> Pourquoi Nous Choisir</p>
+        <h2>MK Shop – La Mode<br/><em>Accessible à Tous</em></h2>
+        <p>Depuis Douala, nous sélectionnons les plus belles pièces pour vous. Notre engagement: qualité premium, prix justes, et service personnalisé via WhatsApp.</p>
+        <ul class="why-list">
+          <li><i class="fas fa-check-circle"></i> Produits de qualité supérieure soigneusement sélectionnés</li>
+          <li><i class="fas fa-check-circle"></i> Livraison express dans tout Douala</li>
+          <li><i class="fas fa-check-circle"></i> Commande simple et rapide via WhatsApp</li>
+          <li><i class="fas fa-check-circle"></i> Conseils mode personnalisés</li>
+          <li><i class="fas fa-check-circle"></i> Nouvelles collections chaque semaine</li>
+          <li><i class="fas fa-check-circle"></i> Satisfaction garantie ou échange</li>
+        </ul>
+        <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20voudrais%20en%20savoir%20plus%20sur%20vos%20produits." target="_blank" class="btn-primary">
+          <i class="fab fa-whatsapp"></i> Nous Contacter Maintenant
+        </a>
+      </div>
+      <div class="why-us-grid">
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-crown"></i></div>
+          <h4>Qualité Premium</h4>
+          <p>Chaque article est testé avant d'être proposé à nos clients.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-bolt"></i></div>
+          <h4>Commande Express</h4>
+          <p>Un message WhatsApp suffit pour commander en 2 minutes.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-map-marker-alt"></i></div>
+          <h4>Livraison Douala</h4>
+          <p>Nous livrons dans tous les quartiers de Douala rapidement.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-heart"></i></div>
+          <h4>Service Personnalisé</h4>
+          <p>Nous vous aidons à trouver la tenue parfaite pour chaque occasion.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       CTA WHATSAPP SECTION
+  ══════════════════════════════════════════ -->
+  <section class="whatsapp-cta-section">
+    <div class="wa-cta-inner">
+      <div class="wa-cta-icon"><i class="fab fa-whatsapp"></i></div>
+      <h2>Commandez Facilement<br/>sur WhatsApp!</h2>
+      <p>Sélectionnez vos articles, envoyez-nous un message et nous nous occupons du reste. Livraison à domicile disponible dans tout Douala!</p>
+      <div class="wa-steps">
+        <div class="wa-step">
+          <div class="step-num">1</div>
+          <p>Choisissez vos produits sur notre site</p>
+        </div>
+        <div class="wa-arrow"><i class="fas fa-arrow-right"></i></div>
+        <div class="wa-step">
+          <div class="step-num">2</div>
+          <p>Cliquez "Commander" pour ouvrir WhatsApp</p>
+        </div>
+        <div class="wa-arrow"><i class="fas fa-arrow-right"></i></div>
+        <div class="wa-step">
+          <div class="step-num">3</div>
+          <p>Confirmez votre commande & recevez chez vous!</p>
+        </div>
+      </div>
+      <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20voudrais%20passer%20une%20commande." target="_blank" class="btn-wa-big">
+        <i class="fab fa-whatsapp"></i> Ouvrir WhatsApp &amp; Commander
+      </a>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <span class="logo-mk">MK</span><span class="logo-shop">SHOP</span>
+        </div>
+        <p>Votre boutique mode de confiance à Douala, Cameroun. Qualité premium, style unique, livraison rapide.</p>
+        <div class="footer-social">
+          <a href="https://wa.me/237600000000" target="_blank" class="social-btn wa"><i class="fab fa-whatsapp"></i></a>
+          <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-btn ig"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-btn tt"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h4>Collections</h4>
+        <ul>
+          <li><a href="#femme">Mode Femme</a></li>
+          <li><a href="#homme">Mode Homme</a></li>
+          <li><a href="#enfants">Mode Enfants</a></li>
+          <li><a href="#chaussures">Chaussures</a></li>
+          <li><a href="#sacs">Sacs à Main</a></li>
+          <li><a href="#perruques">Perruques</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Informations</h4>
+        <ul>
+          <li><a href="#promos">Promos du Jour</a></li>
+          <li><a href="https://wa.me/237600000000" target="_blank">Comment Commander</a></li>
+          <li><a href="https://wa.me/237600000000" target="_blank">Livraison &amp; Retours</a></li>
+          <li><a href="https://wa.me/237600000000" target="_blank">Guide des Tailles</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>Contact</h4>
+        <p><i class="fab fa-whatsapp"></i> WhatsApp: +237 6 00 00 00 00</p>
+        <p><i class="fas fa-map-marker-alt"></i> Douala, Cameroun</p>
+        <p><i class="fas fa-clock"></i> Lun–Sam: 8h–20h</p>
+        <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!" target="_blank" class="footer-wa-btn">
+          <i class="fab fa-whatsapp"></i> Envoyer un Message
+        </a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 MK Shop – Douala, Cameroun. Tous droits réservés.</p>
+      <p>Fait avec <i class="fas fa-heart"></i> à Douala</p>
+    </div>
+  </footer>
+
+  <!-- ══════════════════════════════════════════
+       FLOATING WHATSAPP BUTTON
+  ══════════════════════════════════════════ -->
+  <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20voudrais%20commander." target="_blank" class="floating-whatsapp" id="floatingWA">
+    <i class="fab fa-whatsapp"></i>
+    <span class="float-tooltip">Commander sur WhatsApp</span>
+  </a>
+
+  <!-- ══════════════════════════════════════════
+       CART SIDEBAR
+  ══════════════════════════════════════════ -->
+  <div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <h3>Mon Panier <span id="cartItemCount">(0)</span></h3>
+      <button class="cart-close" id="cartClose"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="cart-body" id="cartBody">
+      <div class="cart-empty" id="cartEmpty">
+        <i class="fas fa-shopping-bag"></i>
+        <p>Votre panier est vide</p>
+        <span>Ajoutez des articles pour commencer</span>
+      </div>
+      <div class="cart-items" id="cartItems"></div>
+    </div>
+    <div class="cart-footer" id="cartFooter" style="display:none;">
+      <div class="cart-total">
+        <span>Total:</span>
+        <strong id="cartTotal">0 FCFA</strong>
+      </div>
+      <button class="btn-checkout" id="btnCheckout">
+        <i class="fab fa-whatsapp"></i> Commander sur WhatsApp
+      </button>
+      <button class="btn-clear-cart" id="btnClearCart">Vider le Panier</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       PRODUCT MODAL
+  ══════════════════════════════════════════ -->
+  <div class="product-modal" id="productModal">
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="modal-content">
+      <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
+      <div class="modal-body" id="modalBody">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Back to top -->
+  <button class="back-to-top" id="backToTop"><i class="fas fa-chevron-up"></i></button>
+
+  <script src="js/sheet-loader.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
