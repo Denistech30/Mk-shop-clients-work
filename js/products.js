@@ -3,7 +3,7 @@
 //   All products with categories, prices in FCFA
 // ═══════════════════════════════════════════════════════════
 
-const WHATSAPP_NUMBER = '237600000000'; // ← Remplacez par votre vrai numéro
+const WHATSAPP_NUMBER = '237682513941'; // ← Remplacez par votre vrai numéro
 
 const PRODUCTS = {
 
@@ -75,7 +75,7 @@ const PRODUCTS = {
       id: 'w05',
       name: 'Jupe Pagne Kabba Modern',
       category: 'Jupe',
-      desc: 'Jupe mi-longue en pagne de qualité supérieure. Coupe asymétrique tendance 2025.',
+      desc: 'Jupe mi-longue en pagne de qualité supérieure. Coupe asymétrique tendance 2026.',
       price: 15000,
       oldPrice: 19000,
       badge: 'trending',
@@ -1028,3 +1028,81 @@ function initSheetProducts() {
     }
   );
 }
+
+// ═══════════════════════════════════════════════════════════
+//   HERO IMAGE LOADER – from Google Sheet
+//   Reads rows where Category = "hero" and injects images
+//   into the hero slide frames (heroFrame1, heroFrame2, heroFrame3)
+// ═══════════════════════════════════════════════════════════
+
+/**
+ * Call this after sheet products are loaded.
+ * It looks for rows with category "hero" (case-insensitive)
+ * and injects their images into the hero frames in order.
+ *
+ * Google Sheet columns used:
+ *   Category  → must be "hero"
+ *   Image     → the image URL to show
+ *   Name      → used as alt text (optional)
+ */
+function loadHeroImagesFromSheet(sheetProducts) {
+  // Default Unsplash images — replace by adding "hero" rows in your sheet
+  const HERO_DEFAULTS = [
+    {
+      url: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80&fm=webp',
+      alt: 'Mode Femme'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&q=80&fm=webp',
+      alt: 'Promos & Offres'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80&fm=webp',
+      alt: 'Perruques Premium'
+    },
+  ];
+
+  // Use sheet hero rows if available, otherwise fall back to defaults
+  const heroItems = sheetProducts.filter(p =>
+    (p.category || '').toLowerCase().trim() === 'hero' && p.mediaUrl
+  );
+
+  const frameIds = ['heroFrame1', 'heroFrame2', 'heroFrame3'];
+
+  frameIds.forEach((frameId, i) => {
+    const frame = document.getElementById(frameId);
+    if (!frame) return;
+
+    const source = heroItems[i]
+      ? { url: heroItems[i].mediaUrl, alt: heroItems[i].name || 'MK Shop' }
+      : HERO_DEFAULTS[i];
+
+    if (!source) return;
+
+    const img = document.createElement('img');
+    img.src = source.url;
+    img.alt = source.alt;
+    img.loading = i === 0 ? 'eager' : 'lazy';
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:inherit;transition:opacity 0.5s ease;';
+
+    img.onerror = () => img.remove();
+
+    frame.style.position = 'relative';
+    frame.insertBefore(img, frame.firstChild);
+
+    img.onload = () => {
+      const placeholder = frame.querySelector('.hero-img-placeholder');
+      if (placeholder) placeholder.style.opacity = '0';
+    };
+  });
+}
+
+// Hook into the existing sheet handler
+const _origHandleSheetProducts = handleSheetProducts;
+window.handleSheetProducts = function(products) {
+  _origHandleSheetProducts(products);
+  loadHeroImagesFromSheet(products);
+};
+
+// Also load defaults immediately on page load (before sheet responds)
+document.addEventListener('DOMContentLoaded', () => loadHeroImagesFromSheet([]));

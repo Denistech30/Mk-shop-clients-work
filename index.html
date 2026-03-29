@@ -45,7 +45,7 @@
     "description": "Boutique mode premium à Douala, Cameroun. Robes, ensembles, chaussures, sacs à main et perruques.",
     "url": "https://mkshop1.netlify.app/",
     "image": "https://mkshop1.netlify.app/og-image.jpg",
-    "telephone": "+237600000000",
+    "telephone": "+237682513941",
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "Douala",
@@ -53,7 +53,7 @@
     },
     "openingHours": "Mo-Sa 08:00-20:00",
     "sameAs": [
-      "https://wa.me/237600000000"
+      "https://wa.me/237682513941"
     ]
   }
   </script>
@@ -91,40 +91,42 @@
   ══════════════════════════════════════════ -->
   <header class="header" id="header">
     <nav class="navbar">
-      <div class="nav-left">
+
+      <!-- Logo – always left -->
+      <a href="#" class="logo">
+        <img src="logo.png" alt="MK Shop" class="logo-img" loading="eager" />
+      </a>
+
+      <!-- Desktop category links – center (hidden on mobile) -->
+      <nav class="nav-links-desktop">
+        <a href="#femme" class="nav-link active">Femme</a>
+        <a href="#homme" class="nav-link">Homme</a>
+        <a href="#enfants" class="nav-link">Enfants</a>
+        <a href="#chaussures" class="nav-link">Chaussures</a>
+        <a href="#sacs" class="nav-link">Sacs à Main</a>
+        <a href="#perruques" class="nav-link">Perruques</a>
+        <a href="#promos" class="nav-link promo-link"><i class="fas fa-fire"></i> Promos</a>
+      </nav>
+
+      <!-- Right actions -->
+      <div class="nav-actions">
+        <button class="nav-icon" id="searchToggle" aria-label="Rechercher">
+          <i class="fas fa-search"></i>
+        </button>
+        <button class="nav-icon cart-btn" id="cartToggle" aria-label="Panier">
+          <i class="fas fa-shopping-bag"></i>
+          <span class="cart-count" id="cartCount">0</span>
+        </button>
+        <a href="https://wa.me/237682513941?text=Bonjour%20MK%20Shop!%20Je%20voudrais%20commander." target="_blank" class="whatsapp-nav-btn">
+          <i class="fab fa-whatsapp"></i>
+          <span>Commander</span>
+        </a>
+        <!-- Hamburger – mobile only -->
         <button class="menu-toggle" id="menuToggle" aria-label="Menu">
           <span></span><span></span><span></span>
         </button>
       </div>
 
-      <a href="#" class="logo">
-        <img src="logo.png" alt="MK Shop" class="logo-img" width="120" height="50" loading="eager" />
-      </a>
-
-      <div class="nav-right">
-        <button class="nav-icon" id="searchToggle" aria-label="Search">
-          <i class="fas fa-search"></i>
-        </button>
-        <button class="nav-icon cart-btn" id="cartToggle" aria-label="Cart">
-          <i class="fas fa-shopping-bag"></i>
-          <span class="cart-count" id="cartCount">0</span>
-        </button>
-        <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20voudrais%20commander." target="_blank" class="whatsapp-nav-btn">
-          <i class="fab fa-whatsapp"></i>
-          <span>Commander</span>
-        </a>
-      </div>
-    </nav>
-
-    <!-- Desktop Nav Links -->
-    <nav class="nav-links-bar">
-      <a href="#femme" class="nav-link active">Femme</a>
-      <a href="#homme" class="nav-link">Homme</a>
-      <a href="#enfants" class="nav-link">Enfants</a>
-      <a href="#chaussures" class="nav-link">Chaussures</a>
-      <a href="#sacs" class="nav-link">Sacs à Main</a>
-      <a href="#perruques" class="nav-link">Perruques</a>
-      <a href="#promos" class="nav-link promo-link"><i class="fas fa-fire"></i> Promos</a>
     </nav>
   </header>
 
@@ -143,7 +145,7 @@
       <a href="#perruques" class="mobile-nav-link" data-close><i class="fas fa-spa"></i> Perruques</a>
       <a href="#promos" class="mobile-nav-link promo-link" data-close><i class="fas fa-fire"></i> Promos du Jour</a>
     </nav>
-    <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!" target="_blank" class="mobile-whatsapp-btn">
+    <a href="https://wa.me/237682513941?text=Bonjour%20MK%20Shop!" target="_blank" class="mobile-whatsapp-btn">
       <i class="fab fa-whatsapp"></i> Contacter sur WhatsApp
     </a>
   </div>
@@ -169,7 +171,7 @@
         <div class="hero-bg-pattern"></div>
         <div class="hero-content">
           <div class="hero-text">
-            <p class="hero-eyebrow"><i class="fas fa-magic"></i> Nouvelle Collection 2025</p>
+            <p class="hero-eyebrow"><i class="fas fa-magic"></i> Nouvelle Collection 2026</p>
             <h1 class="hero-title">
               Femme<br/>
               <em>Élégante</em>
@@ -177,7 +179,7 @@
             <p class="hero-subtitle">Découvrez les robes, tenues et ensembles qui subliment chaque femme de Douala.</p>
             <div class="hero-actions">
               <a href="#femme" class="btn-hero-primary">Explorer la Collection</a>
-              <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20suis%20int%C3%A9ress%C3%A9e%20par%20la%20collection%20femme." target="_blank" class="btn-hero-secondary">
+              <a href="https://wa.me/237682513941?text=Bonjour%20MK%20Shop!%20Je%20suis%20int%C3%A9ress%C3%A9e%20par%20la%20collection%20femme." target="_blank" class="btn-hero-secondary">
                 <i class="fab fa-whatsapp"></i> Commander Maintenant
               </a>
             </div>
@@ -190,7 +192,7 @@
             </div>
           </div>
           <div class="hero-visual">
-            <div class="hero-image-frame">
+            <div class="hero-image-frame" id="heroFrame1">
               <div class="hero-img-placeholder women-hero">
                 <i class="fas fa-female"></i>
                 <span>Mode Femme</span>
@@ -229,7 +231,7 @@
             <p class="hero-subtitle">Jusqu'à 50% de réduction sur une sélection de perruques, sacs et chaussures cette semaine!</p>
             <div class="hero-actions">
               <a href="#promos" class="btn-hero-primary">Voir les Promos</a>
-              <a href="https://wa.me/237600000000?text=Bonjour!%20Quelles%20sont%20vos%20promotions%20du%20jour?" target="_blank" class="btn-hero-secondary">
+              <a href="https://wa.me/237682513941?text=Bonjour!%20Quelles%20sont%20vos%20promotions%20du%20jour?" target="_blank" class="btn-hero-secondary">
                 <i class="fab fa-whatsapp"></i> Demander les Promos
               </a>
             </div>
@@ -245,7 +247,7 @@
             </div>
           </div>
           <div class="hero-visual">
-            <div class="hero-image-frame sale-frame">
+            <div class="hero-image-frame sale-frame" id="heroFrame2">
               <div class="hero-img-placeholder sale-hero">
                 <i class="fas fa-tags"></i>
                 <span>Meilleures Offres</span>
@@ -273,13 +275,13 @@
             <p class="hero-subtitle">Cheveux naturels, synthétiques, lace front... Toutes les tendances pour sublimer votre beauté.</p>
             <div class="hero-actions">
               <a href="#perruques" class="btn-hero-primary">Voir les Perruques</a>
-              <a href="https://wa.me/237600000000?text=Bonjour!%20Je%20voudrais%20voir%20votre%20collection%20de%20perruques." target="_blank" class="btn-hero-secondary">
+              <a href="https://wa.me/237682513941?text=Bonjour!%20Je%20voudrais%20voir%20votre%20collection%20de%20perruques." target="_blank" class="btn-hero-secondary">
                 <i class="fab fa-whatsapp"></i> Commander
               </a>
             </div>
           </div>
           <div class="hero-visual">
-            <div class="hero-image-frame wig-frame">
+            <div class="hero-image-frame wig-frame" id="heroFrame3">
               <div class="hero-img-placeholder wig-hero">
                 <i class="fas fa-spa"></i>
                 <span>Perruques Premium</span>
@@ -427,7 +429,7 @@
       <!-- Products injected by JS -->
     </div>
     <div class="section-cta">
-      <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20voudrais%20voir%20toute%20la%20collection%20femme." target="_blank" class="btn-see-more">
+      <a href="https://wa.me/237682513941?text=Bonjour%20MK%20Shop!%20Je%20voudrais%20voir%20toute%20la%20collection%20femme." target="_blank" class="btn-see-more">
         <i class="fab fa-whatsapp"></i> Voir Toute la Collection sur WhatsApp
       </a>
     </div>
@@ -448,7 +450,7 @@
           <span>Chaussures -25%</span>
           <span>Robes -35%</span>
         </div>
-        <a href="https://wa.me/237600000000?text=Bonjour!%20Je%20voudrais%20profiter%20des%20promos%20flash%20de%20MK%20Shop!" target="_blank" class="btn-promo">
+        <a href="https://wa.me/237682513941?text=Bonjour!%20Je%20voudrais%20profiter%20des%20promos%20flash%20de%20MK%20Shop!" target="_blank" class="btn-promo">
           <i class="fab fa-whatsapp"></i> Profiter de l'Offre Maintenant
         </a>
       </div>
@@ -472,7 +474,7 @@
     </div>
     <div class="products-grid" id="menGrid"></div>
     <div class="section-cta">
-      <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20suis%20int%C3%A9ress%C3%A9%20par%20la%20collection%20homme." target="_blank" class="btn-see-more">
+      <a href="https://wa.me/237682513941?text=Bonjour%20MK%20Shop!%20Je%20suis%20int%C3%A9ress%C3%A9%20par%20la%20collection%20homme." target="_blank" class="btn-see-more">
         <i class="fab fa-whatsapp"></i> Commander sur WhatsApp
       </a>
     </div>
@@ -489,7 +491,7 @@
     </div>
     <div class="products-grid" id="kidsGrid"></div>
     <div class="section-cta">
-      <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20cherche%20des%20v%C3%AAtements%20pour%20enfants." target="_blank" class="btn-see-more">
+      <a href="https://wa.me/237682513941?text=Bonjour%20MK%20Shop!%20Je%20cherche%20des%20v%C3%AAtements%20pour%20enfants." target="_blank" class="btn-see-more">
         <i class="fab fa-whatsapp"></i> Commander sur WhatsApp
       </a>
     </div>
@@ -506,7 +508,7 @@
     </div>
     <div class="products-grid" id="shoesGrid"></div>
     <div class="section-cta">
-      <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20cherche%20des%20chaussures." target="_blank" class="btn-see-more">
+      <a href="https://wa.me/237682513941?text=Bonjour%20MK%20Shop!%20Je%20cherche%20des%20chaussures." target="_blank" class="btn-see-more">
         <i class="fab fa-whatsapp"></i> Commander sur WhatsApp
       </a>
     </div>
@@ -523,7 +525,7 @@
     </div>
     <div class="products-grid" id="bagsGrid"></div>
     <div class="section-cta">
-      <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20voudrais%20voir%20vos%20sacs%20%C3%A0%20main." target="_blank" class="btn-see-more">
+      <a href="https://wa.me/237682513941?text=Bonjour%20MK%20Shop!%20Je%20voudrais%20voir%20vos%20sacs%20%C3%A0%20main." target="_blank" class="btn-see-more">
         <i class="fab fa-whatsapp"></i> Commander sur WhatsApp
       </a>
     </div>
@@ -540,7 +542,7 @@
     </div>
     <div class="products-grid" id="wigsGrid"></div>
     <div class="section-cta">
-      <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20suis%20int%C3%A9ress%C3%A9e%20par%20vos%20perruques." target="_blank" class="btn-see-more">
+      <a href="https://wa.me/237682513941?text=Bonjour%20MK%20Shop!%20Je%20suis%20int%C3%A9ress%C3%A9e%20par%20vos%20perruques." target="_blank" class="btn-see-more">
         <i class="fab fa-whatsapp"></i> Commander sur WhatsApp
       </a>
     </div>
@@ -607,7 +609,7 @@
           <li><i class="fas fa-check-circle"></i> Nouvelles collections chaque semaine</li>
           <li><i class="fas fa-check-circle"></i> Satisfaction garantie ou échange</li>
         </ul>
-        <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20voudrais%20en%20savoir%20plus%20sur%20vos%20produits." target="_blank" class="btn-primary">
+        <a href="https://wa.me/237682513941?text=Bonjour%20MK%20Shop!%20Je%20voudrais%20en%20savoir%20plus%20sur%20vos%20produits." target="_blank" class="btn-primary">
           <i class="fab fa-whatsapp"></i> Nous Contacter Maintenant
         </a>
       </div>
@@ -660,7 +662,7 @@
           <p>Confirmez votre commande & recevez chez vous!</p>
         </div>
       </div>
-      <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20voudrais%20passer%20une%20commande." target="_blank" class="btn-wa-big">
+      <a href="https://wa.me/237682513941?text=Bonjour%20MK%20Shop!%20Je%20voudrais%20passer%20une%20commande." target="_blank" class="btn-wa-big">
         <i class="fab fa-whatsapp"></i> Ouvrir WhatsApp &amp; Commander
       </a>
     </div>
@@ -677,7 +679,7 @@
         </div>
         <p>Votre boutique mode de confiance à Douala, Cameroun. Qualité premium, style unique, livraison rapide.</p>
         <div class="footer-social">
-          <a href="https://wa.me/237600000000" target="_blank" class="social-btn wa"><i class="fab fa-whatsapp"></i></a>
+          <a href="https://wa.me/237682513941" target="_blank" class="social-btn wa"><i class="fab fa-whatsapp"></i></a>
           <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
           <a href="#" class="social-btn ig"><i class="fab fa-instagram"></i></a>
           <a href="#" class="social-btn tt"><i class="fab fa-tiktok"></i></a>
@@ -698,23 +700,23 @@
         <h4>Informations</h4>
         <ul>
           <li><a href="#promos">Promos du Jour</a></li>
-          <li><a href="https://wa.me/237600000000" target="_blank">Comment Commander</a></li>
-          <li><a href="https://wa.me/237600000000" target="_blank">Livraison &amp; Retours</a></li>
-          <li><a href="https://wa.me/237600000000" target="_blank">Guide des Tailles</a></li>
+          <li><a href="https://wa.me/237682513941" target="_blank">Comment Commander</a></li>
+          <li><a href="https://wa.me/237682513941" target="_blank">Livraison &amp; Retours</a></li>
+          <li><a href="https://wa.me/237682513941" target="_blank">Guide des Tailles</a></li>
         </ul>
       </div>
       <div class="footer-contact">
         <h4>Contact</h4>
-        <p><i class="fab fa-whatsapp"></i> WhatsApp: +237 6 00 00 00 00</p>
+        <p><i class="fab fa-whatsapp"></i> WhatsApp: +237 6 82 51 39 41</p>
         <p><i class="fas fa-map-marker-alt"></i> Douala, Cameroun</p>
         <p><i class="fas fa-clock"></i> Lun–Sam: 8h–20h</p>
-        <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!" target="_blank" class="footer-wa-btn">
+        <a href="https://wa.me/237682513941?text=Bonjour%20MK%20Shop!" target="_blank" class="footer-wa-btn">
           <i class="fab fa-whatsapp"></i> Envoyer un Message
         </a>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2025 MK Shop – Douala, Cameroun. Tous droits réservés.</p>
+      <p>&copy; 2026 MK Shop – Douala, Cameroun. Tous droits réservés.</p>
       <p>Fait avec <i class="fas fa-heart"></i> à Douala</p>
     </div>
   </footer>
@@ -722,7 +724,7 @@
   <!-- ══════════════════════════════════════════
        FLOATING WHATSAPP BUTTON
   ══════════════════════════════════════════ -->
-  <a href="https://wa.me/237600000000?text=Bonjour%20MK%20Shop!%20Je%20voudrais%20commander." target="_blank" class="floating-whatsapp" id="floatingWA">
+  <a href="https://wa.me/237682513941?text=Bonjour%20MK%20Shop!%20Je%20voudrais%20commander." target="_blank" class="floating-whatsapp" id="floatingWA">
     <i class="fab fa-whatsapp"></i>
     <span class="float-tooltip">Commander sur WhatsApp</span>
   </a>
