@@ -485,14 +485,23 @@ function getBadgeHTML(badge, text) {
 
 // ───── Build WhatsApp order URL ─────
 function buildWhatsAppURL(product) {
-  const msg = encodeURIComponent(
-    `Bonjour MK Shop!\n\nJe souhaite commander:\n\n` +
-    `Produit: ${product.name}\n` +
-    `Prix: ${formatPrice(product.price)}\n` +
-    `Categorie: ${product.category}\n\n` +
-    `Merci de me confirmer la disponibilité et les détails de livraison à Douala.`
-  );
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
+  const lines = [
+    `Bonjour MK Shop!`,
+    ``,
+    `Je souhaite commander:`,
+    ``,
+    `Produit: ${product.name}`,
+    `Categorie: ${product.category}`,
+    product.price ? `Prix: ${formatPrice(product.price)}` : `Prix: Sur demande`,
+    product.oldPrice ? `Prix normal: ${formatPrice(product.oldPrice)}` : null,
+    product.desc ? `Description: ${product.desc}` : null,
+    // Include image URL so shop owner can see the product
+    product.mediaUrl ? `\nImage du produit:\n${product.mediaUrl}` : null,
+    ``,
+    `Merci de me confirmer la disponibilite et les details de livraison a Douala.`,
+  ].filter(l => l !== null);
+
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join('\n'))}`;
 }
 
 // ───── Render a product card ─────

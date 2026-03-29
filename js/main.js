@@ -325,7 +325,11 @@ const cart = {
     this.items.forEach((item, idx) => {
       const p = getProductById(item.id);
       if (p) {
-        msg += `${idx + 1}. *${p.name}*\n   Qté: ${item.qty} × ${formatPrice(p.price)}\n\n`;
+        msg += `${idx + 1}. ${p.name}\n`;
+        msg += `   Qte: ${item.qty} x ${formatPrice(p.price)}\n`;
+        msg += `   Categorie: ${p.category}\n`;
+        if (p.mediaUrl) msg += `   Image: ${p.mediaUrl}\n`;
+        msg += `\n`;
       }
     });
 
