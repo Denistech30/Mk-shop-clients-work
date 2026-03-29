@@ -34,7 +34,7 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   --nav-height: 80px;
-  --announcement-height: 40px;
+  --announcement-height: 0px;
 }
 
 /* ─── Reset & Base ─── */
@@ -2336,9 +2336,8 @@ input { font-family: inherit; }
   border-radius: var(--radius-lg) 0 0 var(--radius-lg);
   overflow: hidden;
   background: var(--off-white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  /* Remove display:flex — gallery-wrap handles layout */
+  position: relative;
 }
 
 .modal-img img { width: 100%; height: 100%; object-fit: cover; }
@@ -2348,11 +2347,12 @@ input { font-family: inherit; }
   position: relative;
   display: block;
   padding: 0;
+  overflow: hidden;
 }
 
 .modal-slides-track {
   width: 100%;
-  height: 100%;
+  /* Height driven by the active slide content */
   position: relative;
 }
 
@@ -2364,11 +2364,21 @@ input { font-family: inherit; }
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .modal-slide.active {
   opacity: 1;
   position: relative;
+  /* Let the active slide define the height */
+  min-height: 280px;
+}
+
+.modal-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .modal-gallery-prev,
@@ -2640,14 +2650,19 @@ input { font-family: inherit; }
   .footer-top { grid-template-columns: 1fr 1fr; gap: 2.5rem; padding: 3rem 2rem; }
 
   .modal-body { grid-template-columns: 1fr; }
-  .modal-img { border-radius: var(--radius-lg) var(--radius-lg) 0 0; aspect-ratio: 16/9; }
+  .modal-img {
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    aspect-ratio: unset;
+    height: 300px;
+  }
+  .modal-slide.active { min-height: 300px; }
 }
 
 /* ── Tablet portrait ── */
 @media (max-width: 768px) {
   :root {
     --nav-height: 60px;
-    --announcement-height: 36px;
+    --announcement-height: 0px;
   }
 
   /* ─ Nav ─ */
@@ -2749,11 +2764,17 @@ input { font-family: inherit; }
   .product-modal { padding: 0.5rem; align-items: flex-end; }
   .modal-content {
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    max-height: 95vh;
+    max-height: 92vh;
     overflow-y: auto;
+    width: 100%;
   }
   .modal-body { grid-template-columns: 1fr; }
-  .modal-img { aspect-ratio: 4/3; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+  .modal-img {
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    aspect-ratio: unset;
+    height: 280px;
+  }
+  .modal-slide.active { min-height: 280px; }
   .modal-info { padding: 1.5rem; }
   .modal-actions { flex-direction: column; gap: 0.75rem; }
   .btn-modal-add, .btn-modal-wa { width: 100%; justify-content: center; }
@@ -2840,8 +2861,9 @@ input { font-family: inherit; }
 
   /* ─ Modal ─ */
   .product-modal { padding: 0; }
-  .modal-content { border-radius: 0; max-height: 100dvh; }
-  .modal-img { aspect-ratio: 1/1; border-radius: 0; }
+  .modal-content { border-radius: 0; max-height: 100dvh; width: 100%; }
+  .modal-img { height: 260px; aspect-ratio: unset; border-radius: 0; }
+  .modal-slide.active { min-height: 260px; }
   .modal-info { padding: 1.25rem; }
   .modal-name { font-size: 1.2rem; }
   .modal-price-current { font-size: 1.3rem; }
@@ -3015,3 +3037,31 @@ input { font-family: inherit; }
 }
 
 .offline-banner i { font-size: 1rem; }
+
+/* ─── Image skeleton shimmer ─── */
+.product-img-wrapper {
+  background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Once image loads, stop shimmer and fade image in */
+.product-img-wrapper img {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.product-img-wrapper img.img-loaded {
+  opacity: 1;
+}
+
+/* Stop shimmer once image is loaded */
+.product-img-wrapper:has(img.img-loaded) {
+  animation: none;
+  background: none;
+}

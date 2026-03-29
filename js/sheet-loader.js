@@ -241,19 +241,40 @@ function _optimizeImageUrl(url) {
   if (!url) return url;
   try {
     const u = new URL(url);
+
     // Unsplash
-    if (u.hostname.includes('unsplash.com') || u.hostname.includes('images.unsplash.com')) {
-      if (!u.searchParams.has('w')) u.searchParams.set('w', '600');
-      if (!u.searchParams.has('q')) u.searchParams.set('q', '80');
-      if (!u.searchParams.has('fm')) u.searchParams.set('fm', 'webp');
+    if (u.hostname.includes('unsplash.com')) {
+      u.searchParams.set('w', '480');
+      u.searchParams.set('q', '75');
+      u.searchParams.set('fm', 'webp');
+      u.searchParams.set('fit', 'crop');
       return u.toString();
     }
+
     // Pexels
     if (u.hostname.includes('images.pexels.com')) {
-      if (!u.searchParams.has('w')) u.searchParams.set('w', '600');
-      if (!u.searchParams.has('h')) u.searchParams.set('h', '800');
+      u.searchParams.set('w', '480');
+      u.searchParams.set('h', '640');
+      u.searchParams.set('fit', 'crop');
       return u.toString();
     }
+
+    // Cloudinary – insert transformation before /upload/
+    if (u.hostname.includes('cloudinary.com') && u.pathname.includes('/upload/')) {
+      return url.replace('/upload/', '/upload/w_480,q_75,f_webp,c_fill/');
+    }
+
+    // Google Drive – convert share link to direct thumbnail
+    const driveMatch = url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+    if (driveMatch) {
+      return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w480`;
+    }
+
+    // imgbb / ibb.co – already optimized, pass through
+    if (u.hostname.includes('ibb.co') || u.hostname.includes('i.ibb.co')) {
+      return url;
+    }
+
   } catch {
     // Not a valid URL, return as-is
   }

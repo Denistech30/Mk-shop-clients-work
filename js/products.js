@@ -857,9 +857,11 @@ function renderSheetProductCard(product, index) {
     : '★★★★★';
 
   const mediaHTML = cardProduct.mediaUrl
-    ? `<img src="${cardProduct.mediaUrl}" alt="${cardProduct.name}" loading="lazy"
-            width="600" height="800"
+    ? `<img src="${cardProduct.mediaUrl}" alt="${cardProduct.name}"
+            loading="lazy" decoding="async"
+            width="480" height="640"
             style="width:100%;height:100%;object-fit:cover;"
+            onload="this.classList.add('img-loaded')"
             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
        <div class="product-placeholder" style="background:${cardProduct.gradient};display:none;">
          <i class="${cardProduct.icon}"></i><span>${cardProduct.name}</span>
