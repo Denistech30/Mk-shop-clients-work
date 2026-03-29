@@ -61,6 +61,24 @@
     ]
   }
   </script>
+  <!-- Product catalog structured data for Google rich results -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Catalogue MK Shop Douala",
+    "description": "Mode femme, homme, enfants, chaussures, sacs et perruques premium à Douala",
+    "url": "https://mkshop1.netlify.app/",
+    "itemListElement": [
+      {"@type":"ListItem","position":1,"name":"Mode Femme – Robes & Ensembles","url":"https://mkshop1.netlify.app/#femme","description":"Robes africaines, ensembles 2 pièces, tops et tenues de soirée pour femmes à Douala"},
+      {"@type":"ListItem","position":2,"name":"Mode Homme – Costumes & Chemises","url":"https://mkshop1.netlify.app/#homme","description":"Costumes agbada, chemises classiques et ensembles pagne pour hommes"},
+      {"@type":"ListItem","position":3,"name":"Mode Enfants","url":"https://mkshop1.netlify.app/#enfants","description":"Vêtements bébé, fille et garçon pour cérémonies et quotidien"},
+      {"@type":"ListItem","position":4,"name":"Chaussures Femme","url":"https://mkshop1.netlify.app/#chaussures","description":"Escarpins, sandales, sneakers et mules tendance à Douala"},
+      {"@type":"ListItem","position":5,"name":"Sacs à Main","url":"https://mkshop1.netlify.app/#sacs","description":"Sacs cuir, pochettes soirée et sacs bandoulière premium"},
+      {"@type":"ListItem","position":6,"name":"Perruques Premium","url":"https://mkshop1.netlify.app/#perruques","description":"Lace front, bob, bouclées, tressées et afro de qualité supérieure"}
+    ]
+  }
+  </script>
   <link rel="stylesheet" href="css/style.css" />
   <!-- Google Fonts – preconnect for faster DNS + TLS handshake -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -432,7 +450,10 @@
       <button class="filter-btn" data-filter="soiree">Soirée</button>
     </div>
     <div class="products-grid" id="womenGrid">
-      <!-- Products injected by JS -->
+      <!-- Static SEO content – replaced by JS with live products -->
+      <noscript>
+        <p>Robes africaines, ensembles 2 pièces, tops, jupes et tenues de soirée pour femmes à Douala. Commandez via WhatsApp avec livraison rapide dans tout Douala, Cameroun.</p>
+      </noscript>
     </div>
     <div class="section-cta">
       <a href="https://wa.me/237682513941?text=Bonjour%20MK%20Shop!%20Je%20voudrais%20voir%20toute%20la%20collection%20femme." target="_blank" class="btn-see-more">
@@ -478,7 +499,9 @@
       <h2 class="section-title">Mode Homme</h2>
       <p class="section-subtitle">Style moderne pour l'homme camerounais d'aujourd'hui</p>
     </div>
-    <div class="products-grid" id="menGrid"></div>
+    <div class="products-grid" id="menGrid">
+      <noscript><p>Costumes agbada, chemises classiques, ensembles pagne homme et tenues casual pour hommes à Douala, Cameroun.</p></noscript>
+    </div>
     <div class="section-cta">
       <a href="https://wa.me/237682513941?text=Bonjour%20MK%20Shop!%20Je%20suis%20int%C3%A9ress%C3%A9%20par%20la%20collection%20homme." target="_blank" class="btn-see-more">
         <i class="fab fa-whatsapp"></i> Commander sur WhatsApp
@@ -495,7 +518,9 @@
       <h2 class="section-title">Mode Enfants</h2>
       <p class="section-subtitle">Des tenues mignons et confortables pour vos petits trésors</p>
     </div>
-    <div class="products-grid" id="kidsGrid"></div>
+    <div class="products-grid" id="kidsGrid">
+      <noscript><p>Vêtements enfants à Douala: robes princesse, ensembles bébé, tenues garçon et fille pour cérémonies et quotidien. Livraison Douala.</p></noscript>
+    </div>
     <div class="section-cta">
       <a href="https://wa.me/237682513941?text=Bonjour%20MK%20Shop!%20Je%20cherche%20des%20v%C3%AAtements%20pour%20enfants." target="_blank" class="btn-see-more">
         <i class="fab fa-whatsapp"></i> Commander sur WhatsApp
@@ -512,7 +537,9 @@
       <h2 class="section-title">Chaussures</h2>
       <p class="section-subtitle">Des chaussures qui font parler à chaque pas</p>
     </div>
-    <div class="products-grid" id="shoesGrid"></div>
+    <div class="products-grid" id="shoesGrid">
+      <noscript><p>Chaussures femme à Douala: escarpins, sandales plates, sneakers tendance et mules plateformes. Commandez sur WhatsApp.</p></noscript>
+    </div>
     <div class="section-cta">
       <a href="https://wa.me/237682513941?text=Bonjour%20MK%20Shop!%20Je%20cherche%20des%20chaussures." target="_blank" class="btn-see-more">
         <i class="fab fa-whatsapp"></i> Commander sur WhatsApp
@@ -529,7 +556,9 @@
       <h2 class="section-title">Sacs à Main</h2>
       <p class="section-subtitle">L'accessoire qui complète chaque tenue avec élégance</p>
     </div>
-    <div class="products-grid" id="bagsGrid"></div>
+    <div class="products-grid" id="bagsGrid">
+      <noscript><p>Sacs à main femme à Douala: sacs cuir premium, pochettes soirée, tote bags et sacs bandoulière tendance. Livraison Douala Cameroun.</p></noscript>
+    </div>
     <div class="section-cta">
       <a href="https://wa.me/237682513941?text=Bonjour%20MK%20Shop!%20Je%20voudrais%20voir%20vos%20sacs%20%C3%A0%20main." target="_blank" class="btn-see-more">
         <i class="fab fa-whatsapp"></i> Commander sur WhatsApp
@@ -546,7 +575,9 @@
       <h2 class="section-title">Perruques Premium</h2>
       <p class="section-subtitle">De vraies perruques de qualité pour toutes les occasions</p>
     </div>
-    <div class="products-grid" id="wigsGrid"></div>
+    <div class="products-grid" id="wigsGrid">
+      <noscript><p>Perruques premium à Douala: lace front naturelle, bob lisse, perruques bouclées, tressées, colorées et afro 4C. Qualité supérieure, prix abordables.</p></noscript>
+    </div>
     <div class="section-cta">
       <a href="https://wa.me/237682513941?text=Bonjour%20MK%20Shop!%20Je%20suis%20int%C3%A9ress%C3%A9e%20par%20vos%20perruques." target="_blank" class="btn-see-more">
         <i class="fab fa-whatsapp"></i> Commander sur WhatsApp
