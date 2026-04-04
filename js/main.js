@@ -871,3 +871,105 @@ if (_origHandleSheet) {
 
 // Run once on load for any static videos
 document.addEventListener('DOMContentLoaded', initVideoObserver);
+
+// ═══════════════════════════════════════════════════════════
+//   PWA INSTALL PROMPT
+// ═══════════════════════════════════════════════════════════
+(function initPWAInstall() {
+  let deferredPrompt = null; // stores the Android install event
+  const modal        = document.getElementById('pwaModal');
+  const installBtn   = document.getElementById('pwaInstallBtn');
+  const iosSteps     = document.getElementById('pwaIosSteps');
+  const closeBtn     = document.getElementById('pwaModalClose');
+  const laterBtn     = document.getElementById('pwaModalLater');
+  const mobileBtn    = document.getElementById('mobileInstallBtn');
+
+  const DISMISSED_KEY = 'mkshop_pwa_dismissed';
+
+  // Don't show if already installed or dismissed recently
+  function wasDismissed() {
+    const t = localStorage.getItem(DISMISSED_KEY);
+    if (!t) return false;
+    // Show again after 7 days
+    return (Date.now() - parseInt(t)) < 7 * 24 * 60 * 60 * 1000;
+  }
+
+  function isIOS() {
+    return /iphone|ipad|ipod/i.test(navigator.userAgent);
+  }
+
+  function isInStandaloneMode() {
+    return window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true;
+  }
+
+  function openModal() {
+    if (!modal) return;
+    modal.classList.add('open');
+  }
+
+  function closeModal() {
+    if (!modal) return;
+    modal.classList.remove('open');
+    localStorage.setItem(DISMISSED_KEY, Date.now().toString());
+  }
+
+  // Android: capture the beforeinstallprompt event
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+
+    // Show install button in mobile menu
+    if (mobileBtn) mobileBtn.style.display = 'flex';
+
+    // Show modal after 4 seconds if not dismissed
+    if (!wasDismissed() && !isInStandaloneMode()) {
+      setTimeout(openModal, 4000);
+    }
+
+    // Configure modal for Android
+    if (installBtn) installBtn.style.display = 'flex';
+    if (iosSteps)   iosSteps.style.display   = 'none';
+  });
+
+  // iOS: show manual instructions
+  if (isIOS() && !isInStandaloneMode() && !wasDismissed()) {
+    if (mobileBtn) mobileBtn.style.display = 'flex';
+    setTimeout(openModal, 4000);
+    // Configure modal for iOS
+    if (installBtn) installBtn.style.display = 'none';
+    if (iosSteps)   iosSteps.style.display   = 'block';
+  }
+
+  // Android install trigger
+  window.triggerInstall = async function() {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      closeModal();
+      if (mobileBtn) mobileBtn.style.display = 'none';
+    } else if (isIOS()) {
+      openModal();
+    }
+  };
+
+  // Install button inside modal (Android)
+  installBtn?.addEventListener('click', () => window.triggerInstall());
+
+  // Close / later buttons
+  closeBtn?.addEventListener('click', closeModal);
+  laterBtn?.addEventListener('click', closeModal);
+
+  // Close on backdrop click
+  modal?.addEventListener('click', e => {
+    if (e.target === modal) closeModal();
+  });
+
+  // Hide install button after successful install
+  window.addEventListener('appinstalled', () => {
+    if (mobileBtn) mobileBtn.style.display = 'none';
+    closeModal();
+    console.log('[PWA] App installed successfully');
+  });
+})();

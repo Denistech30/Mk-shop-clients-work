@@ -7,6 +7,7 @@
   <!-- ── Favicon ── -->
   <link rel="icon" type="image/jpeg" href="logo.jpeg" />
   <link rel="apple-touch-icon" href="logo.jpeg" />
+  <link rel="manifest" href="manifest.json" />
 
   <!-- ── Primary SEO ── -->
   <title>MK Shop – Mode Premium à Douala, Cameroun</title>
@@ -172,6 +173,9 @@
     <a href="https://wa.me/237682513941?text=Bonjour%20MK%20Shop!" target="_blank" class="mobile-whatsapp-btn">
       <i class="fab fa-whatsapp"></i> Contacter sur WhatsApp
     </a>
+    <button class="mobile-install-btn" id="mobileInstallBtn" style="display:none" onclick="triggerInstall()">
+      <i class="fas fa-download"></i> Installer l'Application
+    </button>
   </div>
   <div class="overlay" id="overlay"></div>
 
@@ -809,6 +813,42 @@
 
   <!-- Back to top -->
   <button class="back-to-top" id="backToTop"><i class="fas fa-chevron-up"></i></button>
+
+  <!-- ══════════════════════════════════════════
+       PWA INSTALL MODAL
+  ══════════════════════════════════════════ -->
+  <div class="pwa-modal" id="pwaModal">
+    <div class="pwa-modal-box">
+      <button class="pwa-modal-close" id="pwaModalClose"><i class="fas fa-times"></i></button>
+      <img src="logo.jpeg" alt="MK Shop" class="pwa-modal-logo" />
+      <h2 class="pwa-modal-title">Installer MK Shop</h2>
+      <p class="pwa-modal-desc">Accédez à la boutique en un tap depuis votre écran d'accueil — sans passer par le navigateur.</p>
+
+      <!-- Android / Desktop install button -->
+      <button class="pwa-install-btn" id="pwaInstallBtn" style="display:none">
+        <i class="fas fa-download"></i> Installer l'Application
+      </button>
+
+      <!-- iOS manual instructions -->
+      <div class="pwa-ios-steps" id="pwaIosSteps" style="display:none">
+        <p class="pwa-ios-label">Sur iPhone, suivez ces étapes:</p>
+        <div class="pwa-ios-step">
+          <span class="pwa-ios-num">1</span>
+          <span>Appuyez sur <strong><i class="fas fa-share-square"></i> Partager</strong> en bas de Safari</span>
+        </div>
+        <div class="pwa-ios-step">
+          <span class="pwa-ios-num">2</span>
+          <span>Faites défiler et appuyez sur <strong>« Sur l'écran d'accueil »</strong></span>
+        </div>
+        <div class="pwa-ios-step">
+          <span class="pwa-ios-num">3</span>
+          <span>Appuyez sur <strong>Ajouter</strong> en haut à droite</span>
+        </div>
+      </div>
+
+      <button class="pwa-modal-later" id="pwaModalLater">Plus tard</button>
+    </div>
+  </div>
 
   <script src="js/sheet-loader.js"></script>
   <script src="js/products.js"></script>
