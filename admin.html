@@ -1,757 +1,351 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MK Shop – Admin</title>
-  <link rel="icon" type="image/jpeg" href="logo.jpeg" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --gold: #c9a84c;
-      --gold-light: #e8c97a;
-      --dark: #0a0a0a;
-      --dark-2: #141414;
-      --dark-3: #1e1e1e;
-      --white: #ffffff;
-      --gray: #888;
-      --red: #e53935;
-      --green: #2e7d32;
-      --radius: 14px;
-      --radius-sm: 8px;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
-      background: var(--dark);
-      color: var(--white);
-      min-height: 100vh;
-      padding: 0 0 4rem;
-    }
-
-    /* ── Header ── */
-    .admin-header {
-      background: var(--dark-2);
-      border-bottom: 2px solid var(--gold);
-      padding: 1.25rem 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .admin-header img {
-      height: 38px;
-      width: auto;
-      object-fit: contain;
-      filter: drop-shadow(0 1px 4px rgba(0,0,0,0.5));
-    }
-
-    .admin-header h1 {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--gold);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .admin-header p {
-      font-size: 0.72rem;
-      color: var(--gray);
-      margin-top: 1px;
-    }
-
-    /* ── Container ── */
-    .container {
-      max-width: 540px;
-      margin: 0 auto;
-      padding: 1.5rem 1.25rem;
-    }
-
-    /* ── Login screen ── */
-    #loginScreen {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 70vh;
-      gap: 1.5rem;
-      text-align: center;
-    }
-
-    .lock-icon {
-      font-size: 3.5rem;
-      color: var(--gold);
-      margin-bottom: 0.5rem;
-    }
-
-    #loginScreen h2 {
-      font-size: 1.4rem;
-      font-weight: 700;
-    }
-
-    #loginScreen p {
-      color: var(--gray);
-      font-size: 0.9rem;
-    }
-
-    /* ── Form elements ── */
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      margin-bottom: 1.25rem;
-    }
-
-    label {
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--gold);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    label .optional {
-      color: var(--gray);
-      font-weight: 400;
-      text-transform: none;
-      letter-spacing: 0;
-      font-size: 0.78rem;
-    }
-
-    input[type="text"],
-    input[type="number"],
-    input[type="password"],
-    select,
-    textarea {
-      width: 100%;
-      background: var(--dark-3);
-      border: 1.5px solid rgba(201,168,76,0.25);
-      border-radius: var(--radius-sm);
-      color: var(--white);
-      font-size: 1rem;
-      padding: 0.9rem 1rem;
-      outline: none;
-      transition: border-color 0.2s ease;
-      -webkit-appearance: none;
-      appearance: none;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--gold);
-    }
-
-    input::placeholder, textarea::placeholder {
-      color: rgba(255,255,255,0.25);
-    }
-
-    select option { background: var(--dark-3); }
-
-    textarea {
-      resize: vertical;
-      min-height: 90px;
-      line-height: 1.5;
-    }
-
-    /* ── Photo upload ── */
-    .photo-upload-area {
-      border: 2px dashed rgba(201,168,76,0.35);
-      border-radius: var(--radius);
-      padding: 2rem 1rem;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color 0.2s ease, background 0.2s ease;
-      position: relative;
-    }
-
-    .photo-upload-area:hover, .photo-upload-area.has-image {
-      border-color: var(--gold);
-      background: rgba(201,168,76,0.05);
-    }
-
-    .photo-upload-area input[type="file"] {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-      width: 100%;
-      height: 100%;
-      padding: 0;
-      border: none;
-      background: none;
-    }
-
-    .photo-upload-area i {
-      font-size: 2.5rem;
-      color: var(--gold);
-      margin-bottom: 0.75rem;
-      display: block;
-    }
-
-    .photo-upload-area p {
-      font-size: 0.9rem;
-      color: rgba(255,255,255,0.6);
-    }
-
-    .photo-upload-area small {
-      font-size: 0.75rem;
-      color: var(--gray);
-      margin-top: 0.3rem;
-      display: block;
-    }
-
-    #imagePreview {
-      width: 100%;
-      max-height: 220px;
-      object-fit: cover;
-      border-radius: var(--radius-sm);
-      margin-top: 1rem;
-      display: none;
-    }
-
-    /* ── Buttons ── */
-    .btn {
-      width: 100%;
-      padding: 1rem;
-      border-radius: var(--radius);
-      font-size: 1.05rem;
-      font-weight: 700;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-      transition: opacity 0.2s ease, transform 0.15s ease;
-      letter-spacing: 0.3px;
-    }
-
-    .btn:active { transform: scale(0.98); }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .btn-gold {
-      background: var(--gold);
-      color: var(--dark);
-    }
-
-    .btn-gold:hover:not(:disabled) { background: var(--gold-light); }
-
-    .btn-dark {
-      background: var(--dark-3);
-      color: var(--white);
-      border: 1.5px solid rgba(255,255,255,0.1);
-    }
-
-    /* ── Status messages ── */
-    .status {
-      border-radius: var(--radius);
-      padding: 1.25rem 1rem;
-      font-size: 0.95rem;
-      font-weight: 600;
-      text-align: center;
-      display: none;
-      margin-bottom: 1.25rem;
-      line-height: 1.5;
-    }
-
-    .status.error {
-      background: rgba(229,57,53,0.15);
-      border: 1.5px solid rgba(229,57,53,0.4);
-      color: #ff6b6b;
-    }
-
-    .status.success {
-      background: rgba(46,125,50,0.15);
-      border: 1.5px solid rgba(46,125,50,0.4);
-      color: #69f0ae;
-      font-size: 1.1rem;
-    }
-
-    .status.loading {
-      background: rgba(201,168,76,0.1);
-      border: 1.5px solid rgba(201,168,76,0.3);
-      color: var(--gold-light);
-    }
-
-    .status i { margin-right: 0.4rem; }
-
-    /* ── Spinner ── */
-    .spinner {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(201,168,76,0.3);
-      border-top-color: var(--gold);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      flex-shrink: 0;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── Section divider ── */
-    .section-divider {
-      border: none;
-      border-top: 1px solid rgba(255,255,255,0.07);
-      margin: 1.75rem 0;
-    }
-
-    .section-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--gray);
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-bottom: 1.25rem;
-    }
-
-    /* ── Setup notice ── */
-    .setup-notice {
-      background: rgba(201,168,76,0.08);
-      border: 1px solid rgba(201,168,76,0.25);
-      border-radius: var(--radius);
-      padding: 1rem 1.25rem;
-      font-size: 0.82rem;
-      color: rgba(255,255,255,0.65);
-      line-height: 1.6;
-      margin-bottom: 1.5rem;
-    }
-
-    .setup-notice strong { color: var(--gold); }
-
-    /* ── Progress bar ── */
-    .progress-wrap {
-      background: rgba(255,255,255,0.08);
-      border-radius: 50px;
-      height: 6px;
-      overflow: hidden;
-      margin-top: 0.75rem;
-      display: none;
-    }
-
-    .progress-bar {
-      height: 100%;
-      background: var(--gold);
-      border-radius: 50px;
-      width: 0%;
-      transition: width 0.3s ease;
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>MK Shop – Admin</title>
+<link rel="icon" type="image/jpeg" href="logo.jpeg"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#c9a84c;--gold-light:#e8c97a;--dark:#0a0a0a;--dark-2:#141414;--dark-3:#1e1e1e;--white:#fff;--gray:#888;--red:#e53935;--green:#2e7d32;--r:14px;--rs:8px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;background:var(--dark);color:var(--white);min-height:100vh;padding-bottom:4rem}
+.hdr{background:var(--dark-2);border-bottom:2px solid var(--gold);padding:1.1rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100}
+.hdr img{height:36px;width:auto;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,.5))}
+.hdr h1{font-size:.95rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px}
+.hdr p{font-size:.7rem;color:var(--gray)}
+.wrap{max-width:520px;margin:0 auto;padding:1.5rem 1.1rem}
+/* login */
+#loginScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:70vh;gap:1.5rem;text-align:center}
+.lock{font-size:3rem;color:var(--gold)}
+/* fields */
+.field{display:flex;flex-direction:column;gap:.45rem;margin-bottom:1.1rem}
+label{font-size:.78rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.5px}
+label .opt{color:var(--gray);font-weight:400;text-transform:none;font-size:.75rem}
+input,select,textarea{width:100%;background:var(--dark-3);border:1.5px solid rgba(201,168,76,.25);border-radius:var(--rs);color:var(--white);font-size:1rem;padding:.85rem 1rem;outline:none;transition:border-color .2s;-webkit-appearance:none;appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--gold)}
+input::placeholder,textarea::placeholder{color:rgba(255,255,255,.25)}
+select option{background:var(--dark-3)}
+textarea{resize:vertical;min-height:80px;line-height:1.5}
+/* photo */
+.photo-area{border:2px dashed rgba(201,168,76,.35);border-radius:var(--r);padding:1.75rem 1rem;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;position:relative}
+.photo-area:hover,.photo-area.has{border-color:var(--gold);background:rgba(201,168,76,.05)}
+.photo-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;padding:0;border:none;background:none}
+.photo-area i{font-size:2.2rem;color:var(--gold);margin-bottom:.6rem;display:block}
+.photo-area p{font-size:.88rem;color:rgba(255,255,255,.6)}
+.photo-area small{font-size:.72rem;color:var(--gray);margin-top:.25rem;display:block}
+#imgPreview{width:100%;max-height:200px;object-fit:cover;border-radius:var(--rs);margin-top:.85rem;display:none}
+/* buttons */
+.btn{width:100%;padding:.95rem;border-radius:var(--r);font-size:1rem;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.55rem;transition:opacity .2s,transform .15s}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-gold{background:var(--gold);color:var(--dark)}
+.btn-gold:hover:not(:disabled){background:var(--gold-light)}
+.btn-dark{background:var(--dark-3);color:var(--white);border:1.5px solid rgba(255,255,255,.1)}
+.btn-sm{padding:.5rem .85rem;font-size:.8rem;border-radius:var(--rs);width:auto}
+/* status */
+.status{border-radius:var(--r);padding:1.1rem 1rem;font-size:.92rem;font-weight:600;text-align:center;display:none;margin-bottom:1.1rem;line-height:1.5}
+.status.error{background:rgba(229,57,53,.15);border:1.5px solid rgba(229,57,53,.4);color:#ff6b6b}
+.status.success{background:rgba(46,125,50,.15);border:1.5px solid rgba(46,125,50,.4);color:#69f0ae;font-size:1.05rem}
+.status.loading{background:rgba(201,168,76,.1);border:1.5px solid rgba(201,168,76,.3);color:var(--gold-light)}
+/* spinner */
+.spin{display:inline-block;width:18px;height:18px;border:3px solid rgba(201,168,76,.3);border-top-color:var(--gold);border-radius:50%;animation:sp .7s linear infinite;flex-shrink:0}
+@keyframes sp{to{transform:rotate(360deg)}}
+/* progress */
+.prog-wrap{background:rgba(255,255,255,.08);border-radius:50px;height:5px;overflow:hidden;margin-top:.65rem;display:none}
+.prog-bar{height:100%;background:var(--gold);border-radius:50px;width:0%;transition:width .3s}
+/* divider */
+hr.div{border:none;border-top:1px solid rgba(255,255,255,.07);margin:1.5rem 0}
+.sec-lbl{font-size:.7rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1.1rem}
+/* setup notice */
+.notice{background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--r);padding:.9rem 1.1rem;font-size:.8rem;color:rgba(255,255,255,.65);line-height:1.6;margin-bottom:1.4rem}
+.notice strong{color:var(--gold)}
+</style>
 </head>
 <body>
+<div class="hdr">
+  <img src="logo.jpeg" alt="MK Shop" onerror="this.style.display='none'"/>
+  <div><h1>Admin Panel</h1><p>Ajouter un produit</p></div>
+</div>
+<div class="wrap">
 
-  <!-- Header -->
-  <div class="admin-header">
-    <img src="logo.jpeg" alt="MK Shop" onerror="this.style.display='none'" />
-    <div>
-      <h1>Admin Panel</h1>
-      <p>Ajouter un produit</p>
+  <!-- LOGIN -->
+  <div id="loginScreen">
+    <div><div class="lock"><i class="fas fa-lock"></i></div>
+      <h2 style="font-size:1.3rem;font-weight:700;margin-top:.5rem">Accès Administrateur</h2>
+      <p style="color:var(--gray);font-size:.88rem;margin-top:.4rem">Entrez votre mot de passe</p>
     </div>
+    <div class="field" style="width:100%;max-width:320px">
+      <label for="pwInput">Mot de passe</label>
+      <input type="password" id="pwInput" placeholder="••••••••" autocomplete="current-password"/>
+    </div>
+    <div id="loginErr" class="status error" style="width:100%;max-width:320px"></div>
+    <button class="btn btn-gold" onclick="checkPw()" style="max-width:320px">
+      <i class="fas fa-sign-in-alt"></i> Entrer
+    </button>
   </div>
 
-  <div class="container">
+  <!-- FORM -->
+  <div id="mainForm" style="display:none">
 
-    <!-- ══ LOGIN SCREEN ══ -->
-    <div id="loginScreen">
-      <div>
-        <div class="lock-icon"><i class="fas fa-lock"></i></div>
-        <h2>Accès Administrateur</h2>
-        <p style="margin-top:0.5rem;">Entrez votre mot de passe pour continuer</p>
+    <!-- Setup notice -->
+    <div class="notice" id="setupNotice">
+      <strong><i class="fas fa-info-circle"></i> Configuration requise</strong><br>
+      Collez l'URL de votre Google Apps Script ci-dessous pour enregistrer les produits dans Google Sheet.
+      <div class="field" style="margin-top:.65rem;margin-bottom:0">
+        <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/..." style="font-size:.8rem;padding:.6rem .85rem"/>
       </div>
-
-      <div class="field" style="width:100%;max-width:340px;">
-        <label for="passwordInput">Mot de passe</label>
-        <input type="password" id="passwordInput" placeholder="••••••••"
-               autocomplete="current-password" />
-      </div>
-
-      <div id="loginError" class="status error" style="width:100%;max-width:340px;"></div>
-
-      <button class="btn btn-gold" onclick="checkPassword()" style="max-width:340px;">
-        <i class="fas fa-sign-in-alt"></i> Entrer
+      <button onclick="saveUrl()" class="btn btn-dark" style="margin-top:.45rem;padding:.55rem;font-size:.8rem">
+        <i class="fas fa-save"></i> Enregistrer
       </button>
     </div>
 
-    <!-- ══ UPLOAD FORM ══ -->
-    <div id="uploadForm" style="display:none;">
+    <div id="statusMsg" class="status"></div>
+    <div class="prog-wrap" id="progWrap"><div class="prog-bar" id="progBar"></div></div>
 
-      <!-- Setup notice -->
-      <div class="setup-notice" id="setupNotice">
-        <strong><i class="fas fa-info-circle"></i> Configuration requise</strong><br>
-        Pour que les produits s'enregistrent dans Google Sheet, collez l'URL de votre
-        Google Apps Script dans le champ ci-dessous.
-        <br><br>
-        <strong>Comment faire:</strong> Ouvrez votre Google Sheet → Extensions →
-        Apps Script → collez le script fourni → Déployer → Copier l'URL → coller ici.
-        <div class="field" style="margin-top:0.75rem;margin-bottom:0;">
-          <input type="text" id="appsScriptUrl"
-                 placeholder="https://script.google.com/macros/s/..."
-                 style="font-size:0.82rem;padding:0.65rem 0.85rem;" />
-        </div>
-        <button onclick="saveScriptUrl()" class="btn btn-dark"
-                style="margin-top:0.5rem;padding:0.6rem;font-size:0.82rem;">
-          <i class="fas fa-save"></i> Enregistrer l'URL
-        </button>
-      </div>
+    <!-- Photo -->
+    <p class="sec-lbl">Photo du produit</p>
+    <div class="photo-area" id="photoArea">
+      <input type="file" id="photoInput" accept="image/*" capture="environment" onchange="onPhoto(event)"/>
+      <i class="fas fa-camera"></i>
+      <p>Appuyez pour prendre une photo ou choisir depuis la galerie</p>
+      <small>Compressée automatiquement avant envoi</small>
+    </div>
+    <img id="imgPreview" alt="Aperçu"/>
 
-      <!-- Status messages -->
-      <div id="statusMsg" class="status"></div>
-      <div class="progress-wrap" id="progressWrap">
-        <div class="progress-bar" id="progressBar"></div>
-      </div>
+    <hr class="div"/>
+    <p class="sec-lbl">Détails du produit</p>
 
-      <!-- ── Photo ── -->
-      <p class="section-label">Photo du produit</p>
+    <div class="field">
+      <label for="fName">Nom du produit</label>
+      <input type="text" id="fName" placeholder="Ex: Robe Maxi Africaine"/>
+    </div>
+    <div class="field">
+      <label for="fPrice">Prix (XAF)</label>
+      <input type="number" id="fPrice" placeholder="Ex: 25000" min="0"/>
+    </div>
+    <div class="field">
+      <label for="fOld">Ancien prix (XAF) <span class="opt">– optionnel</span></label>
+      <input type="number" id="fOld" placeholder="Ex: 35000" min="0"/>
+    </div>
+    <div class="field">
+      <label for="fCat">Catégorie</label>
+      <select id="fCat">
+        <option value="Femme">Femme</option>
+        <option value="Homme">Homme</option>
+        <option value="Enfants">Enfants</option>
+        <option value="Chaussures">Chaussures</option>
+        <option value="Sacs">Sacs à Main</option>
+        <option value="Perruques">Perruques</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="fBadge">Badge <span class="opt">– optionnel</span></label>
+      <select id="fBadge">
+        <option value="">Aucun</option>
+        <option value="new">Nouveau</option>
+        <option value="hot">Populaire</option>
+        <option value="sale">Promo</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="fCol">Collection <span class="opt">– optionnel</span></label>
+      <input type="text" id="fCol" placeholder="Ex: Collection Été 2026"/>
+    </div>
+    <div class="field">
+      <label for="fDesc">Description <span class="opt">– optionnel</span></label>
+      <textarea id="fDesc" placeholder="Matière, taille, occasion..."></textarea>
+    </div>
 
-      <div class="photo-upload-area" id="uploadArea">
-        <input type="file" id="photoInput" accept="image/*" capture="environment"
-               onchange="handlePhotoSelect(event)" />
-        <i class="fas fa-camera"></i>
-        <p>Appuyez pour prendre une photo ou choisir depuis la galerie</p>
-        <small>La photo sera compressée automatiquement</small>
-      </div>
-      <img id="imagePreview" alt="Aperçu" />
-
-      <hr class="section-divider" />
-
-      <!-- ── Product details ── -->
-      <p class="section-label">Détails du produit</p>
-
-      <div class="field">
-        <label for="productName">Nom du produit</label>
-        <input type="text" id="productName" placeholder="Ex: Robe Maxi Africaine" />
-      </div>
-
-      <div class="field">
-        <label for="productPrice">Prix (XAF)</label>
-        <input type="number" id="productPrice" placeholder="Ex: 25000" min="0" />
-      </div>
-
-      <div class="field">
-        <label for="productOldPrice">
-          Ancien prix (XAF) <span class="optional">– optionnel, pour afficher une réduction</span>
-        </label>
-        <input type="number" id="productOldPrice" placeholder="Ex: 35000" min="0" />
-      </div>
-
-      <div class="field">
-        <label for="productCategory">Catégorie</label>
-        <select id="productCategory">
-          <option value="Femme">👗 Femme</option>
-          <option value="Homme">👔 Homme</option>
-          <option value="Enfants">👶 Enfants</option>
-          <option value="Chaussures">👠 Chaussures</option>
-          <option value="Sacs">👜 Sacs à Main</option>
-          <option value="Perruques">💇 Perruques</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="productBadge">Badge <span class="optional">– optionnel</span></label>
-        <select id="productBadge">
-          <option value="">Aucun</option>
-          <option value="new">Nouveau</option>
-          <option value="hot">Populaire</option>
-          <option value="sale">Promo</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="productCollection">
-          Collection <span class="optional">– optionnel (ex: Summer Drop)</span>
-        </label>
-        <input type="text" id="productCollection" placeholder="Ex: Collection Été 2026" />
-      </div>
-
-      <div class="field">
-        <label for="productDesc">
-          Description <span class="optional">– optionnel</span>
-        </label>
-        <textarea id="productDesc"
-                  placeholder="Décrivez le produit: matière, taille, occasion..."></textarea>
-      </div>
-
-      <hr class="section-divider" />
-
-      <!-- Submit -->
-      <button class="btn btn-gold" id="submitBtn" onclick="submitProduct()">
-        <i class="fas fa-plus-circle"></i> Ajouter le Produit
-      </button>
-
-      <button class="btn btn-dark" onclick="resetForm()" style="margin-top:0.75rem;">
-        <i class="fas fa-redo"></i> Réinitialiser le formulaire
-      </button>
-
-    </div><!-- /uploadForm -->
-  </div><!-- /container -->
+    <hr class="div"/>
+    <button class="btn btn-gold" id="submitBtn" onclick="submit()">
+      <i class="fas fa-plus-circle"></i> Ajouter le Produit
+    </button>
+    <button class="btn btn-dark" onclick="resetForm()" style="margin-top:.7rem">
+      <i class="fas fa-redo"></i> Réinitialiser
+    </button>
+  </div>
+</div>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-//   MK SHOP ADMIN – Standalone product uploader
-// ═══════════════════════════════════════════════════════════
+const PW   = 'Manu237#';
+const CDN  = 'https://api.cloudinary.com/v1_1/drntx3vgo/image/upload';
+const PRESET = 'mk_shop_uploads';
+let blob = null;
 
-const PASSWORD       = 'Manu237#';
-const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/drntx3vgo/image/upload';
-const UPLOAD_PRESET  = 'mk_shop_uploads';
-
-let compressedBlob = null; // holds the compressed image ready to upload
-
-// ── Password check ────────────────────────────────────────
-function checkPassword() {
-  const val = document.getElementById('passwordInput').value;
-  const err = document.getElementById('loginError');
-
-  if (val === PASSWORD) {
+// ── Auth ──────────────────────────────────────────────────
+function checkPw() {
+  const v = document.getElementById('pwInput').value;
+  const e = document.getElementById('loginErr');
+  if (v === PW) {
     document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('uploadForm').style.display  = 'block';
-    loadScriptUrl();
+    document.getElementById('mainForm').style.display = 'block';
+    loadUrl();
   } else {
-    err.textContent = 'Mot de passe incorrect. Réessayez.';
-    err.style.display = 'block';
-    document.getElementById('passwordInput').value = '';
-    document.getElementById('passwordInput').focus();
+    e.textContent = 'Mot de passe incorrect. Réessayez.';
+    e.style.display = 'block';
+    document.getElementById('pwInput').value = '';
   }
 }
+document.getElementById('pwInput').addEventListener('keydown', e => { if(e.key==='Enter') checkPw(); });
 
-// Allow Enter key on password field
-document.getElementById('passwordInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') checkPassword();
-});
-
-// ── Apps Script URL persistence ───────────────────────────
-function saveScriptUrl() {
-  const url = document.getElementById('appsScriptUrl').value.trim();
-  if (!url.startsWith('https://script.google.com')) {
-    showStatus('error', 'URL invalide. Elle doit commencer par https://script.google.com');
-    return;
+// ── Script URL ────────────────────────────────────────────
+function saveUrl() {
+  const u = document.getElementById('scriptUrl').value.trim();
+  if (!u.startsWith('https://script.google.com')) {
+    showStatus('error','URL invalide. Elle doit commencer par https://script.google.com'); return;
   }
-  localStorage.setItem('mkshop_script_url', url);
+  localStorage.setItem('mks_url', u);
   document.getElementById('setupNotice').style.display = 'none';
-  showStatus('success', 'URL enregistrée avec succès!');
-  setTimeout(clearStatus, 3000);
+  showStatus('success','<i class="fas fa-check-circle"></i> URL enregistrée!');
+  setTimeout(clearStatus, 2500);
 }
-
-function loadScriptUrl() {
-  const saved = localStorage.getItem('mkshop_script_url');
-  if (saved) {
-    document.getElementById('appsScriptUrl').value = saved;
-    document.getElementById('setupNotice').style.display = 'none';
-  }
+function loadUrl() {
+  const s = localStorage.getItem('mks_url');
+  if (s) { document.getElementById('scriptUrl').value = s; document.getElementById('setupNotice').style.display = 'none'; }
 }
+function getUrl() { return localStorage.getItem('mks_url') || ''; }
 
-function getScriptUrl() {
-  return localStorage.getItem('mkshop_script_url') || '';
-}
-
-// ── Image compression via Canvas ─────────────────────────
-function handlePhotoSelect(event) {
-  const file = event.target.files[0];
+// ── Image compression ─────────────────────────────────────
+function onPhoto(e) {
+  const file = e.target.files[0];
   if (!file) return;
-
   const reader = new FileReader();
-  reader.onload = e => {
+  reader.onload = ev => {
     const img = new Image();
     img.onload = () => {
-      // Resize to max 800px wide
-      const MAX_W = 800;
-      let w = img.width;
-      let h = img.height;
-
-      if (w > MAX_W) {
-        h = Math.round(h * MAX_W / w);
-        w = MAX_W;
-      }
-
-      const canvas = document.createElement('canvas');
-      canvas.width  = w;
-      canvas.height = h;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, w, h);
-
-      canvas.toBlob(blob => {
-        compressedBlob = blob;
-
-        // Show preview
-        const preview = document.getElementById('imagePreview');
-        preview.src = URL.createObjectURL(blob);
-        preview.style.display = 'block';
-
-        // Mark upload area
-        document.getElementById('uploadArea').classList.add('has-image');
-
-        const sizeMB = (blob.size / 1024 / 1024).toFixed(2);
-        showStatus('loading',
-          `<i class="fas fa-check-circle"></i> Photo prête (${sizeMB} MB compressé)`);
-        setTimeout(clearStatus, 3000);
+      const MAX = 800;
+      let w = img.width, h = img.height;
+      if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      c.toBlob(b => {
+        blob = b;
+        const prev = document.getElementById('imgPreview');
+        prev.src = URL.createObjectURL(b);
+        prev.style.display = 'block';
+        document.getElementById('photoArea').classList.add('has');
+        showStatus('loading', '<i class="fas fa-check"></i> Photo prête (' + (b.size/1024/1024).toFixed(2) + ' MB)');
+        setTimeout(clearStatus, 2500);
       }, 'image/jpeg', 0.75);
     };
-    img.src = e.target.result;
+    img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
 }
 
-// ── Upload to Cloudinary ──────────────────────────────────
-async function uploadToCloudinary() {
-  if (!compressedBlob) throw new Error('NO_IMAGE');
-
-  const formData = new FormData();
-  formData.append('file', compressedBlob, 'product.jpg');
-  formData.append('upload_preset', UPLOAD_PRESET);
-  formData.append('folder', 'mkshop');
-
-  setProgress(30);
-
-  const res = await fetch(CLOUDINARY_URL, { method: 'POST', body: formData });
-  if (!res.ok) throw new Error('CLOUDINARY_FAIL');
-
+// ── Cloudinary upload ─────────────────────────────────────
+async function uploadImage() {
+  if (!blob) throw new Error('NO_IMAGE');
+  const fd = new FormData();
+  fd.append('file', blob, 'product.jpg');
+  fd.append('upload_preset', PRESET);
+  fd.append('folder', 'mkshop');
+  setP(30);
+  const res = await fetch(CDN, { method:'POST', body:fd });
   const data = await res.json();
-  setProgress(60);
-
-  if (!data.secure_url) throw new Error('CLOUDINARY_NO_URL');
+  setP(60);
+  if (!res.ok || !data.secure_url) {
+    console.error('Cloudinary error:', data);
+    throw new Error('CLOUDINARY: ' + (data.error?.message || res.status));
+  }
   return data.secure_url;
 }
 
-// ── Save to Google Sheet via Apps Script ──────────────────
+// ── Save to sheet ─────────────────────────────────────────
 async function saveToSheet(row) {
-  const scriptUrl = getScriptUrl();
-  if (!scriptUrl) throw new Error('NO_SCRIPT_URL');
-
-  const res = await fetch(scriptUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action: 'addProduct', row }),
+  const url = getUrl();
+  if (!url) throw new Error('NO_URL');
+  const res = await fetch(url, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ action:'addProduct', row })
   });
-
-  setProgress(90);
-
-  // Apps Script returns text/plain even for JSON sometimes
+  setP(90);
   const text = await res.text();
-  let data;
-  try { data = JSON.parse(text); } catch { data = { status: text }; }
-
-  if (!res.ok || (data.status && data.status !== 'ok' && data.status !== 'success')) {
-    throw new Error('SHEET_FAIL');
+  let d; try { d = JSON.parse(text); } catch { d = { status: text }; }
+  if (!res.ok || (d.status && d.status !== 'ok' && d.status !== 'success')) {
+    console.error('Sheet error:', d);
+    throw new Error('SHEET: ' + (d.message || res.status));
   }
 }
 
-// ── Main submit ───────────────────────────────────────────
-async function submitProduct() {
-  const name     = document.getElementById('productName').value.trim();
-  const price    = document.getElementById('productPrice').value.trim();
-  const oldPrice = document.getElementById('productOldPrice').value.trim();
-  const category = document.getElementById('productCategory').value;
-  const badge    = document.getElementById('productBadge').value;
-  const collection = document.getElementById('productCollection').value.trim();
-  const desc     = document.getElementById('productDesc').value.trim();
+// ── Submit ────────────────────────────────────────────────
+async function submit() {
+  const name  = document.getElementById('fName').value.trim();
+  const price = document.getElementById('fPrice').value.trim();
+  const old   = document.getElementById('fOld').value.trim();
+  const cat   = document.getElementById('fCat').value;
+  const badge = document.getElementById('fBadge').value;
+  const col   = document.getElementById('fCol').value.trim();
+  const desc  = document.getElementById('fDesc').value.trim();
 
-  // Validation
-  if (!name)  { showStatus('error', 'Veuillez entrer le nom du produit.'); return; }
-  if (!price) { showStatus('error', 'Veuillez entrer le prix du produit.'); return; }
-  if (!compressedBlob) {
-    showStatus('error', 'Veuillez choisir une photo pour le produit.'); return;
-  }
-  if (!getScriptUrl()) {
-    showStatus('error',
-      'URL Apps Script manquante. Faites défiler vers le haut et configurez-la d\'abord.');
-    return;
-  }
+  if (!name)  { showStatus('error','Veuillez entrer le nom du produit.'); return; }
+  if (!price) { showStatus('error','Veuillez entrer le prix du produit.'); return; }
+  if (!blob)  { showStatus('error','Veuillez choisir une photo.'); return; }
+  if (!getUrl()) { showStatus('error','URL Apps Script manquante. Configurez-la en haut de la page.'); return; }
 
-  // Disable button
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
-  showStatus('loading',
-    '<span class="spinner"></span> Envoi de la photo en cours...');
-  showProgressBar();
+  showStatus('loading','<span class="spin"></span> Envoi de la photo...');
+  showProg();
 
   try {
-    // 1. Upload image
-    const imageUrl = await uploadToCloudinary();
-
-    showStatus('loading',
-      '<span class="spinner"></span> Enregistrement du produit...');
-
-    // 2. Save to sheet — column order: Name, Price, OldPrice, Category, MediaURL, Badge, Description, Collection
-    await saveToSheet([name, price, oldPrice, category, imageUrl, badge, desc, collection]);
-
-    setProgress(100);
-
-    // 3. Success
+    const imgUrl = await uploadImage();
+    showStatus('loading','<span class="spin"></span> Enregistrement du produit...');
+    // Column order: Name, Price, OldPrice, Category, MediaURL, Badge, Description, Collection
+    await saveToSheet([name, price, old, cat, imgUrl, badge, desc, col]);
+    setP(100);
     showStatus('success',
-      '<i class="fas fa-check-circle" style="font-size:1.4rem;display:block;margin-bottom:0.5rem;"></i>' +
+      '<i class="fas fa-check-circle" style="font-size:1.3rem;display:block;margin-bottom:.4rem"></i>' +
       'Produit ajouté! Il apparaîtra sur votre boutique dans quelques secondes.');
-
-    setTimeout(() => {
-      resetForm();
-      clearStatus();
-    }, 4000);
-
-  } catch (err) {
-    console.error(err);
-    const messages = {
-      NO_IMAGE:       'Aucune photo sélectionnée. Veuillez choisir une photo.',
-      CLOUDINARY_FAIL:'Échec de l\'envoi de la photo. Vérifiez votre connexion et réessayez.',
-      CLOUDINARY_NO_URL: 'La photo n\'a pas pu être traitée. Réessayez.',
-      SHEET_FAIL:     'La photo a été envoyée mais le produit n\'a pas pu être enregistré dans la fiche. Réessayez.',
-      NO_SCRIPT_URL:  'URL Apps Script manquante. Configurez-la en haut de la page.',
+    setTimeout(() => { resetForm(); clearStatus(); }, 4000);
+  } catch(err) {
+    console.error('Submit error:', err.message);
+    const msgs = {
+      'NO_IMAGE': 'Aucune photo sélectionnée.',
+      'NO_URL':   'URL Apps Script manquante. Configurez-la en haut de la page.',
     };
-    showStatus('error',
-      '<i class="fas fa-exclamation-circle"></i> ' +
-      (messages[err.message] || 'Une erreur s\'est produite. Vérifiez votre connexion et réessayez.'));
+    // Check for known prefixes
+    let msg = msgs[err.message];
+    if (!msg && err.message.startsWith('CLOUDINARY')) {
+      msg = 'Échec de l\'envoi de la photo. Vérifiez que le preset Cloudinary "mk_shop_uploads" est bien en mode Non signé (Unsigned).';
+    }
+    if (!msg && err.message.startsWith('SHEET')) {
+      msg = 'Photo envoyée mais impossible d\'enregistrer dans Google Sheet. Vérifiez l\'URL Apps Script.';
+    }
+    if (!msg) msg = 'Une erreur s\'est produite. Vérifiez votre connexion et réessayez.';
+    showStatus('error','<i class="fas fa-exclamation-circle"></i> ' + msg);
   } finally {
     btn.disabled = false;
-    hideProgressBar();
+    hideProg();
   }
 }
 
 // ── Helpers ───────────────────────────────────────────────
 function showStatus(type, html) {
   const el = document.getElementById('statusMsg');
-  el.className = `status ${type}`;
+  el.className = 'status ' + type;
   el.innerHTML = html;
   el.style.display = 'block';
-  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  el.scrollIntoView({ behavior:'smooth', block:'nearest' });
 }
-
 function clearStatus() {
   const el = document.getElementById('statusMsg');
-  el.style.display = 'none';
-  el.innerHTML = '';
+  el.style.display = 'none'; el.innerHTML = '';
 }
-
-function showProgressBar() {
-  document.getElementById('progressWrap').style.display = 'block';
-  setProgress(10);
-}
-
-function hideProgressBar() {
-  setTimeout(() => {
-    document.getElementById('progressWrap').style.display = 'none';
-    setProgress(0);
-  }, 800);
-}
-
-function setProgress(pct) {
-  document.getElementById('progressBar').style.width = pct + '%';
-}
-
+function showProg() { document.getElementById('progWrap').style.display='block'; setP(10); }
+function hideProg() { setTimeout(() => { document.getElementById('progWrap').style.display='none'; setP(0); }, 800); }
+function setP(v) { document.getElementById('progBar').style.width = v + '%'; }
 function resetForm() {
-  document.getElementById('productName').value     = '';
-  document.getElementById('productPrice').value    = '';
-  document.getElementById('productOldPrice').value = '';
-  document.getElementById('productCategory').value = 'Femme';
-  document.getElementById('productBadge').value    = '';
-  document.getElementById('productCollection').value = '';
-  document.getElementById('productDesc').value     = '';
-  document.getElementById('photoInput').value      = '';
-  document.getElementById('imagePreview').style.display = 'none';
-  document.getElementById('imagePreview').src      = '';
-  document.getElementById('uploadArea').classList.remove('has-image');
-  compressedBlob = null;
-  clearStatus();
+  ['fName','fPrice','fOld','fCol','fDesc'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('fCat').value = 'Femme';
+  document.getElementById('fBadge').value = '';
+  document.getElementById('photoInput').value = '';
+  document.getElementById('imgPreview').style.display = 'none';
+  document.getElementById('photoArea').classList.remove('has');
+  blob = null; clearStatus();
 }
 </script>
 </body>
