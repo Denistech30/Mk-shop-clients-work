@@ -257,11 +257,14 @@ async function uploadImage() {
 async function saveToSheet(row) {
   const url = getUrl();
   if (!url) throw new Error('NO_URL');
-  const res = await fetch(url, {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ action:'addProduct', row })
+
+  // Use GET + query params to avoid CORS preflight on Apps Script
+  const params = new URLSearchParams({
+    action: 'addProduct',
+    row: encodeURIComponent(JSON.stringify(row))
   });
+
+  const res = await fetch(url + '?' + params.toString(), { method: 'GET' });
   setP(90);
   const text = await res.text();
   let d; try { d = JSON.parse(text); } catch { d = { status: text }; }
