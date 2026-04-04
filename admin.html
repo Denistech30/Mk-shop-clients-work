@@ -141,10 +141,21 @@ hr.div{border:none;border-top:1px solid rgba(255,255,255,.07);margin:1.4rem 0}
     <!-- Photo -->
     <p class="sec-lbl">Photo du produit</p>
     <div class="photo-area" id="photoArea">
-      <input type="file" id="photoInput" accept="image/*" onchange="onPhoto(event)"/>
-      <i class="fas fa-camera"></i>
-      <p id="photoAreaText">Appuyez pour prendre une photo ou choisir depuis la galerie</p>
-      <small>Compressée automatiquement avant envoi</small>
+      <input type="file" id="photoInput" accept="image/*" onchange="onPhoto(event)" style="display:none"/>
+      <input type="file" id="cameraInput" accept="image/*" capture="environment" onchange="onPhoto(event)" style="display:none"/>
+      <i class="fas fa-image"></i>
+      <p id="photoAreaText">Choisissez comment ajouter la photo</p>
+      <div style="display:flex;gap:.65rem;justify-content:center;margin-top:1rem;flex-wrap:wrap">
+        <button type="button" class="btn btn-gold" style="width:auto;padding:.65rem 1.2rem;font-size:.88rem"
+                onclick="document.getElementById('cameraInput').click()">
+          <i class="fas fa-camera"></i> Prendre une photo
+        </button>
+        <button type="button" class="btn btn-dark" style="width:auto;padding:.65rem 1.2rem;font-size:.88rem"
+                onclick="document.getElementById('photoInput').click()">
+          <i class="fas fa-images"></i> Choisir depuis la galerie
+        </button>
+      </div>
+      <small style="margin-top:.6rem">Compressée automatiquement avant envoi</small>
     </div>
     <img id="imgPreview" alt="Aperçu"/>
 
