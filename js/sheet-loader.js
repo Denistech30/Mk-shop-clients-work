@@ -48,8 +48,16 @@ function loadProductsFromSheet(url, onProducts, options = {}) {
     const targetUrl = PROXIES[proxyIndex](url);
     console.log(`[SheetLoader] Attempt ${proxyIndex + 1}:`, targetUrl);
 
-    fetch(targetUrl)
+    // 8-second timeout — abort and try next proxy if too slow
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => {
+      controller.abort();
+      console.warn(`[SheetLoader] Attempt ${proxyIndex + 1} timed out after 8s`);
+    }, 8000);
+
+    fetch(targetUrl, { signal: controller.signal })
       .then(res => {
+        clearTimeout(timeoutId);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.text();
       })
@@ -62,6 +70,7 @@ function loadProductsFromSheet(url, onProducts, options = {}) {
         onProducts(products);
       })
       .catch(err => {
+        clearTimeout(timeoutId);
         console.warn(`[SheetLoader] Attempt ${proxyIndex + 1} failed:`, err.message);
         tryNext(proxyIndex + 1);
       });

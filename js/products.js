@@ -953,6 +953,81 @@ function _showGridError(gridId) {
 // ─── handleProducts: MK Shop renderer ─────────────────────
 // This is the per-site function. It receives the parsed sheet
 // products and routes them into the correct HTML grids.
+// ─── Skeleton card HTML ───────────────────────────────────
+function renderSkeletonCards(count = 4) {
+  return Array.from({ length: count }, () => `
+    <div class="product-card skeleton-card">
+      <div class="skeleton-img"></div>
+      <div class="skeleton-info">
+        <div class="skeleton-line short"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line medium"></div>
+        <div class="skeleton-line short"></div>
+      </div>
+    </div>`).join('');
+}
+
+// ─── Infinite scroll renderer ─────────────────────────────
+// Renders first `batchSize` items immediately, loads more on scroll
+function renderWithInfiniteScroll(gridEl, items, batchSize = 8) {
+  let rendered = 0;
+
+  function renderBatch() {
+    const batch = items.slice(rendered, rendered + batchSize);
+    if (!batch.length) {
+      // Remove sentinel if nothing left
+      const sentinel = gridEl.querySelector('.scroll-sentinel');
+      if (sentinel) sentinel.remove();
+      return;
+    }
+
+    // Remove skeleton cards before first real render
+    gridEl.querySelectorAll('.skeleton-card').forEach(el => el.remove());
+
+    // Remove old sentinel
+    const oldSentinel = gridEl.querySelector('.scroll-sentinel');
+    if (oldSentinel) oldSentinel.remove();
+
+    // Append new cards
+    const fragment = document.createDocumentFragment();
+    batch.forEach(({ product, index }) => {
+      const div = document.createElement('div');
+      div.innerHTML = renderSheetProductCard(product, index);
+      fragment.appendChild(div.firstElementChild);
+    });
+    gridEl.appendChild(fragment);
+    rendered += batch.length;
+
+    // Re-init reveal animations for new cards
+    if (typeof initRevealAnimations === 'function') {
+      setTimeout(initRevealAnimations, 50);
+    }
+
+    // Add sentinel for next batch if more remain
+    if (rendered < items.length) {
+      const sentinel = document.createElement('div');
+      sentinel.className = 'scroll-sentinel';
+      sentinel.style.cssText = 'height:1px;width:100%;grid-column:1/-1;';
+      gridEl.appendChild(sentinel);
+
+      const obs = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+          obs.disconnect();
+          renderBatch();
+        }
+      }, { rootMargin: '200px' });
+
+      obs.observe(sentinel);
+    }
+  }
+
+  // Show skeletons immediately
+  gridEl.innerHTML = renderSkeletonCards(Math.min(batchSize, items.length || 4));
+
+  // Render first batch
+  renderBatch();
+}
+
 function handleSheetProducts(products) {
   console.log('[SheetLoader] handleSheetProducts called with', products.length, 'products');
 
@@ -961,13 +1036,9 @@ function handleSheetProducts(products) {
 
   products.forEach((p, i) => {
     const catKey = (p.category || '').toLowerCase().trim();
-    console.log(`[SheetLoader] Row ${i+1}: name="${p.name}" category="${p.category}" → catKey="${catKey}"`);
-    // Find matching grid ID
     const gridId = CATEGORY_GRID_MAP[catKey]
       || Object.entries(CATEGORY_GRID_MAP).find(([k]) => catKey.includes(k))?.[1]
       || null;
-
-    console.log(`[SheetLoader] Row ${i+1}: gridId="${gridId}"`);
 
     if (!gridId) {
       console.warn(`[SheetLoader] No grid found for category "${p.category}" (row ${i + 1}). Skipping.`);
@@ -978,22 +1049,15 @@ function handleSheetProducts(products) {
     groups[gridId].push({ product: p, index: i });
   });
 
-  // Render each group into its grid
+  // Render each group with infinite scroll
   for (const [gridId, items] of Object.entries(groups)) {
     const el = document.getElementById(gridId);
     if (!el) continue;
-    el.innerHTML = items.map(({ product, index }) =>
-      renderSheetProductCard(product, index)
-    ).join('');
+    renderWithInfiniteScroll(el, items, 8);
   }
 
   // Register sheet products so cart/modal/search can find them
   _registerSheetProducts(products);
-
-  // Re-run reveal animations for newly injected cards
-  if (typeof initRevealAnimations === 'function') {
-    setTimeout(initRevealAnimations, 100);
-  }
 }
 
 // ─── Register sheet products into the lookup system ───────
@@ -1026,7 +1090,11 @@ function initSheetProducts() {
     handleSheetProducts,
     {
       onLoading() {
-        allGridIds.forEach(_showGridLoading);
+        // Show skeleton cards immediately in all grids
+        allGridIds.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.innerHTML = renderSkeletonCards(4);
+        });
       },
       onSuccess(products) {
         console.info(`[SheetLoader] Loaded ${products.length} products from sheet.`);
