@@ -513,6 +513,55 @@ function initProductActions() {
 }
 
 // ═══════════════════════════════════════════════════════════
+//   RELATED PRODUCTS
+// ═══════════════════════════════════════════════════════════
+function renderRelatedProducts(currentProduct) {
+  const section = document.getElementById('modalRelated');
+  const grid    = document.getElementById('modalRelatedGrid');
+  if (!section || !grid) return;
+
+  // Gather all products from static + sheet registry
+  const allProducts = [
+    ...Object.values(PRODUCTS).flat(),
+    ...Object.values(_sheetProductRegistry || {}),
+  ];
+
+  // Find up to 4 products from same category, excluding current
+  const related = allProducts
+    .filter(p =>
+      p.id !== currentProduct.id &&
+      (p.category || '').toLowerCase() === (currentProduct.category || '').toLowerCase()
+    )
+    .slice(0, 4);
+
+  if (!related.length) {
+    section.style.display = 'none';
+    return;
+  }
+
+  section.style.display = 'block';
+
+  grid.innerHTML = related.map(p => {
+    const img = p.mediaUrl
+      ? `<img src="${p.mediaUrl}" alt="${p.name}" loading="lazy"
+              style="width:100%;height:100%;object-fit:cover;"
+              onerror="this.style.display='none'" />`
+      : `<div style="width:100%;height:100%;background:${p.gradient||'#1a1a1a'};display:flex;align-items:center;justify-content:center;">
+           <i class="${p.icon||'fas fa-tag'}" style="font-size:2rem;color:rgba(255,255,255,0.3)"></i>
+         </div>`;
+
+    return `
+      <div class="related-card" onclick="openProductModal(getProductById('${p.id}'))" style="cursor:pointer">
+        <div class="related-img">${img}</div>
+        <div class="related-info">
+          <p class="related-name">${p.name}</p>
+          <p class="related-price">${p.price ? formatPrice(p.price) : 'Sur demande'}</p>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════
 //   MODAL IMAGE GALLERY
 // ═══════════════════════════════════════════════════════════
 function initModalGallery(container) {
@@ -579,8 +628,8 @@ function initProductModal() {
 }
 
 function openProductModal(product) {
-  const modal = document.getElementById('productModal');
-  const modalBody = document.getElementById('modalBody');
+  const modal      = document.getElementById('productModal');
+  const modalBody  = document.getElementById('modalBody');
 
   if (!modal || !modalBody) return;
 
@@ -588,8 +637,8 @@ function openProductModal(product) {
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
 
-  // Init gallery if multiple images
   initModalGallery(modalBody);
+  renderRelatedProducts(product);
 }
 
 function closeProductModal() {
