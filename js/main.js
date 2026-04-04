@@ -932,24 +932,28 @@ document.addEventListener('DOMContentLoaded', initVideoObserver);
     if (iosSteps)   iosSteps.style.display   = 'none';
   });
 
-  // iOS: show manual instructions
-  if (isIOS() && !isInStandaloneMode() && !wasDismissed()) {
+  // iOS: show manual instructions — always show menu button, modal only if not dismissed
+  if (isIOS() && !isInStandaloneMode()) {
     if (mobileBtn) mobileBtn.style.display = 'flex';
-    setTimeout(openModal, 4000);
+    if (!wasDismissed()) setTimeout(openModal, 4000);
     // Configure modal for iOS
     if (installBtn) installBtn.style.display = 'none';
     if (iosSteps)   iosSteps.style.display   = 'block';
   }
 
-  // Android install trigger
+  // triggerInstall — called by modal button AND hamburger menu button
   window.triggerInstall = async function() {
     if (deferredPrompt) {
+      // Android: trigger native install prompt
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
       deferredPrompt = null;
       closeModal();
       if (mobileBtn) mobileBtn.style.display = 'none';
-    } else if (isIOS()) {
+    } else {
+      // iOS or no prompt: show modal with step-by-step instructions
+      if (installBtn) installBtn.style.display = 'none';
+      if (iosSteps)   iosSteps.style.display   = 'block';
       openModal();
     }
   };
