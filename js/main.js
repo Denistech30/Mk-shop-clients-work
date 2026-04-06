@@ -374,10 +374,24 @@ function updateCartUI() {
     cartItems.innerHTML = cart.items.map(item => {
       const p = getProductById(item.id);
       if (!p) return '';
+
+      // Show real image if available, otherwise gradient placeholder
+      const imgHTML = p.mediaUrl
+        ? `<img src="${p.mediaUrl}" alt="${p.name}"
+                loading="lazy" decoding="async"
+                style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"
+                onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+           <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;background:${p.gradient || '#1a1a1a'}">
+             <i class="${p.icon || 'fas fa-tag'}" style="color:rgba(255,255,255,0.4);font-size:1.2rem;"></i>
+           </div>`
+        : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:${p.gradient || '#1a1a1a'}">
+             <i class="${p.icon || 'fas fa-tag'}" style="color:rgba(255,255,255,0.4);font-size:1.2rem;"></i>
+           </div>`;
+
       return `
         <div class="cart-item">
-          <div class="cart-item-img" style="background: ${p.gradient}">
-            <i class="${p.icon}" style="color:rgba(255,255,255,0.4);font-size:1.2rem;"></i>
+          <div class="cart-item-img" style="overflow:hidden;border-radius:var(--radius-sm);">
+            ${imgHTML}
           </div>
           <div class="cart-item-details">
             <p class="cart-item-name">${p.name}</p>

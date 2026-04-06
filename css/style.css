@@ -2332,12 +2332,12 @@ input { font-family: inherit; }
 }
 
 .modal-img {
-  aspect-ratio: 3/4;
   border-radius: var(--radius-lg) 0 0 var(--radius-lg);
   overflow: hidden;
-  background: var(--off-white);
-  /* Remove display:flex — gallery-wrap handles layout */
+  background: #1a1a1a;
   position: relative;
+  /* Fixed height — image always fills this space */
+  min-height: 420px;
 }
 
 .modal-img img { width: 100%; height: 100%; object-fit: cover; }
@@ -2345,15 +2345,17 @@ input { font-family: inherit; }
 /* ── Modal Image Gallery ── */
 .modal-gallery-wrap {
   position: relative;
-  display: block;
-  padding: 0;
   overflow: hidden;
+  /* Match modal-img height */
+  min-height: 420px;
 }
 
 .modal-slides-track {
   width: 100%;
-  /* Height driven by the active slide content */
+  height: 100%;
   position: relative;
+  /* Stretch to fill parent */
+  min-height: inherit;
 }
 
 .modal-slide {
@@ -2361,24 +2363,31 @@ input { font-family: inherit; }
   inset: 0;
   opacity: 0;
   transition: opacity 0.4s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
 }
 
 .modal-slide.active {
   opacity: 1;
-  position: relative;
-  /* Let the active slide define the height */
-  min-height: 280px;
+  /* Keep absolute so all slides stack — height comes from parent */
+  position: absolute;
 }
 
+/* Image fills the slide completely */
 .modal-slide img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+/* Placeholder fills the slide */
+.modal-slide .product-placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .modal-gallery-prev,
@@ -2652,10 +2661,11 @@ input { font-family: inherit; }
   .modal-body { grid-template-columns: 1fr; }
   .modal-img {
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    aspect-ratio: unset;
+    min-height: 300px;
     height: 300px;
   }
-  .modal-slide.active { min-height: 300px; }
+  .modal-gallery-wrap { min-height: 300px; height: 300px; }
+  .modal-slides-track { min-height: 300px; height: 300px; }
 }
 
 /* ── Tablet portrait ── */
@@ -2771,10 +2781,11 @@ input { font-family: inherit; }
   .modal-body { grid-template-columns: 1fr; }
   .modal-img {
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    aspect-ratio: unset;
+    min-height: 280px;
     height: 280px;
   }
-  .modal-slide.active { min-height: 280px; }
+  .modal-gallery-wrap { min-height: 280px; height: 280px; }
+  .modal-slides-track { min-height: 280px; height: 280px; }
   .modal-info { padding: 1.5rem; }
   .modal-actions { flex-direction: column; gap: 0.75rem; }
   .btn-modal-add, .btn-modal-wa { width: 100%; justify-content: center; }
@@ -2862,8 +2873,9 @@ input { font-family: inherit; }
   /* ─ Modal ─ */
   .product-modal { padding: 0; }
   .modal-content { border-radius: 0; max-height: 100dvh; width: 100%; }
-  .modal-img { height: 260px; aspect-ratio: unset; border-radius: 0; }
-  .modal-slide.active { min-height: 260px; }
+  .modal-img { height: 260px; min-height: 260px; border-radius: 0; }
+  .modal-gallery-wrap { height: 260px; min-height: 260px; }
+  .modal-slides-track { height: 260px; min-height: 260px; }
   .modal-info { padding: 1.25rem; }
   .modal-name { font-size: 1.2rem; }
   .modal-price-current { font-size: 1.3rem; }
