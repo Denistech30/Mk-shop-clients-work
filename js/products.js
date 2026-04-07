@@ -631,14 +631,13 @@ function _renderMediaSlide(url, label, placeholderHTML, isActive) {
       <div class="modal-slide modal-slide-video ${activeClass}">
         <iframe src="${embedUrl}" title="${label}" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen style="width:100%;height:100%;border:none;"></iframe>
+          allowfullscreen></iframe>
       </div>`;
   }
 
   if (type === 'tiktok') {
-    // TikTok doesn't allow iframe embeds easily — show a link overlay instead
     return `
-      <div class="modal-slide modal-slide-video ${activeClass}" style="position:relative;">
+      <div class="modal-slide modal-slide-video ${activeClass}">
         ${placeholderHTML}
         <a href="${url}" target="_blank" rel="noopener" class="modal-video-overlay">
           <i class="fab fa-tiktok"></i>
@@ -650,20 +649,18 @@ function _renderMediaSlide(url, label, placeholderHTML, isActive) {
   if (type === 'video') {
     return `
       <div class="modal-slide modal-slide-video ${activeClass}">
-        <video controls playsinline preload="metadata"
-               style="width:100%;height:100%;object-fit:cover;">
+        <video autoplay muted loop playsinline preload="metadata"
+               style="width:100%;max-height:60vh;object-fit:contain;display:block;background:#000;">
           <source src="${url}" />
-          Votre navigateur ne supporte pas la lecture vidéo.
         </video>
       </div>`;
   }
 
-  // Default: image
+  // Image — use object-fit:contain so nothing gets cropped
   return `
     <div class="modal-slide ${activeClass}">
-      <img src="${url}" alt="${label}" loading="lazy"
-           width="600" height="800"
-           style="width:100%;height:100%;object-fit:cover;"
+      <img src="${url}" alt="${label}"
+           loading="lazy" decoding="async"
            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
       ${placeholderHTML}
     </div>`;
@@ -674,7 +671,7 @@ function renderModalContent(product) {
     i < Math.floor(product.rating) ? '★' : '☆'
   ).join('');
 
-  // Build full media array
+  // Build media array
   const mediaItems = (product.images && product.images.length)
     ? product.images
     : (product.mediaUrl ? [product.mediaUrl] : []);
@@ -682,73 +679,57 @@ function renderModalContent(product) {
   const hasGallery = mediaItems.length > 1;
 
   const placeholderHTML = `
-    <div class="product-placeholder" style="background:${product.gradient || '#1a1a1a'};width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;">
-      <i class="${product.icon || 'fas fa-tag'}" style="font-size:8rem;opacity:0.4;color:white;"></i>
-      <span style="color:rgba(255,255,255,0.5);font-size:0.9rem;">${product.name}</span>
+    <div class="modal-placeholder" style="background:${product.gradient || '#1a1a1a'};">
+      <i class="${product.icon || 'fas fa-tag'}"></i>
+      <span>${product.name}</span>
     </div>`;
 
   const slidesHTML = mediaItems.length
     ? mediaItems.map((url, i) =>
-        _renderMediaSlide(url, `${product.name} - ${i + 1}`, placeholderHTML, i === 0)
+        _renderMediaSlide(url, `${product.name} ${i + 1}`, placeholderHTML, i === 0)
       ).join('')
     : `<div class="modal-slide active">${placeholderHTML}</div>`;
 
-  // Dot icons: show video icon for video slides
-  const dotsHTML = hasGallery
-    ? `<div class="modal-gallery-dots">
-        ${mediaItems.map((url, i) => {
-          const type = _getMediaType(url);
-          const icon = (type === 'youtube' || type === 'tiktok' || type === 'video')
-            ? '<i class="fas fa-play" style="font-size:0.5rem;"></i>'
-            : '';
-          return `<button class="modal-dot ${i === 0 ? 'active' : ''}" data-index="${i}" title="${type}">${icon}</button>`;
-        }).join('')}
-       </div>`
-    : '';
-
-  const arrowsHTML = hasGallery
-    ? `<button class="modal-gallery-prev"><i class="fas fa-chevron-left"></i></button>
-       <button class="modal-gallery-next"><i class="fas fa-chevron-right"></i></button>`
-    : '';
-
-  const counterHTML = hasGallery
-    ? `<span class="modal-gallery-counter">1 / ${mediaItems.length}</span>`
-    : '';
-
-  const ratingHTML = product.rating
-    ? `<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
-         <span style="color:#fbbf24;font-size:1.1rem;">${starsHTML}</span>
-         <span style="color:#888;font-size:0.85rem;">${product.rating}/5 (${product.reviews} avis)</span>
-       </div>` : '';
+  const arrowsHTML = hasGallery ? `
+    <button class="modal-gallery-prev"><i class="fas fa-chevron-left"></i></button>
+    <button class="modal-gallery-next"><i class="fas fa-chevron-right"></i></button>
+    <span class="modal-gallery-counter">1 / ${mediaItems.length}</span>
+    <div class="modal-gallery-dots">
+      ${mediaItems.map((_, i) => `
+        <button class="modal-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></button>
+      `).join('')}
+    </div>` : '';
 
   const desc = product.desc || product.description || '';
 
   return `
-    <div class="modal-img modal-gallery-wrap" style="background:${product.gradient || '#1a1a1a'}">
+    <div class="modal-media">
       <div class="modal-slides-track">${slidesHTML}</div>
       ${arrowsHTML}
-      ${dotsHTML}
-      ${counterHTML}
     </div>
     <div class="modal-info">
-      <p class="modal-category">${product.category}</p>
+      <p class="modal-category">${product.category || ''}</p>
       <h2 class="modal-name">${product.name}</h2>
-      ${ratingHTML}
+      ${product.rating ? `
+        <div class="modal-rating">
+          <span class="stars-gold">${starsHTML}</span>
+          <span class="rating-text">${product.rating}/5 (${product.reviews || 0} avis)</span>
+        </div>` : ''}
       ${desc ? `<p class="modal-desc">${desc}</p>` : ''}
       <div class="modal-price">
         <span class="modal-price-current">${product.price ? formatPrice(product.price) : 'Sur demande'}</span>
         ${product.oldPrice ? `<span class="modal-price-old">${formatPrice(product.oldPrice)}</span>` : ''}
       </div>
-      <div style="background:#f9f7f4;border-radius:10px;padding:1rem;font-size:0.82rem;color:#666;">
-        <p style="margin-bottom:0.3rem;"><i class="fab fa-whatsapp" style="color:#25d366;"></i> <strong>Commande via WhatsApp</strong></p>
-        <p>Cliquez sur "Commander" pour ouvrir WhatsApp avec les détails du produit pré-remplis.</p>
+      <div class="modal-wa-note">
+        <i class="fab fa-whatsapp"></i>
+        <span>Commandez via WhatsApp — livraison dans tout Douala</span>
       </div>
       <div class="modal-actions">
         <button class="btn-modal-add" data-id="${product.id}">
           <i class="fas fa-shopping-bag"></i> Ajouter au Panier
         </button>
         <a href="${buildWhatsAppURL(product)}" target="_blank" class="btn-modal-wa" rel="noopener">
-          <i class="fab fa-whatsapp"></i> Commander Directement sur WhatsApp
+          <i class="fab fa-whatsapp"></i> Commander sur WhatsApp
         </a>
       </div>
     </div>
