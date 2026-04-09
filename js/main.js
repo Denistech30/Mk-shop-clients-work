@@ -530,17 +530,15 @@ function initProductActions() {
 //   RELATED PRODUCTS
 // ═══════════════════════════════════════════════════════════
 function renderRelatedProducts(currentProduct) {
-  const section = document.getElementById('modalRelated');
-  const grid    = document.getElementById('modalRelatedGrid');
+  const section = document.getElementById('mmodalRelated');
+  const grid    = document.getElementById('mmodalRelatedGrid');
   if (!section || !grid) return;
 
-  // Gather all products from static + sheet registry
   const allProducts = [
     ...Object.values(PRODUCTS).flat(),
     ...Object.values(_sheetProductRegistry || {}),
   ];
 
-  // Find up to 4 products from same category, excluding current
   const related = allProducts
     .filter(p =>
       p.id !== currentProduct.id &&
@@ -548,24 +546,20 @@ function renderRelatedProducts(currentProduct) {
     )
     .slice(0, 4);
 
-  if (!related.length) {
-    section.style.display = 'none';
-    return;
-  }
+  if (!related.length) { section.style.display = 'none'; return; }
 
   section.style.display = 'block';
 
   grid.innerHTML = related.map(p => {
     const img = p.mediaUrl
       ? `<img src="${p.mediaUrl}" alt="${p.name}" loading="lazy"
-              style="width:100%;height:100%;object-fit:cover;"
               onerror="this.style.display='none'" />`
-      : `<div style="width:100%;height:100%;background:${p.gradient||'#1a1a1a'};display:flex;align-items:center;justify-content:center;">
-           <i class="${p.icon||'fas fa-tag'}" style="font-size:2rem;color:rgba(255,255,255,0.3)"></i>
+      : `<div class="related-placeholder" style="background:${p.gradient||'#1a1a1a'}">
+           <i class="${p.icon||'fas fa-tag'}"></i>
          </div>`;
 
     return `
-      <div class="related-card" onclick="openProductModal(getProductById('${p.id}'))" style="cursor:pointer">
+      <div class="related-card" data-id="${p.id}" role="button" tabindex="0">
         <div class="related-img">${img}</div>
         <div class="related-info">
           <p class="related-name">${p.name}</p>
@@ -573,6 +567,14 @@ function renderRelatedProducts(currentProduct) {
         </div>
       </div>`;
   }).join('');
+
+  // Wire clicks
+  grid.querySelectorAll('.related-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const p = getProductById(card.dataset.id);
+      if (p) openProductModal(p);
+    });
+  });
 }
 
 // ═══════════════════════════════════════════════════════════

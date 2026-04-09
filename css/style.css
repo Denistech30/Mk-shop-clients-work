@@ -2430,120 +2430,215 @@ input { font-family: inherit; }
 
 /* ── Info section ── */
 .mmodal-info {
-  padding: 1.25rem 1.5rem;
+  padding: 1.5rem 1.75rem 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
+  gap: 0.85rem;
+  background: #fff;
 }
 
 .mmodal-category {
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 2.5px;
   color: var(--gold);
   font-weight: 700;
 }
 
 .mmodal-name {
   font-family: var(--font-serif);
-  font-size: 1.5rem;
+  font-size: 1.55rem;
   font-weight: 900;
   line-height: 1.2;
   color: #111;
   word-break: break-word;
+  margin-top: -0.2rem;
 }
 
 .mmodal-rating {
-  display: flex; align-items: center; gap: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
-.mmodal-stars { color: #fbbf24; font-size: 0.95rem; }
-.mmodal-reviews { font-size: 0.78rem; color: #888; }
+.mmodal-stars { color: #f59e0b; font-size: 0.9rem; letter-spacing: 1px; }
+.mmodal-reviews { font-size: 0.75rem; color: #999; }
 
 .mmodal-desc {
   font-size: 0.85rem;
-  color: #666;
-  line-height: 1.65;
+  color: #555;
+  line-height: 1.7;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid #f3f3f3;
 }
 
 .mmodal-price {
-  display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap;
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
 .mmodal-price-now {
-  font-size: 1.6rem;
+  font-size: 1.75rem;
   font-weight: 900;
   font-family: var(--font-serif);
   color: #c0392b;
+  line-height: 1;
 }
 
 .mmodal-price-old {
-  font-size: 0.95rem;
-  color: #aaa;
+  font-size: 1rem;
+  color: #bbb;
   text-decoration: line-through;
 }
 
 /* Buttons */
 .mmodal-actions {
   display: flex;
-  gap: 0.6rem;
-  flex-wrap: wrap;
+  gap: 0.65rem;
   padding-top: 0.25rem;
 }
 
 .mmodal-btn-cart, .mmodal-btn-wa {
   flex: 1;
-  min-width: 140px;
-  padding: 0.85rem 1rem;
+  padding: 0.9rem 1rem;
   border-radius: 10px;
   font-weight: 700;
   font-size: 0.88rem;
-  display: flex; align-items: center; justify-content: center;
-  gap: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
   cursor: pointer;
   border: none;
   text-decoration: none;
-  transition: opacity 0.2s, transform 0.15s;
+  transition: transform 0.15s, box-shadow 0.15s;
+  white-space: nowrap;
 }
 
-.mmodal-btn-cart { background: #111; color: #fff; }
-.mmodal-btn-cart:hover { background: var(--gold); color: #111; }
+.mmodal-btn-cart {
+  background: #111;
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
 
-.mmodal-btn-wa { background: var(--wa-green); color: #fff; }
-.mmodal-btn-wa:hover { background: var(--wa-dark); }
+.mmodal-btn-cart:hover {
+  background: var(--gold);
+  color: #111;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(201,168,76,0.35);
+}
 
-/* Related products */
+.mmodal-btn-wa {
+  background: #25d366;
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(37,211,102,0.25);
+}
+
+.mmodal-btn-wa:hover {
+  background: #128c7e;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(37,211,102,0.35);
+}
+
+/* ── Related products ── */
 .mmodal-related {
-  padding: 1rem 1.5rem 1.5rem;
-  border-top: 1px solid #f0f0f0;
+  padding: 1.25rem 1.75rem 1.75rem;
+  background: #fafafa;
+  border-top: 1px solid #efefef;
 }
 
 .mmodal-related-title {
-  font-size: 0.82rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  color: #888;
+  color: #999;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 0.75rem;
+  letter-spacing: 1.5px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
+
+.mmodal-related-title i { color: var(--pink); }
 
 .mmodal-related-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: 0.5rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+.related-card {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid #efefef;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.related-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.related-img {
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+.related-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.related-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.related-placeholder i { font-size: 1.5rem; color: rgba(255,255,255,0.3); }
+
+.related-info {
+  padding: 0.5rem 0.6rem 0.6rem;
+}
+
+.related-name {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #222;
+  line-height: 1.3;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.related-price {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #c0392b;
+  margin-top: 0.2rem;
 }
 
 /* ── Desktop: side by side ── */
 @media (min-width: 768px) {
   .modal-body {
     flex-direction: row;
-    min-height: 420px;
+    min-height: 440px;
   }
 
   .mmodal-img-wrap {
-    width: 45%;
+    width: 46%;
     flex-shrink: 0;
-    max-height: none;
     align-self: stretch;
   }
 
@@ -2555,7 +2650,7 @@ input { font-family: inherit; }
   }
 
   .mmodal-gallery {
-    width: 45%;
+    width: 46%;
     flex-shrink: 0;
     align-self: stretch;
   }
@@ -2567,22 +2662,35 @@ input { font-family: inherit; }
 
   .mmodal-info {
     flex: 1;
-    padding: 1.75rem;
+    padding: 1.75rem 2rem;
     overflow-y: auto;
     max-height: 90vh;
+    justify-content: space-between;
   }
 
-  .mmodal-actions { flex-wrap: nowrap; }
+  .mmodal-related-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 /* ── Mobile ── */
 @media (max-width: 767px) {
   .product-modal { padding: 0; align-items: flex-end; }
+
   .modal-content {
-    border-radius: 14px 14px 0 0;
+    border-radius: 18px 18px 0 0;
     max-height: 96dvh;
   }
-  .mmodal-btn-cart, .mmodal-btn-wa { min-width: 0; }
+
+  .mmodal-info { padding: 1.1rem 1.25rem 1rem; }
+  .mmodal-name { font-size: 1.25rem; }
+  .mmodal-price-now { font-size: 1.45rem; }
+
+  .mmodal-actions { gap: 0.5rem; }
+  .mmodal-btn-cart, .mmodal-btn-wa { font-size: 0.82rem; padding: 0.8rem 0.75rem; }
+
+  .mmodal-related { padding: 1rem 1.25rem 1.5rem; }
+  .mmodal-related-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
 }
 
 /* ═══════════════════════════════════════════════════════════
