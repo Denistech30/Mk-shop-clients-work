@@ -516,7 +516,7 @@ function initProductActions() {
     }
 
     // Modal add to cart
-    const modalAddBtn = e.target.closest('.btn-modal-add');
+    const modalAddBtn = e.target.closest('.btn-modal-add, .mmodal-btn-cart');
     if (modalAddBtn) {
       const id = modalAddBtn.dataset.id;
       cart.add(id);
@@ -579,27 +579,21 @@ function renderRelatedProducts(currentProduct) {
 //   MODAL IMAGE GALLERY
 // ═══════════════════════════════════════════════════════════
 function initModalGallery(container) {
-  const slides  = container.querySelectorAll('.modal-slide');
-  const dots    = container.querySelectorAll('.modal-dot');
-  const prev    = container.querySelector('.modal-gallery-prev');
-  const next    = container.querySelector('.modal-gallery-next');
-  const counter = container.querySelector('.modal-gallery-counter');
+  const slides  = container.querySelectorAll('.mmodal-slide');
+  const dots    = container.querySelectorAll('.mmodal-dot');
+  const prev    = container.querySelector('#mmodalPrev');
+  const next    = container.querySelector('#mmodalNext');
+  const counter = container.querySelector('#mmodalCounter');
 
   if (!slides.length || slides.length < 2) return;
 
   let current = 0;
 
   function pauseSlide(index) {
-    // Pause any playing video when leaving a slide
     const video = slides[index]?.querySelector('video');
     if (video) video.pause();
-    // Pause YouTube by reloading src
     const iframe = slides[index]?.querySelector('iframe');
-    if (iframe) {
-      const src = iframe.src;
-      iframe.src = '';
-      iframe.src = src;
-    }
+    if (iframe) { const s = iframe.src; iframe.src = ''; iframe.src = s; }
   }
 
   function goTo(index) {
@@ -614,12 +608,11 @@ function initModalGallery(container) {
 
   prev?.addEventListener('click', () => goTo(current - 1));
   next?.addEventListener('click', () => goTo(current + 1));
-
   dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
 
-  // Swipe support
+  // Swipe
   let touchStartX = 0;
-  const track = container.querySelector('.modal-slides-track');
+  const track = container.querySelector('.mmodal-slides');
   track?.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
   track?.addEventListener('touchend', e => {
     const dx = touchStartX - e.changedTouches[0].clientX;
@@ -642,17 +635,30 @@ function initProductModal() {
 }
 
 function openProductModal(product) {
-  const modal      = document.getElementById('productModal');
-  const modalBody  = document.getElementById('modalBody');
-
+  const modal     = document.getElementById('productModal');
+  const modalBody = document.getElementById('modalBody');
   if (!modal || !modalBody) return;
 
   modalBody.innerHTML = renderModalContent(product);
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
 
+  // Wire gallery if multiple images
   initModalGallery(modalBody);
-  renderRelatedProducts(product);
+
+  // Wire cart button inside modal
+  const cartBtn = modalBody.querySelector('.mmodal-btn-cart');
+  if (cartBtn) {
+    cartBtn.addEventListener('click', () => {
+      cart.add(product.id);
+      closeProductModal();
+    });
+  }
+
+  // Related products
+  if (typeof renderRelatedProducts === 'function') {
+    renderRelatedProducts(product);
+  }
 }
 
 function closeProductModal() {

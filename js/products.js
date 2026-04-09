@@ -667,72 +667,130 @@ function _renderMediaSlide(url, label, placeholderHTML, isActive) {
 }
 
 function renderModalContent(product) {
+  // Debug: confirm image URL is received
+  console.log('[Modal] Opening product:', product.name, '| mediaUrl:', product.mediaUrl);
+
   const starsHTML = Array.from({ length: 5 }, (_, i) =>
     i < Math.floor(product.rating) ? '★' : '☆'
   ).join('');
 
-  // Build media array
+  // Build media list
   const mediaItems = (product.images && product.images.length)
     ? product.images
     : (product.mediaUrl ? [product.mediaUrl] : []);
 
-  const hasGallery = mediaItems.length > 1;
+  console.log('[Modal] mediaItems:', mediaItems);
 
-  const placeholderHTML = `
-    <div class="modal-placeholder" style="background:${product.gradient || '#1a1a1a'};">
-      <i class="${product.icon || 'fas fa-tag'}"></i>
-      <span>${product.name}</span>
-    </div>`;
+  // ── Image / gallery section ──
+  let mediaHTML = '';
+  if (mediaItems.length === 0) {
+    // No image — show placeholder
+    mediaHTML = `
+      <div class="mmodal-img-wrap">
+        <div class="mmodal-placeholder" style="background:${product.gradient || '#1a1a1a'}">
+          <i class="${product.icon || 'fas fa-tag'}"></i>
+          <span>${product.name}</span>
+        </div>
+      </div>`;
+  } else if (mediaItems.length === 1) {
+    const url = mediaItems[0];
+    const type = _getMediaType(url);
+    if (type === 'video') {
+      mediaHTML = `
+        <div class="mmodal-img-wrap">
+          <video autoplay muted loop playsinline
+                 style="width:100%;max-height:50vh;object-fit:contain;display:block;background:#111;">
+            <source src="${url}" />
+          </video>
+        </div>`;
+    } else if (type === 'youtube') {
+      const embed = _getYouTubeEmbedUrl(url);
+      mediaHTML = `
+        <div class="mmodal-img-wrap" style="background:#000;">
+          <iframe src="${embed}" frameborder="0" allowfullscreen
+                  style="width:100%;height:50vw;max-height:50vh;display:block;border:none;"></iframe>
+        </div>`;
+    } else {
+      mediaHTML = `
+        <div class="mmodal-img-wrap">
+          <img src="${url}" alt="${product.name}"
+               loading="eager" decoding="async"
+               style="width:100%;max-height:50vh;object-fit:contain;background:#111;display:block;"
+               onerror="this.parentElement.innerHTML='<div class=mmodal-placeholder style=background:${(product.gradient||'#1a1a1a').replace(/"/g,"'")}><i class=${product.icon||'fas fa-tag'}></i></div>'" />
+        </div>`;
+    }
+  } else {
+    // Gallery — multiple images
+    const slides = mediaItems.map((url, i) => {
+      const type = _getMediaType(url);
+      let inner = '';
+      if (type === 'video') {
+        inner = `<video autoplay muted loop playsinline style="width:100%;max-height:50vh;object-fit:contain;display:block;background:#111;"><source src="${url}"/></video>`;
+      } else if (type === 'youtube') {
+        const embed = _getYouTubeEmbedUrl(url);
+        inner = `<iframe src="${embed}" frameborder="0" allowfullscreen style="width:100%;height:50vw;max-height:50vh;display:block;border:none;"></iframe>`;
+      } else {
+        inner = `<img src="${url}" alt="${product.name} ${i+1}" loading="${i===0?'eager':'lazy'}" decoding="async" style="width:100%;max-height:50vh;object-fit:contain;background:#111;display:block;" />`;
+      }
+      return `<div class="mmodal-slide ${i===0?'active':''}">${inner}</div>`;
+    }).join('');
 
-  const slidesHTML = mediaItems.length
-    ? mediaItems.map((url, i) =>
-        _renderMediaSlide(url, `${product.name} ${i + 1}`, placeholderHTML, i === 0)
-      ).join('')
-    : `<div class="modal-slide active">${placeholderHTML}</div>`;
+    const dots = mediaItems.map((_, i) =>
+      `<button class="mmodal-dot ${i===0?'active':''}" data-idx="${i}"></button>`
+    ).join('');
 
-  const arrowsHTML = hasGallery ? `
-    <button class="modal-gallery-prev"><i class="fas fa-chevron-left"></i></button>
-    <button class="modal-gallery-next"><i class="fas fa-chevron-right"></i></button>
-    <span class="modal-gallery-counter">1 / ${mediaItems.length}</span>
-    <div class="modal-gallery-dots">
-      ${mediaItems.map((_, i) => `
-        <button class="modal-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></button>
-      `).join('')}
-    </div>` : '';
+    mediaHTML = `
+      <div class="mmodal-img-wrap mmodal-gallery" id="mmodalGallery">
+        <div class="mmodal-slides">${slides}</div>
+        <button class="mmodal-prev" id="mmodalPrev"><i class="fas fa-chevron-left"></i></button>
+        <button class="mmodal-next" id="mmodalNext"><i class="fas fa-chevron-right"></i></button>
+        <div class="mmodal-dots">${dots}</div>
+        <span class="mmodal-counter" id="mmodalCounter">1 / ${mediaItems.length}</span>
+      </div>`;
+  }
+
+  // ── Price ──
+  const priceHTML = product.price
+    ? `<div class="mmodal-price">
+         <span class="mmodal-price-now">${formatPrice(product.price)}</span>
+         ${product.oldPrice ? `<span class="mmodal-price-old">${formatPrice(product.oldPrice)}</span>` : ''}
+       </div>`
+    : `<div class="mmodal-price"><span class="mmodal-price-now">Sur demande</span></div>`;
+
+  // ── Rating ──
+  const ratingHTML = product.rating
+    ? `<div class="mmodal-rating">
+         <span class="mmodal-stars">${starsHTML}</span>
+         <span class="mmodal-reviews">${product.rating}/5 (${product.reviews || 0} avis)</span>
+       </div>` : '';
 
   const desc = product.desc || product.description || '';
 
+  // ── Related products placeholder (rendered after by JS) ──
+  const relatedHTML = `
+    <div class="mmodal-related" id="mmodalRelated" style="display:none;">
+      <p class="mmodal-related-title"><i class="fas fa-heart"></i> Vous aimerez aussi</p>
+      <div class="mmodal-related-grid" id="mmodalRelatedGrid"></div>
+    </div>`;
+
   return `
-    <div class="modal-media">
-      <div class="modal-slides-track">${slidesHTML}</div>
-      ${arrowsHTML}
-    </div>
-    <div class="modal-info">
-      <p class="modal-category">${product.category || ''}</p>
-      <h2 class="modal-name">${product.name}</h2>
-      ${product.rating ? `
-        <div class="modal-rating">
-          <span class="stars-gold">${starsHTML}</span>
-          <span class="rating-text">${product.rating}/5 (${product.reviews || 0} avis)</span>
-        </div>` : ''}
-      ${desc ? `<p class="modal-desc">${desc}</p>` : ''}
-      <div class="modal-price">
-        <span class="modal-price-current">${product.price ? formatPrice(product.price) : 'Sur demande'}</span>
-        ${product.oldPrice ? `<span class="modal-price-old">${formatPrice(product.oldPrice)}</span>` : ''}
-      </div>
-      <div class="modal-wa-note">
-        <i class="fab fa-whatsapp"></i>
-        <span>Commandez via WhatsApp — livraison dans tout Douala</span>
-      </div>
-      <div class="modal-actions">
-        <button class="btn-modal-add" data-id="${product.id}">
+    ${mediaHTML}
+    <div class="mmodal-info">
+      ${product.category ? `<p class="mmodal-category">${product.category}</p>` : ''}
+      <h2 class="mmodal-name">${product.name}</h2>
+      ${ratingHTML}
+      ${desc ? `<p class="mmodal-desc">${desc}</p>` : ''}
+      ${priceHTML}
+      <div class="mmodal-actions">
+        <button class="mmodal-btn-cart" data-id="${product.id}">
           <i class="fas fa-shopping-bag"></i> Ajouter au Panier
         </button>
-        <a href="${buildWhatsAppURL(product)}" target="_blank" class="btn-modal-wa" rel="noopener">
+        <a href="${buildWhatsAppURL(product)}" target="_blank" rel="noopener" class="mmodal-btn-wa">
           <i class="fab fa-whatsapp"></i> Commander sur WhatsApp
         </a>
       </div>
     </div>
+    ${relatedHTML}
   `;
 }
 
