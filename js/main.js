@@ -283,7 +283,7 @@ const cart = {
 
     this.save();
     updateCartUI();
-    showToast(`<i class="fas fa-check"></i> ${product.name} ajouté au panier`);
+    showToast(`✓ ${product.name} ajouté au panier`);
   },
 
   remove(productId) {
