@@ -530,9 +530,8 @@ function initProductActions() {
 //   RELATED PRODUCTS
 // ═══════════════════════════════════════════════════════════
 function renderRelatedProducts(currentProduct) {
-  const section = document.getElementById('mmodalRelated');
-  const grid    = document.getElementById('mmodalRelatedGrid');
-  if (!section || !grid) return;
+  const grid = document.getElementById('modalRelated');
+  if (!grid) return;
 
   const allProducts = [
     ...Object.values(PRODUCTS).flat(),
@@ -544,32 +543,29 @@ function renderRelatedProducts(currentProduct) {
       p.id !== currentProduct.id &&
       (p.category || '').toLowerCase() === (currentProduct.category || '').toLowerCase()
     )
-    .slice(0, 4);
+    .slice(0, 6);
 
-  if (!related.length) { section.style.display = 'none'; return; }
+  if (!related.length) { grid.style.display = 'none'; return; }
 
-  section.style.display = 'block';
-
+  grid.style.display = 'flex';
   grid.innerHTML = related.map(p => {
     const img = p.mediaUrl
       ? `<img src="${p.mediaUrl}" alt="${p.name}" loading="lazy"
+              style="width:80px;height:80px;object-fit:cover;border-radius:8px;flex-shrink:0;"
               onerror="this.style.display='none'" />`
-      : `<div class="related-placeholder" style="background:${p.gradient||'#1a1a1a'}">
-           <i class="${p.icon||'fas fa-tag'}"></i>
+      : `<div style="width:80px;height:80px;border-radius:8px;flex-shrink:0;background:${p.gradient||'#333'};display:flex;align-items:center;justify-content:center;">
+           <i class="${p.icon||'fas fa-tag'}" style="color:rgba(255,255,255,0.3);font-size:1.5rem;"></i>
          </div>`;
 
     return `
-      <div class="related-card" data-id="${p.id}" role="button" tabindex="0">
-        <div class="related-img">${img}</div>
-        <div class="related-info">
-          <p class="related-name">${p.name}</p>
-          <p class="related-price">${p.price ? formatPrice(p.price) : 'Sur demande'}</p>
-        </div>
+      <div data-id="${p.id}" style="cursor:pointer;flex-shrink:0;width:80px;text-align:center;">
+        ${img}
+        <p style="color:#ccc;font-size:11px;margin-top:4px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${p.name}</p>
+        <p style="color:#e01e1e;font-size:11px;font-weight:700;">${p.price ? p.price.toLocaleString('fr-FR') + ' F' : ''}</p>
       </div>`;
   }).join('');
 
-  // Wire clicks
-  grid.querySelectorAll('.related-card').forEach(card => {
+  grid.querySelectorAll('[data-id]').forEach(card => {
     card.addEventListener('click', () => {
       const p = getProductById(card.dataset.id);
       if (p) openProductModal(p);
@@ -624,48 +620,57 @@ function initModalGallery(container) {
 
 
 function initProductModal() {
-  const modal = document.getElementById('productModal');
-  const modalClose = document.getElementById('modalClose');
-  const modalOverlay = document.getElementById('modalOverlay');
+  // Close button
+  document.getElementById('closeModal')?.addEventListener('click', closeProductModal);
 
-  modalClose?.addEventListener('click', closeProductModal);
-  modalOverlay?.addEventListener('click', closeProductModal);
+  // Click on backdrop
+  document.getElementById('productModal')?.addEventListener('click', e => {
+    if (e.target.id === 'productModal') closeProductModal();
+  });
 
+  // Escape key
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeProductModal();
   });
 }
 
 function openProductModal(product) {
-  const modal     = document.getElementById('productModal');
-  const modalBody = document.getElementById('modalBody');
-  if (!modal || !modalBody) return;
+  if (!product) return;
 
-  modalBody.innerHTML = renderModalContent(product);
-  modal.classList.add('open');
+  console.log('[Modal] Opening:', product.name, '| mediaUrl:', product.mediaUrl);
+
+  const img = document.getElementById('modalImage');
+  if (img) {
+    img.src = product.mediaUrl || '';
+    img.alt = product.name || '';
+    img.style.display = product.mediaUrl ? 'block' : 'none';
+  }
+
+  const el = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
+  el('modalName',        product.name || '');
+  el('modalCategory',    product.category || '');
+  el('modalDescription', product.desc || product.description || '');
+  el('modalPrice',       product.price ? product.price.toLocaleString('fr-FR') + ' FCFA' : 'Sur demande');
+  el('modalOldPrice',    product.oldPrice ? product.oldPrice.toLocaleString('fr-FR') + ' FCFA' : '');
+
+  const cartBtn = document.getElementById('modalAddCart');
+  if (cartBtn) {
+    cartBtn.onclick = () => { cart.add(product.id); closeProductModal(); };
+  }
+
+  const waBtn = document.getElementById('modalWhatsApp');
+  if (waBtn) {
+    waBtn.onclick = () => window.open(buildWhatsAppURL(product), '_blank', 'noopener');
+  }
+
+  document.getElementById('productModal').style.display = 'block';
   document.body.style.overflow = 'hidden';
 
-  // Wire gallery if multiple images
-  initModalGallery(modalBody);
-
-  // Wire cart button inside modal
-  const cartBtn = modalBody.querySelector('.mmodal-btn-cart');
-  if (cartBtn) {
-    cartBtn.addEventListener('click', () => {
-      cart.add(product.id);
-      closeProductModal();
-    });
-  }
-
-  // Related products
-  if (typeof renderRelatedProducts === 'function') {
-    renderRelatedProducts(product);
-  }
+  renderRelatedProducts(product);
 }
 
 function closeProductModal() {
-  const modal = document.getElementById('productModal');
-  modal?.classList.remove('open');
+  document.getElementById('productModal').style.display = 'none';
   document.body.style.overflow = '';
 }
 
