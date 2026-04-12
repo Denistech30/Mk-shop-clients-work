@@ -2,853 +2,136 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>MK Shop – Admin</title>
+<title>MK Shop � Admin</title>
 <link rel="icon" type="image/jpeg" href="logo.jpeg"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--gold:#c9a84c;--gl:#e8c97a;--dk:#0a0a0a;--dk2:#141414;--dk3:#1e1e1e;--w:#fff;--gr:#888;--red:#e53935;--rdk:#b71c1c;--grn:#2e7d32;--r:14px;--rs:8px}
-body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;background:var(--dk);color:var(--w);min-height:100vh;padding-bottom:5rem}
-.hdr{background:var(--dk2);border-bottom:2px solid var(--gold);padding:1rem 1.4rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100}
-.hdr img{height:34px;width:auto;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,.5))}
-.hdr h1{font-size:.9rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px}
-.hdr p{font-size:.68rem;color:var(--gr)}
-/* ── Tab bar ── */
-.tab-bar{display:flex;background:var(--dk2);border-bottom:1px solid rgba(255,255,255,.07);position:sticky;top:68px;z-index:99;overflow-x:auto}
+:root{--gold:#c9a84c;--gl:#e8c97a;--gd:#9a7b2f;--dk:#080808;--dk2:#111111;--dk3:#1a1a1a;--dk4:#222222;--w:#fff;--gr:#777;--red:#e53935;--rdk:#b71c1c;--grn:#25d366;--grnd:#128c7e;--r:14px;--rs:8px;--shadow:0 4px 24px rgba(0,0,0,.5);--shadow-gold:0 4px 20px rgba(201,168,76,.25)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;background:var(--dk);color:var(--w);min-height:100vh;padding-bottom:6rem}
+.hdr{background:linear-gradient(135deg,var(--dk2) 0%,#1a1200 100%);border-bottom:1px solid rgba(201,168,76,.3);padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:200;box-shadow:0 2px 20px rgba(0,0,0,.6)}
+.hdr img{height:36px;width:auto;object-fit:contain;filter:drop-shadow(0 1px 6px rgba(0,0,0,.6))}
+.hdr-text h1{font-size:.88rem;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px}
+.hdr-text p{font-size:.65rem;color:var(--gr);margin-top:1px}
+.tab-bar{display:none;background:var(--dk2);border-bottom:1px solid rgba(255,255,255,.06);position:sticky;top:65px;z-index:199;overflow-x:auto}
 .tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{flex:1;min-width:120px;padding:.75rem .5rem;font-size:.78rem;font-weight:600;color:var(--gr);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.35rem;transition:color .2s,border-color .2s;white-space:nowrap}
-.tab-btn:hover{color:var(--w)}
-.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
-.tab-btn .crown{color:#f59e0b;font-size:.7rem}
+.tab-btn{flex:1;min-width:130px;padding:.85rem .75rem;font-size:.78rem;font-weight:600;color:var(--gr);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.4rem;transition:color .2s,border-color .2s,background .2s;white-space:nowrap}
+.tab-btn:hover{color:var(--w);background:rgba(255,255,255,.03)}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(201,168,76,.05)}
+.tab-btn .crown{color:#f59e0b}
 .tab-panel{display:none}.tab-panel.active{display:block}
-/* ── Premium lock screen ── */
-.prem-lock{display:flex;flex-direction:column;align-items:center;text-align:center;padding:2.5rem 1rem;gap:1.2rem}
-.prem-lock .lock-icon{font-size:3.5rem;color:var(--gold);background:rgba(201,168,76,.1);width:90px;height:90px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid rgba(201,168,76,.3)}
-.prem-lock h2{font-size:1.2rem;font-weight:700}
-.prem-lock p{font-size:.85rem;color:var(--gr);line-height:1.6;max-width:300px}
-.btn-wa{background:#25d366;color:#fff;border:none;border-radius:var(--r);padding:.8rem 1.4rem;font-size:.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.5rem;text-decoration:none;transition:background .2s}
-.btn-wa:hover{background:#128c7e}
-.code-row{display:flex;gap:.5rem;width:100%;max-width:320px}
-.code-row input{flex:1}
-.code-row button{white-space:nowrap;padding:.82rem 1rem;border-radius:var(--rs);background:var(--gold);color:var(--dk);border:none;font-weight:700;cursor:pointer;font-size:.88rem;transition:background .2s}
-.code-row button:hover{background:var(--gl)}
-/* ── Settings panel ── */
-.settings-section{background:var(--dk2);border:1px solid rgba(255,255,255,.07);border-radius:var(--r);padding:1.2rem;margin-bottom:1.2rem}
-.settings-section h3{font-size:.78rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;display:flex;align-items:center;gap:.4rem}
-.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.5rem 0}
-.toggle-row span{font-size:.85rem;color:var(--w)}
-.toggle{position:relative;width:44px;height:24px;flex-shrink:0}
-.toggle input{opacity:0;width:0;height:0}
-.toggle-slider{position:absolute;inset:0;background:#333;border-radius:50px;cursor:pointer;transition:.3s}
-.toggle-slider:before{content:'';position:absolute;width:18px;height:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s}
-.toggle input:checked+.toggle-slider{background:var(--gold)}
-.toggle input:checked+.toggle-slider:before{transform:translateX(20px)}
-.wrap{max-width:520px;margin:0 auto;padding:1.4rem 1rem}
-#loginScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:70vh;gap:1.4rem;text-align:center}
-.lock{font-size:3rem;color:var(--gold)}
+.wrap{max-width:540px;margin:0 auto;padding:1.5rem 1rem}
+.login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;gap:1.5rem;text-align:center;padding:2rem 1rem}
+.login-logo{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,rgba(201,168,76,.15),rgba(201,168,76,.05));border:2px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--gold);box-shadow:0 0 40px rgba(201,168,76,.15)}
+.login-title{font-size:1.4rem;font-weight:800;letter-spacing:-.5px}
+.login-sub{font-size:.84rem;color:var(--gr);margin-top:.25rem}
+.login-card{background:var(--dk2);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:1.75rem;width:100%;max-width:320px;box-shadow:var(--shadow)}
 .field{display:flex;flex-direction:column;gap:.4rem;margin-bottom:1rem}
-label{font-size:.76rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.5px}
-label .opt{color:var(--gr);font-weight:400;text-transform:none;font-size:.73rem}
-input,select,textarea{width:100%;background:var(--dk3);border:1.5px solid rgba(201,168,76,.25);border-radius:var(--rs);color:var(--w);font-size:1rem;padding:.82rem .95rem;outline:none;transition:border-color .2s;-webkit-appearance:none;appearance:none}
-input:focus,select:focus,textarea:focus{border-color:var(--gold)}
-input::placeholder,textarea::placeholder{color:rgba(255,255,255,.22)}
+label{font-size:.72rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.8px}
+label .opt{color:var(--gr);font-weight:400;text-transform:none;font-size:.7rem}
+input,select,textarea{width:100%;background:var(--dk3);border:1.5px solid rgba(255,255,255,.08);border-radius:var(--rs);color:var(--w);font-size:.95rem;padding:.82rem .95rem;outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.12)}
+input::placeholder,textarea::placeholder{color:rgba(255,255,255,.2)}
 select option{background:var(--dk3)}
-textarea{resize:vertical;min-height:78px;line-height:1.5}
-.photo-area{border:2px dashed rgba(201,168,76,.35);border-radius:var(--r);padding:1.6rem 1rem;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;position:relative}
-.photo-area:hover,.photo-area.has{border-color:var(--gold);background:rgba(201,168,76,.05)}
+textarea{resize:vertical;min-height:80px;line-height:1.55}
+.btn{width:100%;padding:.9rem;border-radius:var(--r);font-size:.95rem;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:all .2s;letter-spacing:.2px}
+.btn:active{transform:scale(.98)}.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gl));color:var(--dk);box-shadow:var(--shadow-gold)}
+.btn-gold:hover:not(:disabled){box-shadow:0 6px 28px rgba(201,168,76,.4);transform:translateY(-1px)}
+.btn-dark{background:var(--dk3);color:var(--w);border:1.5px solid rgba(255,255,255,.1)}
+.btn-dark:hover:not(:disabled){border-color:rgba(255,255,255,.2);background:var(--dk4)}
+.btn-red{background:linear-gradient(135deg,var(--red),var(--rdk));color:#fff;box-shadow:0 4px 16px rgba(229,57,53,.3)}
+.btn-red:hover:not(:disabled){box-shadow:0 6px 24px rgba(229,57,53,.45);transform:translateY(-1px)}
+.btn-sm{padding:.42rem .8rem;font-size:.76rem;border-radius:var(--rs);width:auto}
+.btn-wa-full{background:linear-gradient(135deg,var(--grn),var(--grnd));color:#fff;border:none;border-radius:var(--r);padding:.85rem 1.5rem;font-size:.92rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.5rem;text-decoration:none;transition:all .2s;box-shadow:0 4px 16px rgba(37,211,102,.3)}
+.btn-wa-full:hover{box-shadow:0 6px 24px rgba(37,211,102,.45);transform:translateY(-1px)}
+.status{border-radius:var(--r);padding:.9rem 1rem;font-size:.88rem;font-weight:600;text-align:center;display:none;margin-bottom:1rem;line-height:1.5}
+.status.error{background:rgba(229,57,53,.12);border:1.5px solid rgba(229,57,53,.35);color:#ff7070}
+.status.success{background:rgba(37,211,102,.1);border:1.5px solid rgba(37,211,102,.3);color:#69f0ae}
+.status.loading{background:rgba(201,168,76,.08);border:1.5px solid rgba(201,168,76,.25);color:var(--gl)}
+.spin{display:inline-block;width:16px;height:16px;border:2.5px solid rgba(201,168,76,.3);border-top-color:var(--gold);border-radius:50%;animation:sp .7s linear infinite;flex-shrink:0}
+@keyframes sp{to{transform:rotate(360deg)}}
+.prog-wrap{background:rgba(255,255,255,.06);border-radius:50px;height:4px;overflow:hidden;margin-top:.6rem;display:none}
+.prog-bar{height:100%;background:linear-gradient(90deg,var(--gd),var(--gold),var(--gl));border-radius:50px;width:0%;transition:width .3s}
+hr.div{border:none;border-top:1px solid rgba(255,255,255,.06);margin:1.5rem 0}
+.sec-lbl{font-size:.66rem;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:1.8px;margin-bottom:1rem}
+.notice{background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.2);border-radius:var(--r);padding:.9rem 1rem;font-size:.78rem;color:rgba(255,255,255,.6);line-height:1.65;margin-bottom:1.3rem}
+.notice strong{color:var(--gold)}
+.edit-banner{background:rgba(201,168,76,.1);border:1.5px solid rgba(201,168,76,.4);border-radius:var(--r);padding:.8rem 1rem;display:none;align-items:center;gap:.7rem;margin-bottom:1rem;font-size:.84rem;color:var(--gl);font-weight:600}
+.edit-banner button{margin-left:auto;background:none;border:1px solid rgba(201,168,76,.35);color:var(--gold);border-radius:var(--rs);padding:.28rem .65rem;font-size:.74rem;cursor:pointer}
+.photo-area{border:2px dashed rgba(201,168,76,.3);border-radius:var(--r);padding:1.6rem 1rem;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;position:relative;background:rgba(201,168,76,.02)}
+.photo-area:hover,.photo-area.has{border-color:var(--gold);background:rgba(201,168,76,.06)}
 .photo-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;padding:0;border:none;background:none}
 .photo-area i{font-size:2rem;color:var(--gold);margin-bottom:.5rem;display:block}
-.photo-area p{font-size:.86rem;color:rgba(255,255,255,.6)}
-.photo-area small{font-size:.7rem;color:var(--gr);margin-top:.2rem;display:block}
-#imgPreview{width:100%;max-height:190px;object-fit:cover;border-radius:var(--rs);margin-top:.8rem;display:none}
-.btn{width:100%;padding:.9rem;border-radius:var(--r);font-size:.98rem;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:opacity .2s,transform .15s}
-.btn:active{transform:scale(.98)}.btn:disabled{opacity:.45;cursor:not-allowed}
-.btn-gold{background:var(--gold);color:var(--dk)}.btn-gold:hover:not(:disabled){background:var(--gl)}
-.btn-dark{background:var(--dk3);color:var(--w);border:1.5px solid rgba(255,255,255,.1)}
-.btn-red{background:var(--red);color:#fff}.btn-red:hover:not(:disabled){background:var(--rdk)}
-.btn-sm{padding:.45rem .8rem;font-size:.78rem;border-radius:var(--rs);width:auto}
-.status{border-radius:var(--r);padding:1rem;font-size:.9rem;font-weight:600;text-align:center;display:none;margin-bottom:1rem;line-height:1.5}
-.status.error{background:rgba(229,57,53,.15);border:1.5px solid rgba(229,57,53,.4);color:#ff6b6b}
-.status.success{background:rgba(46,125,50,.15);border:1.5px solid rgba(46,125,50,.4);color:#69f0ae}
-.status.loading{background:rgba(201,168,76,.1);border:1.5px solid rgba(201,168,76,.3);color:var(--gl)}
-.spin{display:inline-block;width:17px;height:17px;border:3px solid rgba(201,168,76,.3);border-top-color:var(--gold);border-radius:50%;animation:sp .7s linear infinite;flex-shrink:0}
-@keyframes sp{to{transform:rotate(360deg)}}
-.prog-wrap{background:rgba(255,255,255,.08);border-radius:50px;height:5px;overflow:hidden;margin-top:.6rem;display:none}
-.prog-bar{height:100%;background:var(--gold);border-radius:50px;width:0%;transition:width .3s}
-hr.div{border:none;border-top:1px solid rgba(255,255,255,.07);margin:1.4rem 0}
-.sec-lbl{font-size:.68rem;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1rem}
-.notice{background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--r);padding:.85rem 1rem;font-size:.78rem;color:rgba(255,255,255,.65);line-height:1.6;margin-bottom:1.3rem}
-.notice strong{color:var(--gold)}
-.edit-banner{background:rgba(201,168,76,.12);border:1.5px solid var(--gold);border-radius:var(--r);padding:.8rem 1rem;display:none;align-items:center;gap:.7rem;margin-bottom:1rem;font-size:.85rem;color:var(--gl);font-weight:600}
-.edit-banner button{margin-left:auto;background:none;border:1px solid rgba(201,168,76,.4);color:var(--gold);border-radius:var(--rs);padding:.28rem .65rem;font-size:.75rem;cursor:pointer;white-space:nowrap}
-/* Products list */
+.photo-area p{font-size:.85rem;color:rgba(255,255,255,.55)}
+.photo-area small{font-size:.7rem;color:var(--gr);margin-top:.25rem;display:block}
+#imgPreview{width:100%;max-height:200px;object-fit:cover;border-radius:var(--rs);margin-top:.8rem;display:none;border:1px solid rgba(255,255,255,.08)}
 .prod-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
 .prod-hdr h2{font-size:1rem;font-weight:700}
-.prod-count{font-size:.75rem;color:var(--gr);background:var(--dk3);padding:.22rem .6rem;border-radius:50px}
-.prod-list{display:flex;flex-direction:column;gap:.8rem}
-.prod-card{background:var(--dk2);border:1px solid rgba(255,255,255,.07);border-radius:var(--r);overflow:hidden;display:flex;transition:border-color .2s}
-.prod-card:hover{border-color:rgba(201,168,76,.3)}
-.prod-img{width:85px;min-width:85px;height:105px;object-fit:cover;background:var(--dk3);display:flex;align-items:center;justify-content:center;color:var(--gr);font-size:1.4rem;flex-shrink:0}
+.prod-count{font-size:.72rem;color:var(--gr);background:var(--dk3);padding:.22rem .65rem;border-radius:50px;border:1px solid rgba(255,255,255,.07)}
+.prod-list{display:flex;flex-direction:column;gap:.75rem}
+.prod-card{background:var(--dk2);border:1px solid rgba(255,255,255,.06);border-radius:var(--r);overflow:hidden;display:flex;transition:border-color .2s,box-shadow .2s}
+.prod-card:hover{border-color:rgba(201,168,76,.25);box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.prod-img{width:88px;min-width:88px;height:108px;background:var(--dk3);display:flex;align-items:center;justify-content:center;color:var(--gr);font-size:1.4rem;flex-shrink:0}
 .prod-img img{width:100%;height:100%;object-fit:cover}
-.prod-info{flex:1;padding:.8rem .85rem;display:flex;flex-direction:column;gap:.25rem;min-width:0}
+.prod-info{flex:1;padding:.85rem .9rem;display:flex;flex-direction:column;gap:.22rem;min-width:0}
 .prod-name{font-size:.88rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.prod-cat{font-size:.68rem;color:var(--gold);text-transform:uppercase;letter-spacing:.5px}
-.prod-price{font-size:.85rem;font-weight:700;margin-top:.15rem}
-.prod-actions{display:flex;gap:.45rem;margin-top:auto;padding-top:.55rem}
-.prod-loading{text-align:center;padding:2rem;color:var(--gr);font-size:.88rem}
-.prod-empty{text-align:center;padding:2rem 1rem;color:var(--gr);font-size:.88rem;border:1px dashed rgba(255,255,255,.1);border-radius:var(--r)}
-/* Confirm dialog */
-.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9999;display:none;align-items:center;justify-content:center;padding:1.5rem}
+.prod-cat{font-size:.66rem;color:var(--gold);text-transform:uppercase;letter-spacing:.5px}
+.prod-price{font-size:.85rem;font-weight:700;color:var(--gl);margin-top:.1rem}
+.prod-actions{display:flex;gap:.4rem;margin-top:auto;padding-top:.5rem}
+.prod-loading{text-align:center;padding:2.5rem;color:var(--gr);font-size:.86rem}
+.prod-empty{text-align:center;padding:2.5rem 1rem;color:var(--gr);font-size:.86rem;border:1px dashed rgba(255,255,255,.08);border-radius:var(--r)}
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9999;display:none;align-items:center;justify-content:center;padding:1.5rem;backdrop-filter:blur(4px)}
 .confirm-overlay.open{display:flex}
-.confirm-box{background:var(--dk2);border:1.5px solid rgba(229,57,53,.4);border-radius:var(--r);padding:1.8rem 1.4rem;max-width:320px;width:100%;text-align:center}
-.confirm-box i{font-size:2.2rem;color:var(--red);margin-bottom:.85rem;display:block}
-.confirm-box h3{font-size:1rem;font-weight:700;margin-bottom:.4rem}
-.confirm-box p{font-size:.84rem;color:var(--gr);margin-bottom:1.3rem;line-height:1.5}
+.confirm-box{background:var(--dk2);border:1.5px solid rgba(229,57,53,.35);border-radius:18px;padding:2rem 1.5rem;max-width:320px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.confirm-box i{font-size:2.5rem;color:var(--red);margin-bottom:.9rem;display:block}
+.confirm-box h3{font-size:1.05rem;font-weight:700;margin-bottom:.4rem}
+.confirm-box p{font-size:.83rem;color:var(--gr);margin-bottom:1.4rem;line-height:1.55}
 .confirm-actions{display:flex;gap:.65rem}
 .confirm-actions .btn{flex:1;padding:.8rem}
+.prem-lock{display:flex;flex-direction:column;align-items:center;text-align:center;padding:3rem 1.5rem;gap:1.4rem}
+.lock-ring{position:relative;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.15) 0%,transparent 70%);border:2px solid rgba(201,168,76,.25);display:flex;align-items:center;justify-content:center;box-shadow:0 0 50px rgba(201,168,76,.12);animation:pulse-ring 3s ease-in-out infinite}
+@keyframes pulse-ring{0%,100%{box-shadow:0 0 30px rgba(201,168,76,.1)}50%{box-shadow:0 0 60px rgba(201,168,76,.25)}}
+.lock-ring i{font-size:2.8rem;color:var(--gold)}
+.prem-lock h2{font-size:1.35rem;font-weight:800;letter-spacing:-.3px}
+.prem-lock .prem-sub{font-size:.85rem;color:var(--gr);line-height:1.65;max-width:300px}
+.prem-divider{width:40px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);border-radius:2px}
+.code-wrap{width:100%;max-width:340px;background:var(--dk2);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:1.25rem}
+.code-wrap label{display:block;font-size:.7rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:.6rem}
+.code-row{display:flex;gap:.5rem}
+.code-row input{flex:1;font-family:monospace;letter-spacing:1px;font-size:.9rem}
+.code-row .btn-activate{white-space:nowrap;padding:.82rem 1.1rem;border-radius:var(--rs);background:linear-gradient(135deg,var(--gold),var(--gl));color:var(--dk);border:none;font-weight:800;cursor:pointer;font-size:.85rem;transition:all .2s;box-shadow:var(--shadow-gold)}
+.code-row .btn-activate:hover{box-shadow:0 6px 24px rgba(201,168,76,.45);transform:translateY(-1px)}
+.settings-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.07)}
+.settings-header h2{font-size:1.05rem;font-weight:800;display:flex;align-items:center;gap:.5rem}
+.settings-header h2 i{color:var(--gold)}
+.lock-btn{background:none;border:1px solid rgba(255,255,255,.12);color:var(--gr);border-radius:50px;padding:.3rem .85rem;font-size:.72rem;cursor:pointer;display:flex;align-items:center;gap:.35rem;transition:all .2s}
+.lock-btn:hover{border-color:rgba(255,255,255,.25);color:var(--w)}
+.settings-section{background:var(--dk2);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:1.25rem;margin-bottom:1rem;transition:border-color .2s}
+.settings-section:hover{border-color:rgba(201,168,76,.15)}
+.settings-section h3{font-size:.72rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:1.1rem;display:flex;align-items:center;gap:.45rem;padding-bottom:.75rem;border-bottom:1px solid rgba(255,255,255,.05)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.55rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.toggle-row:last-child{border-bottom:none}
+.toggle-row span{font-size:.88rem;color:var(--w)}
+.toggle{position:relative;width:46px;height:26px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--dk4);border-radius:50px;cursor:pointer;transition:.3s;border:1px solid rgba(255,255,255,.1)}
+.toggle-slider:before{content:'';position:absolute;width:20px;height:20px;left:2px;bottom:2px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.toggle input:checked+.toggle-slider{background:var(--gold);border-color:var(--gold)}
+.toggle input:checked+.toggle-slider:before{transform:translateX(20px)}
+.celebration{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.88);backdrop-filter:blur(8px);flex-direction:column;gap:1.5rem;text-align:center}
+.celebration.show{display:flex}
+.celeb-box{background:linear-gradient(135deg,#1a1200,#0a0a0a);border:2px solid var(--gold);border-radius:24px;padding:2.5rem 2rem;max-width:320px;width:90%;box-shadow:0 0 80px rgba(201,168,76,.3),0 20px 60px rgba(0,0,0,.6);position:relative;overflow:hidden;animation:celeb-pop .5s cubic-bezier(0.34,1.56,0.64,1) forwards}
+@keyframes celeb-pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.celeb-box::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(201,168,76,.15) 0%,transparent 60%);pointer-events:none}
+.celeb-icon{font-size:4rem;margin-bottom:.5rem;animation:bounce-icon 1s ease infinite alternate}
+@keyframes bounce-icon{from{transform:translateY(0) rotate(-5deg)}to{transform:translateY(-8px) rotate(5deg)}}
+.celeb-title{font-size:1.5rem;font-weight:900;color:var(--gold);letter-spacing:-.5px;margin-bottom:.4rem}
+.celeb-sub{font-size:.88rem;color:rgba(255,255,255,.7);line-height:1.6}
+.celeb-close{margin-top:1.25rem;background:linear-gradient(135deg,var(--gold),var(--gl));color:var(--dk);border:none;border-radius:50px;padding:.75rem 2rem;font-size:.92rem;font-weight:800;cursor:pointer;box-shadow:var(--shadow-gold);transition:all .2s}
+.celeb-close:hover{box-shadow:0 6px 28px rgba(201,168,76,.5);transform:translateY(-2px)}
+#confettiCanvas{position:fixed;inset:0;z-index:99998;pointer-events:none;display:none}
 </style>
 </head>
 <body>
-<div class="hdr">
-  <img src="logo.jpeg" alt="MK Shop" onerror="this.style.display='none'"/>
-  <div><h1>Admin Panel</h1><p>Gérer vos produits</p></div>
-</div>
-
-<!-- Confirm delete -->
-<div class="confirm-overlay" id="confirmOverlay">
-  <div class="confirm-box">
-    <i class="fas fa-trash-alt"></i>
-    <h3>Supprimer ce produit?</h3>
-    <p>Cette action est irréversible. Le produit sera retiré de votre boutique.</p>
-    <div class="confirm-actions">
-      <button class="btn btn-dark" onclick="closeConfirm()">Non, annuler</button>
-      <button class="btn btn-red" id="confirmYes">Oui, supprimer</button>
-    </div>
-  </div>
-</div>
-
-<!-- Tab navigation (shown after login) -->
-<div class="tab-bar" id="tabBar" style="display:none">
-  <button class="tab-btn active" onclick="switchTab('products')" id="tabProducts">
-    <i class="fas fa-box-open"></i> Produits
-  </button>
-  <button class="tab-btn" onclick="switchTab('settings')" id="tabSettings">
-    <i class="fas fa-crown crown"></i> Paramètres du Site
-  </button>
-</div>
-
-<!-- ══ TAB: PRODUCTS ══ -->
-<div class="tab-panel active" id="panelProducts">
-<div class="wrap">
-  <!-- LOGIN -->
-  <div id="loginScreen">
-    <div><div class="lock"><i class="fas fa-lock"></i></div>
-      <h2 style="font-size:1.25rem;font-weight:700;margin-top:.4rem">Accès Administrateur</h2>
-      <p style="color:var(--gr);font-size:.86rem;margin-top:.35rem">Entrez votre mot de passe</p>
-    </div>
-    <div class="field" style="width:100%;max-width:310px">
-      <label for="pwInput">Mot de passe</label>
-      <input type="password" id="pwInput" placeholder="••••••••" autocomplete="current-password"/>
-    </div>
-    <div id="loginErr" class="status error" style="width:100%;max-width:310px"></div>
-    <button class="btn btn-gold" onclick="checkPw()" style="max-width:310px">
-      <i class="fas fa-sign-in-alt"></i> Entrer
-    </button>
-  </div>
-
-  <!-- MAIN -->
-  <div id="mainForm" style="display:none">
-    <!-- Setup -->
-    <div class="notice" id="setupNotice">
-      <strong><i class="fas fa-info-circle"></i> Configuration requise</strong><br>
-      Collez l'URL de votre Google Apps Script pour activer toutes les fonctionnalités.
-      <div class="field" style="margin-top:.6rem;margin-bottom:0">
-        <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/..." style="font-size:.78rem;padding:.58rem .82rem"/>
-      </div>
-      <button onclick="saveUrl()" class="btn btn-dark" style="margin-top:.4rem;padding:.52rem;font-size:.78rem">
-        <i class="fas fa-save"></i> Enregistrer
-      </button>
-    </div>
-
-    <div id="statusMsg" class="status"></div>
-    <div class="prog-wrap" id="progWrap"><div class="prog-bar" id="progBar"></div></div>
-
-    <!-- Edit banner -->
-    <div class="edit-banner" id="editBanner">
-      <i class="fas fa-pen"></i>
-      <span>Mode modification</span>
-      <button onclick="cancelEdit()">Annuler</button>
-    </div>
-
-    <!-- Photo -->
-    <p class="sec-lbl">Photo du produit</p>
-    <div class="photo-area" id="photoArea">
-      <input type="file" id="photoInput" accept="image/*" onchange="onPhoto(event)" style="display:none"/>
-      <input type="file" id="cameraInput" accept="image/*" capture="environment" onchange="onPhoto(event)" style="display:none"/>
-      <i class="fas fa-image"></i>
-      <p id="photoAreaText">Choisissez comment ajouter la photo</p>
-      <div style="display:flex;gap:.65rem;justify-content:center;margin-top:1rem;flex-wrap:wrap">
-        <button type="button" class="btn btn-gold" style="width:auto;padding:.65rem 1.2rem;font-size:.88rem"
-                onclick="document.getElementById('cameraInput').click()">
-          <i class="fas fa-camera"></i> Prendre une photo
-        </button>
-        <button type="button" class="btn btn-dark" style="width:auto;padding:.65rem 1.2rem;font-size:.88rem"
-                onclick="document.getElementById('photoInput').click()">
-          <i class="fas fa-images"></i> Choisir depuis la galerie
-        </button>
-      </div>
-      <small style="margin-top:.6rem">Compressée automatiquement avant envoi</small>
-    </div>
-    <img id="imgPreview" alt="Aperçu"/>
-
-    <hr class="div"/>
-    <p class="sec-lbl">Détails du produit</p>
-    <div class="field"><label for="fName">Nom du produit</label><input type="text" id="fName" placeholder="Ex: Robe Maxi Africaine"/></div>
-    <div class="field"><label for="fPrice">Prix (XAF)</label><input type="number" id="fPrice" placeholder="Ex: 25000" min="0"/></div>
-    <div class="field"><label for="fOld">Ancien prix (XAF) <span class="opt">– optionnel</span></label><input type="number" id="fOld" placeholder="Ex: 35000" min="0"/></div>
-    <div class="field">
-      <label for="fCat">Catégorie</label>
-      <select id="fCat">
-        <option value="Femme">Femme</option><option value="Homme">Homme</option>
-        <option value="Enfants">Enfants</option><option value="Chaussures">Chaussures</option>
-        <option value="Sacs">Sacs à Main</option><option value="Perruques">Perruques</option>
-      </select>
-    </div>
-    <div class="field">
-      <label for="fBadge">Badge <span class="opt">– optionnel</span></label>
-      <select id="fBadge"><option value="">Aucun</option><option value="new">Nouveau</option><option value="hot">Populaire</option><option value="sale">Promo</option></select>
-    </div>
-    <div class="field"><label for="fCol">Collection <span class="opt">– optionnel</span></label><input type="text" id="fCol" placeholder="Ex: Collection Été 2026"/></div>
-    <div class="field"><label for="fDesc">Description <span class="opt">– optionnel</span></label><textarea id="fDesc" placeholder="Matière, taille, occasion..."></textarea></div>
-
-    <hr class="div"/>
-    <button class="btn btn-gold" id="submitBtn" onclick="submit()">
-      <i class="fas fa-plus-circle"></i> <span id="submitTxt">Ajouter le Produit</span>
-    </button>
-    <button class="btn btn-dark" onclick="resetForm()" style="margin-top:.65rem">
-      <i class="fas fa-redo"></i> Réinitialiser
-    </button>
-
-    <!-- MY PRODUCTS -->
-    <hr class="div"/>
-    <div class="prod-hdr">
-      <h2><i class="fas fa-box-open" style="color:var(--gold);margin-right:.45rem"></i>Mes Produits</h2>
-      <span class="prod-count" id="prodCount">...</span>
-    </div>
-    <div id="prodList" class="prod-list">
-      <div class="prod-loading"><span class="spin"></span> Chargement...</div>
-    </div>
-  </div>
-</div>
-</div><!-- end panelProducts -->
-
-<!-- ══ TAB: SETTINGS ══ -->
-<div class="tab-panel" id="panelSettings">
-<div class="wrap">
-
-  <!-- LOCK SCREEN -->
-  <div id="settingsLock" class="prem-lock">
-    <div class="lock-icon"><i class="fas fa-lock"></i></div>
-    <h2>Fonctionnalité Premium</h2>
-    <p>Cette fonctionnalité nécessite une activation. Contactez votre développeur pour obtenir votre code d'activation.</p>
-    <a href="https://wa.me/237682513941?text=Bonjour%20Denis!%20Je%20voudrais%20activer%20les%20Param%C3%A8tres%20du%20Site%20sur%20MK%20Shop." target="_blank" class="btn-wa">
-      <i class="fab fa-whatsapp"></i> Contacter le Développeur
-    </a>
-    <div class="code-row">
-      <input type="text" id="activationCode" placeholder="Entrez votre code d'activation" autocomplete="off"/>
-      <button onclick="activateCode()">Activer</button>
-    </div>
-    <div id="activationMsg" class="status" style="width:100%;max-width:320px;margin:0"></div>
-  </div>
-
-  <!-- SETTINGS PANEL (shown after unlock) -->
-  <div id="settingsPanel" style="display:none">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.4rem">
-      <h2 style="font-size:1rem;font-weight:700"><i class="fas fa-sliders-h" style="color:var(--gold);margin-right:.4rem"></i>Paramètres du Site</h2>
-      <button onclick="lockSettings()" style="background:none;border:1px solid rgba(255,255,255,.15);color:var(--gr);border-radius:var(--rs);padding:.3rem .7rem;font-size:.72rem;cursor:pointer">
-        <i class="fas fa-lock"></i> Verrouiller
-      </button>
-    </div>
-
-    <div id="settingsStatus" class="status" style="margin-bottom:1rem"></div>
-
-    <!-- Hero Section -->
-    <div class="settings-section">
-      <h3><i class="fas fa-image"></i> Section Hero</h3>
-      <div class="field"><label>Titre principal</label><input type="text" id="sHeroTitle" placeholder="Ex: Femme Élégante"/></div>
-      <div class="field"><label>Sous-titre</label><textarea id="sHeroSubtitle" placeholder="Ex: Découvrez les robes..."></textarea></div>
-      <div class="field">
-        <label>Image de fond <span class="opt">– upload vers Cloudinary</span></label>
-        <div class="photo-area" id="heroPhotoArea" style="margin-bottom:.5rem">
-          <input type="file" id="heroPhotoInput" accept="image/*" onchange="onHeroPhoto(event)"/>
-          <i class="fas fa-image"></i>
-          <p id="heroPhotoText">Choisir une image hero</p>
-          <small>Recommandé: 1920×1080px</small>
-        </div>
-        <img id="heroImgPreview" style="width:100%;max-height:140px;object-fit:cover;border-radius:var(--rs);display:none;" alt="Hero preview"/>
-        <input type="text" id="sHeroImageUrl" placeholder="Ou collez une URL d'image directement" style="margin-top:.5rem"/>
-      </div>
-    </div>
-
-    <!-- Flash Sale -->
-    <div class="settings-section">
-      <h3><i class="fas fa-fire"></i> Flash Sale</h3>
-      <div class="toggle-row">
-        <span>Activer le Flash Sale</span>
-        <label class="toggle"><input type="checkbox" id="sFlashActive"/><span class="toggle-slider"></span></label>
-      </div>
-      <div class="field" style="margin-top:.8rem"><label>Titre du Flash Sale</label><input type="text" id="sFlashTitle" placeholder="Ex: Flash Sale – Cette Semaine Seulement!"/></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem">
-        <div class="field"><label>Perruques %</label><input type="number" id="sDiscWigs" placeholder="40" min="0" max="100"/></div>
-        <div class="field"><label>Sacs %</label><input type="number" id="sDiscBags" placeholder="30" min="0" max="100"/></div>
-        <div class="field"><label>Chaussures %</label><input type="number" id="sDiscShoes" placeholder="25" min="0" max="100"/></div>
-        <div class="field"><label>Robes %</label><input type="number" id="sDiscDresses" placeholder="35" min="0" max="100"/></div>
-      </div>
-    </div>
-
-    <!-- Social Media -->
-    <div class="settings-section">
-      <h3><i class="fas fa-share-alt"></i> Réseaux Sociaux</h3>
-      <div class="field"><label>Instagram URL</label><input type="url" id="sSocialIG" placeholder="https://instagram.com/mkshop"/></div>
-      <div class="field"><label>Facebook URL</label><input type="url" id="sSocialFB" placeholder="https://facebook.com/mkshop"/></div>
-      <div class="field"><label>TikTok URL</label><input type="url" id="sSocialTT" placeholder="https://tiktok.com/@mkshop"/></div>
-    </div>
-
-    <!-- Business Info -->
-    <div class="settings-section">
-      <h3><i class="fas fa-store"></i> Informations Boutique</h3>
-      <div class="field"><label>Numéro WhatsApp</label><input type="text" id="sWhatsApp" placeholder="237682513941"/></div>
-      <div class="field"><label>Horaires d'ouverture</label><input type="text" id="sHours" placeholder="Lun–Sam: 8h–20h"/></div>
-      <div class="field"><label>Adresse</label><input type="text" id="sAddress" placeholder="Douala, Cameroun"/></div>
-    </div>
-
-    <button class="btn btn-gold" onclick="saveSettings()">
-      <i class="fas fa-save"></i> Enregistrer les Paramètres
-    </button>
-    <button class="btn btn-dark" onclick="resetSettings()" style="margin-top:.65rem">
-      <i class="fas fa-undo"></i> Réinitialiser aux valeurs par défaut
-    </button>
-  </div>
-
-</div>
-</div><!-- end panelSettings -->
-
-<script>
-const PW     = 'Manu237#';
-const CDN    = 'https://api.cloudinary.com/v1_1/drntx3vgo/image/upload';
-const PRESET = 'mk_shop_uploads';
-
-let blob = null;          // compressed image blob
-let editRowIndex = null;  // row being edited (null = add mode)
-let editExistingUrl = ''; // keep old image if no new one chosen
-let pendingDeleteRow = null;
-
-// ── Auth ──────────────────────────────────────────────────
-function checkPw() {
-  const v = document.getElementById('pwInput').value;
-  if (v === PW) {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('mainForm').style.display = 'block';
-    document.getElementById('tabBar').style.display = 'flex';
-    loadUrl();
-    loadProducts();
-  } else {
-    const e = document.getElementById('loginErr');
-    e.textContent = 'Mot de passe incorrect. Réessayez.';
-    e.style.display = 'block';
-    document.getElementById('pwInput').value = '';
-  }
-}
-document.getElementById('pwInput').addEventListener('keydown', e => { if(e.key==='Enter') checkPw(); });
-
-// ── Script URL ────────────────────────────────────────────
-function saveUrl() {
-  const u = document.getElementById('scriptUrl').value.trim();
-  if (!u.startsWith('https://script.google.com')) {
-    showStatus('error','URL invalide. Elle doit commencer par https://script.google.com'); return;
-  }
-  localStorage.setItem('mks_url', u);
-  document.getElementById('setupNotice').style.display = 'none';
-  showStatus('success','<i class="fas fa-check-circle"></i> URL enregistrée!');
-  setTimeout(clearStatus, 2500);
-  loadProducts();
-}
-function loadUrl() {
-  const s = localStorage.getItem('mks_url');
-  if (s) { document.getElementById('scriptUrl').value = s; document.getElementById('setupNotice').style.display = 'none'; }
-}
-function getUrl() { return localStorage.getItem('mks_url') || ''; }
-
-// ── Image compression ─────────────────────────────────────
-function onPhoto(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const img = new Image();
-    img.onload = () => {
-      const MAX = 800;
-      let w = img.width, h = img.height;
-      if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
-      const c = document.createElement('canvas');
-      c.width = w; c.height = h;
-      c.getContext('2d').drawImage(img, 0, 0, w, h);
-      c.toBlob(b => {
-        blob = b;
-        const prev = document.getElementById('imgPreview');
-        prev.src = URL.createObjectURL(b);
-        prev.style.display = 'block';
-        document.getElementById('photoArea').classList.add('has');
-        showStatus('loading','<i class="fas fa-check"></i> Photo prête (' + (b.size/1024/1024).toFixed(2) + ' MB)');
-        setTimeout(clearStatus, 2500);
-      }, 'image/jpeg', 0.75);
-    };
-    img.src = ev.target.result;
-  };
-  reader.readAsDataURL(file);
-}
-
-// ── Cloudinary upload ─────────────────────────────────────
-async function uploadImage() {
-  if (!blob) throw new Error('NO_IMAGE');
-  const fd = new FormData();
-  fd.append('file', blob, 'product.jpg');
-  fd.append('upload_preset', PRESET);
-  fd.append('folder', 'mkshop');
-  setP(30);
-  const res = await fetch(CDN, { method:'POST', body:fd });
-  const data = await res.json();
-  setP(60);
-  if (!res.ok || !data.secure_url) {
-    console.error('Cloudinary error:', data);
-    throw new Error('CLOUDINARY: ' + (data.error?.message || res.status));
-  }
-  return data.secure_url;
-}
-
-// ── Apps Script call (GET to avoid CORS preflight) ────────
-async function callScript(params) {
-  const url = getUrl();
-  if (!url) throw new Error('NO_URL');
-  const qs = new URLSearchParams(params).toString();
-  const res = await fetch(url + '?' + qs);
-  const text = await res.text();
-  let d; try { d = JSON.parse(text); } catch { d = { status: text }; }
-  if (d.status === 'error') throw new Error('SHEET: ' + (d.message || 'unknown'));
-  return d;
-}
-
-// ── Submit (add or update) ────────────────────────────────
-async function submit() {
-  const name  = document.getElementById('fName').value.trim();
-  const price = document.getElementById('fPrice').value.trim();
-  const old   = document.getElementById('fOld').value.trim();
-  const cat   = document.getElementById('fCat').value;
-  const badge = document.getElementById('fBadge').value;
-  const col   = document.getElementById('fCol').value.trim();
-  const desc  = document.getElementById('fDesc').value.trim();
-  const isEdit = editRowIndex !== null;
-
-  if (!name)  { showStatus('error','Veuillez entrer le nom du produit.'); return; }
-  if (!price) { showStatus('error','Veuillez entrer le prix du produit.'); return; }
-  if (!isEdit && !blob) { showStatus('error','Veuillez choisir une photo.'); return; }
-  if (!getUrl()) { showStatus('error','URL Apps Script manquante. Configurez-la en haut de la page.'); return; }
-
-  const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  showProg();
-
-  try {
-    let imgUrl = editExistingUrl;
-
-    if (blob) {
-      showStatus('loading','<span class="spin"></span> Envoi de la photo...');
-      imgUrl = await uploadImage();
-    }
-
-    showStatus('loading','<span class="spin"></span> ' + (isEdit ? 'Mise à jour...' : 'Enregistrement...'));
-
-    // Column order: Name, Price, OldPrice, Category, MediaURL, Badge, Description, Collection
-    const row = [name, price, old, cat, imgUrl, badge, desc, col];
-
-    if (isEdit) {
-      await callScript({ action:'updateProduct', rowIndex: editRowIndex, row: JSON.stringify(row) });
-      setP(100);
-      showStatus('success','<i class="fas fa-check-circle"></i> Produit mis à jour avec succès!');
-    } else {
-      await callScript({ action:'addProduct', row: JSON.stringify(row) });
-      setP(100);
-      showStatus('success',
-        '<i class="fas fa-check-circle" style="font-size:1.2rem;display:block;margin-bottom:.35rem"></i>' +
-        'Produit ajouté! Il apparaîtra sur votre boutique dans quelques secondes.');
-    }
-
-    setTimeout(() => { resetForm(); clearStatus(); loadProducts(); }, 3500);
-
-  } catch(err) {
-    console.error('Submit error:', err.message);
-    let msg = 'Une erreur s\'est produite. Vérifiez votre connexion et réessayez.';
-    if (err.message === 'NO_URL') msg = 'URL Apps Script manquante. Configurez-la en haut de la page.';
-    else if (err.message.startsWith('CLOUDINARY')) msg = 'Échec de l\'envoi de la photo. Vérifiez que le preset Cloudinary "mk_shop_uploads" est en mode Non signé (Unsigned).';
-    else if (err.message.startsWith('SHEET')) msg = 'Impossible d\'enregistrer dans Google Sheet. Vérifiez l\'URL Apps Script.';
-    showStatus('error','<i class="fas fa-exclamation-circle"></i> ' + msg);
-  } finally {
-    btn.disabled = false;
-    hideProg();
-  }
-}
-
-// ── Load products ─────────────────────────────────────────
-async function loadProducts() {
-  if (!getUrl()) return;
-  const list = document.getElementById('prodList');
-  const count = document.getElementById('prodCount');
-  list.innerHTML = '<div class="prod-loading"><span class="spin"></span> Chargement...</div>';
-
-  try {
-    const data = await callScript({ action:'getProducts' });
-    const products = data.products || [];
-    count.textContent = products.length + ' produit' + (products.length !== 1 ? 's' : '');
-
-    if (!products.length) {
-      list.innerHTML = '<div class="prod-empty"><i class="fas fa-box-open" style="font-size:2rem;display:block;margin-bottom:.5rem;opacity:.4"></i>Aucun produit pour l\'instant</div>';
-      return;
-    }
-
-    list.innerHTML = products.map(p => renderProductCard(p)).join('');
-  } catch(err) {
-    list.innerHTML = '<div class="prod-empty" style="color:#ff6b6b">Impossible de charger les produits. Vérifiez l\'URL Apps Script.</div>';
-  }
-}
-
-function renderProductCard(p) {
-  const name  = p.name  || p['name']  || '—';
-  const price = p.price || p['price'] || '';
-  const cat   = p.category || p['category'] || '';
-  const img   = p.mediaurl || p['mediaurl'] || p['image'] || '';
-  const row   = p._rowIndex;
-
-  const imgHTML = img
-    ? `<div class="prod-img"><img src="${img}" alt="${name}" loading="lazy" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-image\\'></i>'"/></div>`
-    : `<div class="prod-img"><i class="fas fa-image"></i></div>`;
-
-  return `
-    <div class="prod-card" id="pcard-${row}">
-      ${imgHTML}
-      <div class="prod-info">
-        <div class="prod-name">${name}</div>
-        <div class="prod-cat">${cat}</div>
-        <div class="prod-price">${price ? Number(price).toLocaleString('fr-FR') + ' XAF' : ''}</div>
-        <div class="prod-actions">
-          <button class="btn btn-dark btn-sm" onclick="startEdit(${row})">
-            <i class="fas fa-pen"></i> Modifier
-          </button>
-          <button class="btn btn-red btn-sm" onclick="confirmDelete(${row})">
-            <i class="fas fa-trash"></i> Supprimer
-          </button>
-        </div>
-      </div>
-    </div>`;
-}
-
-// ── Edit ──────────────────────────────────────────────────
-async function startEdit(rowIndex) {
-  if (!getUrl()) { showStatus('error','URL Apps Script manquante.'); return; }
-
-  try {
-    const data = await callScript({ action:'getProducts' });
-    const p = (data.products || []).find(x => x._rowIndex === rowIndex);
-    if (!p) { showStatus('error','Produit introuvable.'); return; }
-
-    editRowIndex    = rowIndex;
-    editExistingUrl = p.mediaurl || p['mediaurl'] || p['image'] || '';
-
-    document.getElementById('fName').value  = p.name  || p['name']  || '';
-    document.getElementById('fPrice').value = p.price || p['price'] || '';
-    document.getElementById('fOld').value   = p.oldprice || p['oldprice'] || '';
-    document.getElementById('fCat').value   = p.category || p['category'] || 'Femme';
-    document.getElementById('fBadge').value = p.badge || p['badge'] || '';
-    document.getElementById('fDesc').value  = p.description || p['description'] || '';
-    document.getElementById('fCol').value   = p.collection || p['collection'] || '';
-
-    // Show existing image
-    if (editExistingUrl) {
-      const prev = document.getElementById('imgPreview');
-      prev.src = editExistingUrl;
-      prev.style.display = 'block';
-    }
-
-    document.getElementById('photoAreaText').textContent = 'Changer la photo (optionnel)';
-    document.getElementById('submitTxt').textContent = 'Mettre à jour le Produit';
-    document.getElementById('editBanner').style.display = 'flex';
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  } catch(err) {
-    showStatus('error','Impossible de charger ce produit.');
-  }
-}
-
-function cancelEdit() {
-  editRowIndex = null;
-  editExistingUrl = '';
-  document.getElementById('editBanner').style.display = 'none';
-  document.getElementById('photoAreaText').textContent = 'Appuyez pour prendre une photo ou choisir depuis la galerie';
-  document.getElementById('submitTxt').textContent = 'Ajouter le Produit';
-  resetForm();
-}
-
-// ── Delete ────────────────────────────────────────────────
-function confirmDelete(rowIndex) {
-  pendingDeleteRow = rowIndex;
-  document.getElementById('confirmOverlay').classList.add('open');
-  document.getElementById('confirmYes').onclick = () => doDelete(rowIndex);
-}
-function closeConfirm() {
-  document.getElementById('confirmOverlay').classList.remove('open');
-  pendingDeleteRow = null;
-}
-async function doDelete(rowIndex) {
-  closeConfirm();
-  showStatus('loading','<span class="spin"></span> Suppression en cours...');
-  try {
-    await callScript({ action:'deleteProduct', rowIndex });
-    // Remove card immediately
-    const card = document.getElementById('pcard-' + rowIndex);
-    if (card) card.remove();
-    showStatus('success','<i class="fas fa-check-circle"></i> Produit retiré de votre boutique.');
-    setTimeout(() => { clearStatus(); loadProducts(); }, 2500);
-  } catch(err) {
-    showStatus('error','Impossible de supprimer ce produit. Réessayez.');
-  }
-}
-
-// ── Helpers ───────────────────────────────────────────────
-function showStatus(type, html) {
-  const el = document.getElementById('statusMsg');
-  el.className = 'status ' + type; el.innerHTML = html; el.style.display = 'block';
-  el.scrollIntoView({ behavior:'smooth', block:'nearest' });
-}
-function clearStatus() { const el = document.getElementById('statusMsg'); el.style.display='none'; el.innerHTML=''; }
-function showProg() { document.getElementById('progWrap').style.display='block'; setP(10); }
-function hideProg() { setTimeout(() => { document.getElementById('progWrap').style.display='none'; setP(0); }, 800); }
-function setP(v) { document.getElementById('progBar').style.width = v + '%'; }
-function resetForm() {
-  ['fName','fPrice','fOld','fCol','fDesc'].forEach(id => document.getElementById(id).value='');
-  document.getElementById('fCat').value='Femme'; document.getElementById('fBadge').value='';
-  document.getElementById('photoInput').value='';
-  document.getElementById('imgPreview').style.display='none';
-  document.getElementById('photoArea').classList.remove('has');
-  blob=null; clearStatus();
-}
-
-// ══════════════════════════════════════════════════════════
-//  TAB SWITCHING
-// ══════════════════════════════════════════════════════════
-function switchTab(tab) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
-  document.getElementById('panel' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
-  if (tab === 'settings') initSettingsTab();
-}
-
-// ══════════════════════════════════════════════════════════
-//  PREMIUM ACTIVATION
-// ══════════════════════════════════════════════════════════
-const LIFETIME_CODE = 'MK-LIFETIME-2026-DENIS';
-
-function getMonthlyCode() {
-  const now = new Date();
-  return 'MK-' + (now.getMonth() + 1) + now.getFullYear() + '-SHOP';
-}
-
-function isAccessValid() {
-  const stored = localStorage.getItem('mk_settings_access');
-  if (!stored) return false;
-  if (stored === 'lifetime') return true;
-  // Check monthly: stored format "4-2026"
-  const now = new Date();
-  const expected = (now.getMonth() + 1) + '-' + now.getFullYear();
-  return stored === expected;
-}
-
-function activateCode() {
-  const code = document.getElementById('activationCode').value.trim();
-  const msg  = document.getElementById('activationMsg');
-
-  if (!code) return;
-
-  if (code === LIFETIME_CODE) {
-    localStorage.setItem('mk_settings_access', 'lifetime');
-    showActivationSuccess(msg);
-  } else if (code === getMonthlyCode()) {
-    const now = new Date();
-    localStorage.setItem('mk_settings_access', (now.getMonth() + 1) + '-' + now.getFullYear());
-    showActivationSuccess(msg);
-  } else {
-    msg.className = 'status error';
-    msg.textContent = 'Code incorrect. Veuillez réessayer.';
-    msg.style.display = 'block';
-    document.getElementById('activationCode').value = '';
-  }
-}
-
-function showActivationSuccess(msgEl) {
-  msgEl.className = 'status success';
-  msgEl.textContent = 'Fonctionnalité activée avec succès!';
-  msgEl.style.display = 'block';
-  setTimeout(() => {
-    document.getElementById('settingsLock').style.display = 'none';
-    document.getElementById('settingsPanel').style.display = 'block';
-    loadSettingsValues();
-  }, 1000);
-}
-
-function lockSettings() {
-  localStorage.removeItem('mk_settings_access');
-  document.getElementById('settingsPanel').style.display = 'none';
-  document.getElementById('settingsLock').style.display = 'flex';
-  document.getElementById('activationCode').value = '';
-  document.getElementById('activationMsg').style.display = 'none';
-}
-
-function initSettingsTab() {
-  if (isAccessValid()) {
-    document.getElementById('settingsLock').style.display = 'none';
-    document.getElementById('settingsPanel').style.display = 'block';
-    loadSettingsValues();
-  } else {
-    document.getElementById('settingsLock').style.display = 'flex';
-    document.getElementById('settingsPanel').style.display = 'none';
-  }
-}
-
-document.getElementById('activationCode')?.addEventListener('keydown', e => {
-  if (e.key === 'Enter') activateCode();
-});
-
-// ══════════════════════════════════════════════════════════
-//  SETTINGS SAVE / LOAD
-// ══════════════════════════════════════════════════════════
-const SETTINGS_KEY = 'mk_site_settings';
-
-function getSettings() {
-  try { return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; } catch { return {}; }
-}
-
-function loadSettingsValues() {
-  const s = getSettings();
-  const set = (id, val) => { if (val !== undefined && val !== null) document.getElementById(id).value = val; };
-  set('sHeroTitle',    s.heroTitle);
-  set('sHeroSubtitle', s.heroSubtitle);
-  set('sHeroImageUrl', s.heroImageUrl);
-  set('sFlashTitle',   s.flashTitle);
-  set('sDiscWigs',     s.discWigs);
-  set('sDiscBags',     s.discBags);
-  set('sDiscShoes',    s.discShoes);
-  set('sDiscDresses',  s.discDresses);
-  set('sSocialIG',     s.socialIG);
-  set('sSocialFB',     s.socialFB);
-  set('sSocialTT',     s.socialTT);
-  set('sWhatsApp',     s.whatsapp);
-  set('sHours',        s.hours);
-  set('sAddress',      s.address);
-  if (s.flashActive !== undefined) document.getElementById('sFlashActive').checked = s.flashActive;
-  if (s.heroImageUrl) {
-    document.getElementById('heroImgPreview').src = s.heroImageUrl;
-    document.getElementById('heroImgPreview').style.display = 'block';
-  }
-}
-
-function saveSettings() {
-  const s = {
-    heroTitle:    document.getElementById('sHeroTitle').value.trim(),
-    heroSubtitle: document.getElementById('sHeroSubtitle').value.trim(),
-    heroImageUrl: document.getElementById('sHeroImageUrl').value.trim() || heroUploadedUrl,
-    flashActive:  document.getElementById('sFlashActive').checked,
-    flashTitle:   document.getElementById('sFlashTitle').value.trim(),
-    discWigs:     document.getElementById('sDiscWigs').value,
-    discBags:     document.getElementById('sDiscBags').value,
-    discShoes:    document.getElementById('sDiscShoes').value,
-    discDresses:  document.getElementById('sDiscDresses').value,
-    socialIG:     document.getElementById('sSocialIG').value.trim(),
-    socialFB:     document.getElementById('sSocialFB').value.trim(),
-    socialTT:     document.getElementById('sSocialTT').value.trim(),
-    whatsapp:     document.getElementById('sWhatsApp').value.trim(),
-    hours:        document.getElementById('sHours').value.trim(),
-    address:      document.getElementById('sAddress').value.trim(),
-  };
-
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
-
-  const msg = document.getElementById('settingsStatus');
-  msg.className = 'status success';
-  msg.innerHTML = '<i class="fas fa-check-circle"></i> Paramètres enregistrés! Les changements seront visibles sur le site.';
-  msg.style.display = 'block';
-  setTimeout(() => { msg.style.display = 'none'; }, 3500);
-}
-
-function resetSettings() {
-  if (!confirm('Réinitialiser tous les paramètres aux valeurs par défaut?')) return;
-  localStorage.removeItem(SETTINGS_KEY);
-  heroUploadedUrl = '';
-  ['sHeroTitle','sHeroSubtitle','sHeroImageUrl','sFlashTitle','sDiscWigs','sDiscBags',
-   'sDiscShoes','sDiscDresses','sSocialIG','sSocialFB','sSocialTT','sWhatsApp','sHours','sAddress']
-    .forEach(id => document.getElementById(id).value = '');
-  document.getElementById('sFlashActive').checked = false;
-  document.getElementById('heroImgPreview').style.display = 'none';
-  const msg = document.getElementById('settingsStatus');
-  msg.className = 'status success';
-  msg.textContent = 'Paramètres réinitialisés.';
-  msg.style.display = 'block';
-  setTimeout(() => { msg.style.display = 'none'; }, 2500);
-}
-
-// ── Hero image upload ─────────────────────────────────────
-let heroUploadedUrl = '';
-let heroBlob = null;
-
-function onHeroPhoto(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const img = new Image();
-    img.onload = () => {
-      const MAX = 1920;
-      let w = img.width, h = img.height;
-      if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
-      const c = document.createElement('canvas');
-      c.width = w; c.height = h;
-      c.getContext('2d').drawImage(img, 0, 0, w, h);
-      c.toBlob(async b => {
-        heroBlob = b;
-        document.getElementById('heroImgPreview').src = URL.createObjectURL(b);
-        document.getElementById('heroImgPreview').style.display = 'block';
-        document.getElementById('heroPhotoText').textContent = 'Upload en cours...';
-        // Upload to Cloudinary
-        try {
-          const fd = new FormData();
-          fd.append('file', b, 'hero.jpg');
-          fd.append('upload_preset', PRESET);
-          fd.append('folder', 'mkshop/hero');
-          const res = await fetch(CDN, { method:'POST', body:fd });
-          const data = await res.json();
-          if (data.secure_url) {
-            heroUploadedUrl = data.secure_url;
-            document.getElementById('sHeroImageUrl').value = heroUploadedUrl;
-            document.getElementById('heroPhotoText').textContent = 'Image uploadée!';
-          }
-        } catch { document.getElementById('heroPhotoText').textContent = 'Erreur upload. Collez l\'URL manuellement.'; }
-      }, 'image/jpeg', 0.82);
-    };
-    img.src = ev.target.result;
-  };
-  reader.readAsDataURL(file);
-}
-
-// Show tabs after login
-const _origCheckPw = checkPw;
-</script>
-</body>
-</html>
