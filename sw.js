@@ -3,8 +3,8 @@
 //   Bump version to force reinstall and clear old caches
 // ═══════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'mkshop-v3';
-const IMAGE_CACHE = 'mkshop-images-v3';
+const CACHE_NAME = 'mkshop-v4';
+const IMAGE_CACHE = 'mkshop-images-v4';
 
 // App shell — cached on install, served instantly forever
 const PRECACHE_URLS = [
