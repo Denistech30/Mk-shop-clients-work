@@ -1148,79 +1148,123 @@ function initSheetProducts() {
 }
 
 // ═══════════════════════════════════════════════════════════
-//   HERO IMAGE LOADER – from Google Sheet
-//   Reads rows where Category = "hero" and injects images
-//   into the hero slide frames (heroFrame1, heroFrame2, heroFrame3)
+//   HERO LOADER — images + text + stats + badges from sheet
+//   Sheet columns for category="hero" rows:
+//   Name, Image, Subtitle, Badge, SalePercent,
+//   Stat1Num, Stat1Label, Stat2Num, Stat2Label, Stat3Num, Stat3Label,
+//   Card1Title, Card1Text, Card2Title, Card2Text
 // ═══════════════════════════════════════════════════════════
 
-/**
- * Call this after sheet products are loaded.
- * It looks for rows with category "hero" (case-insensitive)
- * and injects their images into the hero frames in order.
- *
- * Google Sheet columns used:
- *   Category  → must be "hero"
- *   Image     → the image URL to show
- *   Name      → used as alt text (optional)
- */
 function loadHeroImagesFromSheet(sheetProducts) {
-  // Default Unsplash images — replace by adding "hero" rows in your sheet
+
+  // ── Default values (shown when no sheet row exists) ──
   const HERO_DEFAULTS = [
     {
-      url: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80&fm=webp',
-      alt: 'Mode Femme'
+      url:        'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80&fm=webp',
+      alt:        'Mode Femme',
+      subtitle:   null, // keep HTML default
+      badge:      '-30%',
+      card1Title: 'Trending',
+      card1Text:  'Robes d\'été',
+      card2Title: 'Top Vendu',
+      card2Text:  'Ensemble 2 pièces',
+      stat1Num:   '500+', stat1Label: 'Produits',
+      stat2Num:   '1K+',  stat2Label: 'Clientes Satisfaites',
+      stat3Num:   '5★',   stat3Label: 'Qualité Premium',
     },
     {
-      url: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&q=80&fm=webp',
-      alt: 'Promos & Offres'
+      url:         'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&q=80&fm=webp',
+      alt:         'Promos & Offres',
+      subtitle:    null,
+      salePercent: '50%',
     },
     {
-      url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80&fm=webp',
-      alt: 'Perruques Premium'
+      url:      'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80&fm=webp',
+      alt:      'Perruques Premium',
+      subtitle: null,
     },
   ];
 
-  // Use sheet hero rows if available, otherwise fall back to defaults
-  const heroItems = sheetProducts.filter(p =>
-    (p.category || '').toLowerCase().trim() === 'hero' && p.mediaUrl
+  // ── Get hero rows from sheet (category = "hero") ──
+  const heroRows = sheetProducts.filter(p =>
+    (p.category || '').toLowerCase().trim() === 'hero'
   );
 
-  const frameIds = ['heroFrame1', 'heroFrame2', 'heroFrame3'];
+  // Helper: get raw column value from a sheet product
+  const raw = (p, col) => {
+    if (!p || !p.raw) return null;
+    const key = Object.keys(p.raw).find(k => k.trim().toLowerCase() === col.toLowerCase());
+    return key ? (p.raw[key] !== null ? String(p.raw[key]).trim() : null) : null;
+  };
 
-  frameIds.forEach((frameId, i) => {
-    const frame = document.getElementById(frameId);
-    if (!frame) return;
+  // Helper: set text content safely
+  const setText = (id, val) => {
+    if (!val) return;
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  };
 
-    const source = heroItems[i]
-      ? { url: heroItems[i].mediaUrl, alt: heroItems[i].name || 'MK Shop' }
-      : HERO_DEFAULTS[i];
+  // ── Process each of the 3 hero slots ──
+  [0, 1, 2].forEach(i => {
+    const sheet  = heroRows[i] || null;
+    const def    = HERO_DEFAULTS[i];
+    const frameId = `heroFrame${i + 1}`;
+    const frame   = document.getElementById(frameId);
 
-    if (!source) return;
+    // ── Image ──
+    const imgUrl = (sheet && sheet.mediaUrl) ? sheet.mediaUrl : def.url;
+    const imgAlt = (sheet && sheet.name)     ? sheet.name     : def.alt;
 
-    const img = document.createElement('img');
-    img.src = source.url;
-    img.alt = source.alt;
-    img.loading = i === 0 ? 'eager' : 'lazy';
-    img.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:inherit;transition:opacity 0.5s ease;';
+    if (frame && imgUrl) {
+      const img = document.createElement('img');
+      img.src     = imgUrl;
+      img.alt     = imgAlt;
+      img.loading = i === 0 ? 'eager' : 'lazy';
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:inherit;transition:opacity 0.5s ease;';
+      img.onerror = () => img.remove();
+      img.onload  = () => {
+        const ph = frame.querySelector('.hero-img-placeholder');
+        if (ph) ph.style.opacity = '0';
+      };
+      frame.style.position = 'relative';
+      frame.insertBefore(img, frame.firstChild);
+    }
 
-    img.onerror = () => img.remove();
+    // ── Subtitle ──
+    const subtitle = sheet ? raw(sheet, 'subtitle') : def.subtitle;
+    if (subtitle) setText(`heroSubtitle${i + 1}`, subtitle);
 
-    frame.style.position = 'relative';
-    frame.insertBefore(img, frame.firstChild);
+    // ── Slide 1 specific: stats + floating cards + badge ──
+    if (i === 0) {
+      const badge = sheet ? raw(sheet, 'badge') : def.badge;
+      if (badge) setText('heroBadgeSale1', badge);
 
-    img.onload = () => {
-      const placeholder = frame.querySelector('.hero-img-placeholder');
-      if (placeholder) placeholder.style.opacity = '0';
-    };
+      setText('heroStat1Num',   sheet ? raw(sheet, 'stat1num')   : def.stat1Num);
+      setText('heroStat1Label', sheet ? raw(sheet, 'stat1label') : def.stat1Label);
+      setText('heroStat2Num',   sheet ? raw(sheet, 'stat2num')   : def.stat2Num);
+      setText('heroStat2Label', sheet ? raw(sheet, 'stat2label') : def.stat2Label);
+      setText('heroStat3Num',   sheet ? raw(sheet, 'stat3num')   : def.stat3Num);
+      setText('heroStat3Label', sheet ? raw(sheet, 'stat3label') : def.stat3Label);
+
+      setText('heroCard1Title', sheet ? raw(sheet, 'card1title') : def.card1Title);
+      setText('heroCard1Text',  sheet ? raw(sheet, 'card1text')  : def.card1Text);
+      setText('heroCard2Title', sheet ? raw(sheet, 'card2title') : def.card2Title);
+      setText('heroCard2Text',  sheet ? raw(sheet, 'card2text')  : def.card2Text);
+    }
+
+    // ── Slide 2 specific: sale percentage ──
+    if (i === 1) {
+      const pct = sheet ? raw(sheet, 'salepercent') : def.salePercent;
+      if (pct) setText('heroSalePercent', pct);
+    }
   });
 }
 
-// Hook into the existing sheet handler
-const _origHandleSheetProducts = handleSheetProducts;
+// Hook into sheet handler + load defaults immediately
+const _origHandleSheetProductsHero = window.handleSheetProducts || handleSheetProducts;
 window.handleSheetProducts = function(products) {
-  _origHandleSheetProducts(products);
+  _origHandleSheetProductsHero(products);
   loadHeroImagesFromSheet(products);
 };
 
-// Also load defaults immediately on page load (before sheet responds)
 document.addEventListener('DOMContentLoaded', () => loadHeroImagesFromSheet([]));
