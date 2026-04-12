@@ -878,5 +878,78 @@
   <script src="js/sheet-loader.js"></script>
   <script src="js/products.js"></script>
   <script src="js/main.js"></script>
+
+  <!-- Apply admin settings from localStorage -->
+  <script>
+  (function applyAdminSettings() {
+    try {
+      const s = JSON.parse(localStorage.getItem('mk_site_settings'));
+      if (!s) return;
+
+      // WhatsApp number — replace all wa.me links
+      if (s.whatsapp) {
+        document.querySelectorAll('a[href*="wa.me/"]').forEach(a => {
+          a.href = a.href.replace(/wa\.me\/\d+/, 'wa.me/' + s.whatsapp);
+        });
+      }
+
+      // Business hours
+      if (s.hours) {
+        document.querySelectorAll('.footer-contact p').forEach(p => {
+          if (p.querySelector('.fa-clock')) p.innerHTML = '<i class="fas fa-clock"></i> ' + s.hours;
+        });
+      }
+
+      // Business address
+      if (s.address) {
+        document.querySelectorAll('.footer-contact p').forEach(p => {
+          if (p.querySelector('.fa-map-marker-alt')) p.innerHTML = '<i class="fas fa-map-marker-alt"></i> ' + s.address;
+        });
+      }
+
+      // Social links
+      if (s.socialIG) { const a = document.querySelector('.social-btn.ig'); if (a) a.href = s.socialIG; }
+      if (s.socialFB) { const a = document.querySelector('.social-btn.fb'); if (a) a.href = s.socialFB; }
+      if (s.socialTT) { const a = document.querySelector('.social-btn.tt'); if (a) a.href = s.socialTT; }
+
+      // Flash sale section visibility
+      if (s.flashActive === false) {
+        const promo = document.getElementById('promos');
+        if (promo) promo.style.display = 'none';
+      }
+
+      // Flash sale discounts
+      if (s.discWigs || s.discBags || s.discShoes || s.discDresses) {
+        const tags = document.querySelectorAll('.promo-tags span');
+        const map = [
+          { el: tags[0], val: s.discWigs,    label: 'Perruques' },
+          { el: tags[1], val: s.discBags,    label: 'Sacs' },
+          { el: tags[2], val: s.discShoes,   label: 'Chaussures' },
+          { el: tags[3], val: s.discDresses, label: 'Robes' },
+        ];
+        map.forEach(({ el, val, label }) => {
+          if (el && val) el.textContent = label + ' -' + val + '%';
+        });
+      }
+
+      // Flash sale title
+      if (s.flashTitle) {
+        const h2 = document.querySelector('.promo-text h2');
+        if (h2) h2.textContent = s.flashTitle;
+      }
+
+      // Hero title + subtitle (applied before sheet overrides)
+      if (s.heroTitle) {
+        const el = document.getElementById('heroTitle1');
+        if (el) el.innerHTML = s.heroTitle;
+      }
+      if (s.heroSubtitle) {
+        const el = document.getElementById('heroSubtitle1');
+        if (el) el.textContent = s.heroSubtitle;
+      }
+
+    } catch(e) { console.warn('Settings apply error:', e); }
+  })();
+  </script>
 </body>
 </html>

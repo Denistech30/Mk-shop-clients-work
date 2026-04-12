@@ -13,6 +13,36 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;background:
 .hdr img{height:34px;width:auto;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,.5))}
 .hdr h1{font-size:.9rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px}
 .hdr p{font-size:.68rem;color:var(--gr)}
+/* ── Tab bar ── */
+.tab-bar{display:flex;background:var(--dk2);border-bottom:1px solid rgba(255,255,255,.07);position:sticky;top:68px;z-index:99;overflow-x:auto}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{flex:1;min-width:120px;padding:.75rem .5rem;font-size:.78rem;font-weight:600;color:var(--gr);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.35rem;transition:color .2s,border-color .2s;white-space:nowrap}
+.tab-btn:hover{color:var(--w)}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-btn .crown{color:#f59e0b;font-size:.7rem}
+.tab-panel{display:none}.tab-panel.active{display:block}
+/* ── Premium lock screen ── */
+.prem-lock{display:flex;flex-direction:column;align-items:center;text-align:center;padding:2.5rem 1rem;gap:1.2rem}
+.prem-lock .lock-icon{font-size:3.5rem;color:var(--gold);background:rgba(201,168,76,.1);width:90px;height:90px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid rgba(201,168,76,.3)}
+.prem-lock h2{font-size:1.2rem;font-weight:700}
+.prem-lock p{font-size:.85rem;color:var(--gr);line-height:1.6;max-width:300px}
+.btn-wa{background:#25d366;color:#fff;border:none;border-radius:var(--r);padding:.8rem 1.4rem;font-size:.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.5rem;text-decoration:none;transition:background .2s}
+.btn-wa:hover{background:#128c7e}
+.code-row{display:flex;gap:.5rem;width:100%;max-width:320px}
+.code-row input{flex:1}
+.code-row button{white-space:nowrap;padding:.82rem 1rem;border-radius:var(--rs);background:var(--gold);color:var(--dk);border:none;font-weight:700;cursor:pointer;font-size:.88rem;transition:background .2s}
+.code-row button:hover{background:var(--gl)}
+/* ── Settings panel ── */
+.settings-section{background:var(--dk2);border:1px solid rgba(255,255,255,.07);border-radius:var(--r);padding:1.2rem;margin-bottom:1.2rem}
+.settings-section h3{font-size:.78rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;display:flex;align-items:center;gap:.4rem}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.5rem 0}
+.toggle-row span{font-size:.85rem;color:var(--w)}
+.toggle{position:relative;width:44px;height:24px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:#333;border-radius:50px;cursor:pointer;transition:.3s}
+.toggle-slider:before{content:'';position:absolute;width:18px;height:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s}
+.toggle input:checked+.toggle-slider{background:var(--gold)}
+.toggle input:checked+.toggle-slider:before{transform:translateX(20px)}
 .wrap{max-width:520px;margin:0 auto;padding:1.4rem 1rem}
 #loginScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:70vh;gap:1.4rem;text-align:center}
 .lock{font-size:3rem;color:var(--gold)}
@@ -97,6 +127,18 @@ hr.div{border:none;border-top:1px solid rgba(255,255,255,.07);margin:1.4rem 0}
   </div>
 </div>
 
+<!-- Tab navigation (shown after login) -->
+<div class="tab-bar" id="tabBar" style="display:none">
+  <button class="tab-btn active" onclick="switchTab('products')" id="tabProducts">
+    <i class="fas fa-box-open"></i> Produits
+  </button>
+  <button class="tab-btn" onclick="switchTab('settings')" id="tabSettings">
+    <i class="fas fa-crown crown"></i> Paramètres du Site
+  </button>
+</div>
+
+<!-- ══ TAB: PRODUCTS ══ -->
+<div class="tab-panel active" id="panelProducts">
 <div class="wrap">
   <!-- LOGIN -->
   <div id="loginScreen">
@@ -198,6 +240,98 @@ hr.div{border:none;border-top:1px solid rgba(255,255,255,.07);margin:1.4rem 0}
     </div>
   </div>
 </div>
+</div><!-- end panelProducts -->
+
+<!-- ══ TAB: SETTINGS ══ -->
+<div class="tab-panel" id="panelSettings">
+<div class="wrap">
+
+  <!-- LOCK SCREEN -->
+  <div id="settingsLock" class="prem-lock">
+    <div class="lock-icon"><i class="fas fa-lock"></i></div>
+    <h2>Fonctionnalité Premium</h2>
+    <p>Cette fonctionnalité nécessite une activation. Contactez votre développeur pour obtenir votre code d'activation.</p>
+    <a href="https://wa.me/237682513941?text=Bonjour%20Denis!%20Je%20voudrais%20activer%20les%20Param%C3%A8tres%20du%20Site%20sur%20MK%20Shop." target="_blank" class="btn-wa">
+      <i class="fab fa-whatsapp"></i> Contacter le Développeur
+    </a>
+    <div class="code-row">
+      <input type="text" id="activationCode" placeholder="Entrez votre code d'activation" autocomplete="off"/>
+      <button onclick="activateCode()">Activer</button>
+    </div>
+    <div id="activationMsg" class="status" style="width:100%;max-width:320px;margin:0"></div>
+  </div>
+
+  <!-- SETTINGS PANEL (shown after unlock) -->
+  <div id="settingsPanel" style="display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.4rem">
+      <h2 style="font-size:1rem;font-weight:700"><i class="fas fa-sliders-h" style="color:var(--gold);margin-right:.4rem"></i>Paramètres du Site</h2>
+      <button onclick="lockSettings()" style="background:none;border:1px solid rgba(255,255,255,.15);color:var(--gr);border-radius:var(--rs);padding:.3rem .7rem;font-size:.72rem;cursor:pointer">
+        <i class="fas fa-lock"></i> Verrouiller
+      </button>
+    </div>
+
+    <div id="settingsStatus" class="status" style="margin-bottom:1rem"></div>
+
+    <!-- Hero Section -->
+    <div class="settings-section">
+      <h3><i class="fas fa-image"></i> Section Hero</h3>
+      <div class="field"><label>Titre principal</label><input type="text" id="sHeroTitle" placeholder="Ex: Femme Élégante"/></div>
+      <div class="field"><label>Sous-titre</label><textarea id="sHeroSubtitle" placeholder="Ex: Découvrez les robes..."></textarea></div>
+      <div class="field">
+        <label>Image de fond <span class="opt">– upload vers Cloudinary</span></label>
+        <div class="photo-area" id="heroPhotoArea" style="margin-bottom:.5rem">
+          <input type="file" id="heroPhotoInput" accept="image/*" onchange="onHeroPhoto(event)"/>
+          <i class="fas fa-image"></i>
+          <p id="heroPhotoText">Choisir une image hero</p>
+          <small>Recommandé: 1920×1080px</small>
+        </div>
+        <img id="heroImgPreview" style="width:100%;max-height:140px;object-fit:cover;border-radius:var(--rs);display:none;" alt="Hero preview"/>
+        <input type="text" id="sHeroImageUrl" placeholder="Ou collez une URL d'image directement" style="margin-top:.5rem"/>
+      </div>
+    </div>
+
+    <!-- Flash Sale -->
+    <div class="settings-section">
+      <h3><i class="fas fa-fire"></i> Flash Sale</h3>
+      <div class="toggle-row">
+        <span>Activer le Flash Sale</span>
+        <label class="toggle"><input type="checkbox" id="sFlashActive"/><span class="toggle-slider"></span></label>
+      </div>
+      <div class="field" style="margin-top:.8rem"><label>Titre du Flash Sale</label><input type="text" id="sFlashTitle" placeholder="Ex: Flash Sale – Cette Semaine Seulement!"/></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem">
+        <div class="field"><label>Perruques %</label><input type="number" id="sDiscWigs" placeholder="40" min="0" max="100"/></div>
+        <div class="field"><label>Sacs %</label><input type="number" id="sDiscBags" placeholder="30" min="0" max="100"/></div>
+        <div class="field"><label>Chaussures %</label><input type="number" id="sDiscShoes" placeholder="25" min="0" max="100"/></div>
+        <div class="field"><label>Robes %</label><input type="number" id="sDiscDresses" placeholder="35" min="0" max="100"/></div>
+      </div>
+    </div>
+
+    <!-- Social Media -->
+    <div class="settings-section">
+      <h3><i class="fas fa-share-alt"></i> Réseaux Sociaux</h3>
+      <div class="field"><label>Instagram URL</label><input type="url" id="sSocialIG" placeholder="https://instagram.com/mkshop"/></div>
+      <div class="field"><label>Facebook URL</label><input type="url" id="sSocialFB" placeholder="https://facebook.com/mkshop"/></div>
+      <div class="field"><label>TikTok URL</label><input type="url" id="sSocialTT" placeholder="https://tiktok.com/@mkshop"/></div>
+    </div>
+
+    <!-- Business Info -->
+    <div class="settings-section">
+      <h3><i class="fas fa-store"></i> Informations Boutique</h3>
+      <div class="field"><label>Numéro WhatsApp</label><input type="text" id="sWhatsApp" placeholder="237682513941"/></div>
+      <div class="field"><label>Horaires d'ouverture</label><input type="text" id="sHours" placeholder="Lun–Sam: 8h–20h"/></div>
+      <div class="field"><label>Adresse</label><input type="text" id="sAddress" placeholder="Douala, Cameroun"/></div>
+    </div>
+
+    <button class="btn btn-gold" onclick="saveSettings()">
+      <i class="fas fa-save"></i> Enregistrer les Paramètres
+    </button>
+    <button class="btn btn-dark" onclick="resetSettings()" style="margin-top:.65rem">
+      <i class="fas fa-undo"></i> Réinitialiser aux valeurs par défaut
+    </button>
+  </div>
+
+</div>
+</div><!-- end panelSettings -->
 
 <script>
 const PW     = 'Manu237#';
@@ -215,6 +349,7 @@ function checkPw() {
   if (v === PW) {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('mainForm').style.display = 'block';
+    document.getElementById('tabBar').style.display = 'flex';
     loadUrl();
     loadProducts();
   } else {
@@ -505,6 +640,215 @@ function resetForm() {
   document.getElementById('photoArea').classList.remove('has');
   blob=null; clearStatus();
 }
+
+// ══════════════════════════════════════════════════════════
+//  TAB SWITCHING
+// ══════════════════════════════════════════════════════════
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+  document.getElementById('panel' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+  if (tab === 'settings') initSettingsTab();
+}
+
+// ══════════════════════════════════════════════════════════
+//  PREMIUM ACTIVATION
+// ══════════════════════════════════════════════════════════
+const LIFETIME_CODE = 'MK-LIFETIME-2026-DENIS';
+
+function getMonthlyCode() {
+  const now = new Date();
+  return 'MK-' + (now.getMonth() + 1) + now.getFullYear() + '-SHOP';
+}
+
+function isAccessValid() {
+  const stored = localStorage.getItem('mk_settings_access');
+  if (!stored) return false;
+  if (stored === 'lifetime') return true;
+  // Check monthly: stored format "4-2026"
+  const now = new Date();
+  const expected = (now.getMonth() + 1) + '-' + now.getFullYear();
+  return stored === expected;
+}
+
+function activateCode() {
+  const code = document.getElementById('activationCode').value.trim();
+  const msg  = document.getElementById('activationMsg');
+
+  if (!code) return;
+
+  if (code === LIFETIME_CODE) {
+    localStorage.setItem('mk_settings_access', 'lifetime');
+    showActivationSuccess(msg);
+  } else if (code === getMonthlyCode()) {
+    const now = new Date();
+    localStorage.setItem('mk_settings_access', (now.getMonth() + 1) + '-' + now.getFullYear());
+    showActivationSuccess(msg);
+  } else {
+    msg.className = 'status error';
+    msg.textContent = 'Code incorrect. Veuillez réessayer.';
+    msg.style.display = 'block';
+    document.getElementById('activationCode').value = '';
+  }
+}
+
+function showActivationSuccess(msgEl) {
+  msgEl.className = 'status success';
+  msgEl.textContent = 'Fonctionnalité activée avec succès!';
+  msgEl.style.display = 'block';
+  setTimeout(() => {
+    document.getElementById('settingsLock').style.display = 'none';
+    document.getElementById('settingsPanel').style.display = 'block';
+    loadSettingsValues();
+  }, 1000);
+}
+
+function lockSettings() {
+  localStorage.removeItem('mk_settings_access');
+  document.getElementById('settingsPanel').style.display = 'none';
+  document.getElementById('settingsLock').style.display = 'flex';
+  document.getElementById('activationCode').value = '';
+  document.getElementById('activationMsg').style.display = 'none';
+}
+
+function initSettingsTab() {
+  if (isAccessValid()) {
+    document.getElementById('settingsLock').style.display = 'none';
+    document.getElementById('settingsPanel').style.display = 'block';
+    loadSettingsValues();
+  } else {
+    document.getElementById('settingsLock').style.display = 'flex';
+    document.getElementById('settingsPanel').style.display = 'none';
+  }
+}
+
+document.getElementById('activationCode')?.addEventListener('keydown', e => {
+  if (e.key === 'Enter') activateCode();
+});
+
+// ══════════════════════════════════════════════════════════
+//  SETTINGS SAVE / LOAD
+// ══════════════════════════════════════════════════════════
+const SETTINGS_KEY = 'mk_site_settings';
+
+function getSettings() {
+  try { return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; } catch { return {}; }
+}
+
+function loadSettingsValues() {
+  const s = getSettings();
+  const set = (id, val) => { if (val !== undefined && val !== null) document.getElementById(id).value = val; };
+  set('sHeroTitle',    s.heroTitle);
+  set('sHeroSubtitle', s.heroSubtitle);
+  set('sHeroImageUrl', s.heroImageUrl);
+  set('sFlashTitle',   s.flashTitle);
+  set('sDiscWigs',     s.discWigs);
+  set('sDiscBags',     s.discBags);
+  set('sDiscShoes',    s.discShoes);
+  set('sDiscDresses',  s.discDresses);
+  set('sSocialIG',     s.socialIG);
+  set('sSocialFB',     s.socialFB);
+  set('sSocialTT',     s.socialTT);
+  set('sWhatsApp',     s.whatsapp);
+  set('sHours',        s.hours);
+  set('sAddress',      s.address);
+  if (s.flashActive !== undefined) document.getElementById('sFlashActive').checked = s.flashActive;
+  if (s.heroImageUrl) {
+    document.getElementById('heroImgPreview').src = s.heroImageUrl;
+    document.getElementById('heroImgPreview').style.display = 'block';
+  }
+}
+
+function saveSettings() {
+  const s = {
+    heroTitle:    document.getElementById('sHeroTitle').value.trim(),
+    heroSubtitle: document.getElementById('sHeroSubtitle').value.trim(),
+    heroImageUrl: document.getElementById('sHeroImageUrl').value.trim() || heroUploadedUrl,
+    flashActive:  document.getElementById('sFlashActive').checked,
+    flashTitle:   document.getElementById('sFlashTitle').value.trim(),
+    discWigs:     document.getElementById('sDiscWigs').value,
+    discBags:     document.getElementById('sDiscBags').value,
+    discShoes:    document.getElementById('sDiscShoes').value,
+    discDresses:  document.getElementById('sDiscDresses').value,
+    socialIG:     document.getElementById('sSocialIG').value.trim(),
+    socialFB:     document.getElementById('sSocialFB').value.trim(),
+    socialTT:     document.getElementById('sSocialTT').value.trim(),
+    whatsapp:     document.getElementById('sWhatsApp').value.trim(),
+    hours:        document.getElementById('sHours').value.trim(),
+    address:      document.getElementById('sAddress').value.trim(),
+  };
+
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+
+  const msg = document.getElementById('settingsStatus');
+  msg.className = 'status success';
+  msg.innerHTML = '<i class="fas fa-check-circle"></i> Paramètres enregistrés! Les changements seront visibles sur le site.';
+  msg.style.display = 'block';
+  setTimeout(() => { msg.style.display = 'none'; }, 3500);
+}
+
+function resetSettings() {
+  if (!confirm('Réinitialiser tous les paramètres aux valeurs par défaut?')) return;
+  localStorage.removeItem(SETTINGS_KEY);
+  heroUploadedUrl = '';
+  ['sHeroTitle','sHeroSubtitle','sHeroImageUrl','sFlashTitle','sDiscWigs','sDiscBags',
+   'sDiscShoes','sDiscDresses','sSocialIG','sSocialFB','sSocialTT','sWhatsApp','sHours','sAddress']
+    .forEach(id => document.getElementById(id).value = '');
+  document.getElementById('sFlashActive').checked = false;
+  document.getElementById('heroImgPreview').style.display = 'none';
+  const msg = document.getElementById('settingsStatus');
+  msg.className = 'status success';
+  msg.textContent = 'Paramètres réinitialisés.';
+  msg.style.display = 'block';
+  setTimeout(() => { msg.style.display = 'none'; }, 2500);
+}
+
+// ── Hero image upload ─────────────────────────────────────
+let heroUploadedUrl = '';
+let heroBlob = null;
+
+function onHeroPhoto(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      const MAX = 1920;
+      let w = img.width, h = img.height;
+      if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      c.toBlob(async b => {
+        heroBlob = b;
+        document.getElementById('heroImgPreview').src = URL.createObjectURL(b);
+        document.getElementById('heroImgPreview').style.display = 'block';
+        document.getElementById('heroPhotoText').textContent = 'Upload en cours...';
+        // Upload to Cloudinary
+        try {
+          const fd = new FormData();
+          fd.append('file', b, 'hero.jpg');
+          fd.append('upload_preset', PRESET);
+          fd.append('folder', 'mkshop/hero');
+          const res = await fetch(CDN, { method:'POST', body:fd });
+          const data = await res.json();
+          if (data.secure_url) {
+            heroUploadedUrl = data.secure_url;
+            document.getElementById('sHeroImageUrl').value = heroUploadedUrl;
+            document.getElementById('heroPhotoText').textContent = 'Image uploadée!';
+          }
+        } catch { document.getElementById('heroPhotoText').textContent = 'Erreur upload. Collez l\'URL manuellement.'; }
+      }, 'image/jpeg', 0.82);
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// Show tabs after login
+const _origCheckPw = checkPw;
 </script>
 </body>
 </html>
