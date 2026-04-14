@@ -217,18 +217,6 @@ hr.div{border:none;border-top:1px solid rgba(255,255,255,.06);margin:1.4rem 0}
   <!-- ── MAIN DASHBOARD ── -->
   <div id="dashboard" style="display:none">
 
-    <!-- Script URL setup notice -->
-    <div class="notice" id="setupNotice">
-      <strong><i class="fas fa-info-circle"></i> Configuration requise</strong><br/>
-      Collez l'URL de votre Google Apps Script déployé ci-dessous.
-      <div class="field" style="margin-top:.6rem;margin-bottom:.5rem">
-        <input type="url" id="scriptUrlInput" placeholder="https://script.google.com/macros/s/..."/>
-      </div>
-      <button onclick="saveScriptUrl()" class="btn btn-dark" style="width:auto;padding:.5rem 1rem;font-size:.78rem">
-        <i class="fas fa-save"></i> Enregistrer
-      </button>
-    </div>
-
     <!-- Tabs -->
     <div class="tabs">
       <button class="tab-btn active" id="tabAdd" onclick="switchTab('add')">
@@ -491,10 +479,10 @@ hr.div{border:none;border-top:1px solid rgba(255,255,255,.06);margin:1.4rem 0}
 
 <script>
 // ── Config ──────────────────────────────────────────────
-var PASSWORD    = 'Manu237#';
-var CDN_URL     = 'https://api.cloudinary.com/v1_1/drntx3vgo/image/upload';
-var CDN_PRESET  = 'mk_shop_uploads';
-var SCRIPT_KEY  = 'mks_script_url';
+var PASSWORD   = 'Manu237#';
+var CDN_URL    = 'https://api.cloudinary.com/v1_1/drntx3vgo/image/upload';
+var CDN_PRESET = 'mk_shop_uploads';
+var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxI1WfUQzuXp0vLIknrzXeEvceFg4h0_RdQM2tWIhMbovaZH_gb0jm7rZSrp9EFH5U7/exec';
 
 // ── State ────────────────────────────────────────────────
 var photoBlob       = null;
@@ -512,7 +500,6 @@ function checkPw() {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('dashboard').style.display  = 'block';
     document.getElementById('logoutBtn').style.display  = 'block';
-    loadScriptUrl();
     loadProducts();
   } else {
     var err = document.getElementById('loginErr');
@@ -531,32 +518,17 @@ function logout() {
   resetForm();
 }
 
-// ── Script URL ───────────────────────────────────────────
-function saveScriptUrl() {
-  var url = document.getElementById('scriptUrlInput').value.trim();
-  if (!url.startsWith('https://script.google.com')) {
-    showStatus('formStatus', 'error', 'URL invalide. Elle doit commencer par https://script.google.com');
-    return;
-  }
-  localStorage.setItem(SCRIPT_KEY, url);
-  document.getElementById('setupNotice').style.display = 'none';
-  showStatus('formStatus', 'success', 'URL enregistrée avec succès!');
-  setTimeout(function() { clearStatus('formStatus'); loadProducts(); }, 2000);
+// ── Call Apps Script ─────────────────────────────────────
+async function callScript(params) {
+  var qs  = new URLSearchParams(params).toString();
+  var res = await fetch(APPS_SCRIPT_URL + '?' + qs);
+  if (!res.ok) throw new Error('NETWORK');
+  var text = await res.text();
+  var data;
+  try { data = JSON.parse(text); } catch(x) { data = { status: text }; }
+  if (data.status === 'error') throw new Error('SHEET: ' + (data.message || ''));
+  return data;
 }
-
-function loadScriptUrl() {
-  var saved = localStorage.getItem(SCRIPT_KEY);
-  if (saved) {
-    document.getElementById('scriptUrlInput').value = saved;
-    document.getElementById('setupNotice').style.display = 'none';
-  }
-}
-
-function getScriptUrl() {
-  return localStorage.getItem(SCRIPT_KEY) || '';
-}
-
-// ── Tabs ─────────────────────────────────────────────────
 function switchTab(tab) {
   var panels = { add: 'panelAdd', list: 'panelList', settings: 'panelSettings' };
   var tabBtns = { add: 'tabAdd', list: 'tabList', settings: 'tabSettings' };
@@ -616,10 +588,8 @@ async function uploadPhoto() {
 
 // ── Call Apps Script ─────────────────────────────────────
 async function callScript(params) {
-  var url = getScriptUrl();
-  if (!url) throw new Error('NO_URL');
   var qs  = new URLSearchParams(params).toString();
-  var res = await fetch(url + '?' + qs);
+  var res = await fetch(APPS_SCRIPT_URL + '?' + qs);
   if (!res.ok) throw new Error('NETWORK');
   var text = await res.text();
   var data;
@@ -637,7 +607,6 @@ async function submitProduct() {
   if (!name)  { showStatus('formStatus', 'error', 'Le nom du produit est requis.'); return; }
   if (!price) { showStatus('formStatus', 'error', 'Le prix est requis.'); return; }
   if (!isEdit && !photoBlob) { showStatus('formStatus', 'error', 'Une photo est requise pour ajouter un produit.'); return; }
-  if (!getScriptUrl()) { showStatus('formStatus', 'error', 'URL Apps Script manquante. Configurez-la en haut.'); return; }
 
   var btn = document.getElementById('submitBtn');
   btn.disabled = true;
@@ -680,7 +649,6 @@ async function submitProduct() {
 
   } catch(err) {
     var msg = 'Une erreur est survenue. Vérifiez votre connexion.';
-    if (err.message === 'NO_URL')      msg = 'URL Apps Script manquante.';
     if (err.message === 'NO_PHOTO')    msg = 'Aucune photo sélectionnée.';
     if (err.message === 'CLOUDINARY')  msg = "Échec de l'upload photo. Réessayez.";
     if (err.message === 'NETWORK')     msg = 'Impossible de joindre le serveur.';
@@ -694,7 +662,6 @@ async function submitProduct() {
 
 // ── Load products list ───────────────────────────────────
 async function loadProducts() {
-  if (!getScriptUrl()) return;
   var list  = document.getElementById('prodList');
   var count = document.getElementById('prodCount');
   list.innerHTML = '<div class="prod-loading"><span class="spin"></span> Chargement...</div>';
@@ -745,7 +712,6 @@ function renderCard(p) {
 
 // ── Edit ─────────────────────────────────────────────────
 async function startEdit(rowIndex) {
-  if (!getScriptUrl()) { showStatus('formStatus', 'error', 'URL manquante.'); return; }
   try {
     var data = await callScript({ action: 'getProducts' });
     var p    = (data.products || []).find(function(x) { return x._rowIndex === rowIndex; });
