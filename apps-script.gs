@@ -74,7 +74,12 @@ function getProducts() {
 }
 
 function addProduct(row) {
-  getSheet().appendRow(row);
+  const sheet = getSheet();
+  // If sheet is empty (no header row), write headers first
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(['name','price','oldprice','category','mediaurl','badge','description','collection','image2','image3','image4']);
+  }
+  sheet.appendRow(row);
 }
 
 function deleteProduct(rowIndex) {

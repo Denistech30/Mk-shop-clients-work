@@ -93,14 +93,18 @@ hr.div{border:none;border-top:1px solid rgba(255,255,255,.06);margin:1.4rem 0}
 .edit-banner{background:rgba(201,168,76,.08);border:1.5px solid rgba(201,168,76,.35);border-radius:var(--r);padding:.75rem 1rem;display:none;align-items:center;gap:.7rem;margin-bottom:1rem;font-size:.83rem;color:var(--gl);font-weight:600}
 .edit-banner button{margin-left:auto;background:none;border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:var(--rs);padding:.28rem .65rem;font-size:.72rem;cursor:pointer}
 
-/* ── Photo area ── */
-.photo-area{border:2px dashed rgba(201,168,76,.28);border-radius:var(--r);padding:1.4rem 1rem;text-align:center;background:rgba(201,168,76,.02);transition:border-color .2s,background .2s}
-.photo-area.has{border-color:var(--gold);background:rgba(201,168,76,.05)}
-.photo-area i{font-size:1.9rem;color:var(--gold);margin-bottom:.45rem;display:block}
-.photo-area p{font-size:.83rem;color:rgba(255,255,255,.5)}
-.photo-btns{display:flex;gap:.6rem;justify-content:center;margin-top:.9rem;flex-wrap:wrap}
-.photo-btns button{padding:.6rem 1.1rem;font-size:.84rem;width:auto}
-#imgPreview{width:100%;max-height:220px;object-fit:cover;border-radius:var(--rs);margin-top:.8rem;display:none;border:1px solid rgba(255,255,255,.08)}
+/* ── Multi-photo uploader ── */
+.photo-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-bottom:.8rem}
+.photo-slot{aspect-ratio:1;border-radius:var(--rs);border:2px dashed rgba(201,168,76,.25);background:var(--dk3);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;transition:border-color .2s,background .2s}
+.photo-slot:hover{border-color:var(--gold);background:rgba(201,168,76,.06)}
+.photo-slot.filled{border-color:var(--gold);border-style:solid}
+.photo-slot.filled img{width:100%;height:100%;object-fit:cover;display:block}
+.photo-slot .slot-icon{font-size:1.3rem;color:rgba(201,168,76,.4);pointer-events:none}
+.photo-slot .slot-num{font-size:.6rem;color:var(--gr);margin-top:.25rem;pointer-events:none}
+.photo-slot .slot-badge{position:absolute;top:3px;left:4px;background:var(--gold);color:var(--dk);font-size:.55rem;font-weight:800;padding:1px 5px;border-radius:4px;line-height:1.4}
+.photo-slot .slot-remove{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:rgba(229,57,53,.9);border:none;color:#fff;font-size:.6rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2}
+.photo-add-btns{display:flex;gap:.5rem;flex-wrap:wrap}
+.photo-add-btns button{flex:1;min-width:120px;padding:.6rem;font-size:.8rem;width:auto}
 
 /* ── Tabs ── */
 .tabs{display:flex;gap:.4rem;margin-bottom:1.5rem;background:var(--dk2);border-radius:var(--r);padding:.35rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -242,24 +246,42 @@ hr.div{border:none;border-top:1px solid rgba(255,255,255,.06);margin:1.4rem 0}
       <div id="formStatus" class="status"></div>
       <div class="prog-wrap" id="progWrap"><div class="prog-bar" id="progBar"></div></div>
 
-      <!-- Photo -->
-      <p class="sec-lbl">Photo du produit</p>
-      <div class="photo-area" id="photoArea">
-        <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="onPhoto(event)"/>
-        <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none" onchange="onPhoto(event)"/>
-        <i class="fas fa-image"></i>
-        <p id="photoAreaText">Aucune photo sélectionnée</p>
-        <div class="photo-btns">
-          <button type="button" class="btn btn-gold" onclick="document.getElementById('cameraInput').click()">
-            <i class="fas fa-camera"></i> Caméra
-          </button>
-          <button type="button" class="btn btn-dark" onclick="document.getElementById('photoInput').click()">
-            <i class="fas fa-images"></i> Galerie
-          </button>
+      <!-- Photos (up to 4) -->
+      <p class="sec-lbl">Photos du produit <span style="color:var(--gr);font-weight:400;text-transform:none;font-size:.68rem">– jusqu'à 4 photos</span></p>
+
+      <!-- Hidden file inputs -->
+      <input type="file" id="photoInputFile" accept="image/*" style="display:none" onchange="onPhotoFile(event)"/>
+      <input type="file" id="cameraInputFile" accept="image/*" capture="environment" style="display:none" onchange="onPhotoFile(event)"/>
+
+      <!-- Thumbnail strip -->
+      <div class="photo-slots" id="photoSlots">
+        <div class="photo-slot" id="slot0" onclick="pickSlot(0)">
+          <i class="fas fa-plus slot-icon"></i>
+          <span class="slot-num">Photo 1</span>
         </div>
-        <small style="color:var(--gr);font-size:.7rem;margin-top:.5rem;display:block">Compressée automatiquement avant envoi</small>
+        <div class="photo-slot" id="slot1" onclick="pickSlot(1)">
+          <i class="fas fa-plus slot-icon"></i>
+          <span class="slot-num">Photo 2</span>
+        </div>
+        <div class="photo-slot" id="slot2" onclick="pickSlot(2)">
+          <i class="fas fa-plus slot-icon"></i>
+          <span class="slot-num">Photo 3</span>
+        </div>
+        <div class="photo-slot" id="slot3" onclick="pickSlot(3)">
+          <i class="fas fa-plus slot-icon"></i>
+          <span class="slot-num">Photo 4</span>
+        </div>
       </div>
-      <img id="imgPreview" alt="Aperçu"/>
+
+      <div class="photo-add-btns">
+        <button type="button" class="btn btn-gold" onclick="triggerCamera()">
+          <i class="fas fa-camera"></i> Caméra
+        </button>
+        <button type="button" class="btn btn-dark" onclick="triggerGallery()">
+          <i class="fas fa-images"></i> Galerie
+        </button>
+      </div>
+      <small style="color:var(--gr);font-size:.7rem;margin-top:.5rem;display:block">Cliquez sur un emplacement pour changer sa photo. Compressées automatiquement.</small>
 
       <hr class="div"/>
       <p class="sec-lbl">Détails du produit</p>
@@ -485,9 +507,11 @@ var CDN_PRESET = 'mk_shop_uploads';
 var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxI1WfUQzuXp0vLIknrzXeEvceFg4h0_RdQM2tWIhMbovaZH_gb0jm7rZSrp9EFH5U7/exec';
 
 // ── State ────────────────────────────────────────────────
-var photoBlob       = null;
+var photoSlots      = [null, null, null, null]; // blobs for new uploads
+var existingImgs    = ['', '', '', ''];          // URLs from sheet (edit mode)
+var activeSlot      = 0;                         // which slot the file picker targets
 var editRowIndex    = null;
-var editExistingImg = '';
+var editExistingImg = ''; // kept for compat, mirrors existingImgs[0]
 
 // ── Boot ─────────────────────────────────────────────────
 document.getElementById('pwInput').addEventListener('keydown', function(e) {
@@ -542,11 +566,27 @@ function switchTab(tab) {
   if (tab === 'settings') openSettingsTab();
 }
 
-// ── Photo handling ───────────────────────────────────────
-function onPhoto(e) {
+// ── Photo slot picking ───────────────────────────────────
+function pickSlot(index) {
+  activeSlot = index;
+  document.getElementById('photoInputFile').click();
+}
+function triggerCamera() {
+  // Find first empty slot, or slot 0
+  activeSlot = photoSlots.findIndex(function(b) { return !b; });
+  if (activeSlot === -1) activeSlot = 0;
+  document.getElementById('cameraInputFile').click();
+}
+function triggerGallery() {
+  activeSlot = photoSlots.findIndex(function(b) { return !b; });
+  if (activeSlot === -1) activeSlot = 0;
+  document.getElementById('photoInputFile').click();
+}
+
+function onPhotoFile(e) {
   var file = e.target.files[0];
   if (!file) return;
-
+  var slot = activeSlot;
   var reader = new FileReader();
   reader.onload = function(ev) {
     var img = new Image();
@@ -557,31 +597,47 @@ function onPhoto(e) {
       canvas.width = w; canvas.height = h;
       canvas.getContext('2d').drawImage(img, 0, 0, w, h);
       canvas.toBlob(function(blob) {
-        photoBlob = blob;
-        var preview = document.getElementById('imgPreview');
-        preview.src = URL.createObjectURL(blob);
-        preview.style.display = 'block';
-        document.getElementById('photoArea').classList.add('has');
-        document.getElementById('photoAreaText').textContent =
-          'Photo prête – ' + (blob.size / 1024).toFixed(0) + ' KB';
+        photoSlots[slot] = blob;
+        renderSlot(slot, URL.createObjectURL(blob));
       }, 'image/jpeg', 0.78);
     };
     img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
+  // Reset input so same file can be re-selected
+  e.target.value = '';
 }
 
-// ── Upload to Cloudinary ─────────────────────────────────
-async function uploadPhoto() {
-  if (!photoBlob) throw new Error('NO_PHOTO');
+function renderSlot(index, previewUrl) {
+  var el = document.getElementById('slot' + index);
+  var label = index === 0 ? 'Principal' : 'Photo ' + (index + 1);
+  el.classList.add('filled');
+  el.innerHTML =
+    '<img src="' + previewUrl + '" alt="Photo ' + (index + 1) + '"/>' +
+    '<span class="slot-badge">' + label + '</span>' +
+    '<button class="slot-remove" onclick="removeSlot(event,' + index + ')"><i class="fas fa-times"></i></button>';
+}
+
+function removeSlot(e, index) {
+  e.stopPropagation();
+  photoSlots[index] = null;
+  existingImgs[index] = '';
+  var el = document.getElementById('slot' + index);
+  el.classList.remove('filled');
+  el.innerHTML =
+    '<i class="fas fa-plus slot-icon"></i>' +
+    '<span class="slot-num">Photo ' + (index + 1) + '</span>';
+  el.onclick = function() { pickSlot(index); };
+}
+
+// ── Upload one blob to Cloudinary ────────────────────────
+async function uploadOnePhoto(blob, filename) {
   var fd = new FormData();
-  fd.append('file', photoBlob, 'product.jpg');
+  fd.append('file', blob, filename);
   fd.append('upload_preset', CDN_PRESET);
   fd.append('folder', 'mkshop');
-  setProgress(35);
   var res  = await fetch(CDN_URL, { method: 'POST', body: fd });
   var data = await res.json();
-  setProgress(65);
   if (!res.ok || !data.secure_url) throw new Error('CLOUDINARY');
   return data.secure_url;
 }
@@ -600,39 +656,54 @@ async function callScript(params) {
 
 // ── Submit (add or update) ───────────────────────────────
 async function submitProduct() {
-  var name  = document.getElementById('fName').value.trim();
-  var price = document.getElementById('fPrice').value.trim();
+  var name   = document.getElementById('fName').value.trim();
+  var price  = document.getElementById('fPrice').value.trim();
   var isEdit = editRowIndex !== null;
+  var hasAnyPhoto = photoSlots.some(function(b) { return b; }) ||
+                    existingImgs.some(function(u) { return u; });
 
   if (!name)  { showStatus('formStatus', 'error', 'Le nom du produit est requis.'); return; }
   if (!price) { showStatus('formStatus', 'error', 'Le prix est requis.'); return; }
-  if (!isEdit && !photoBlob) { showStatus('formStatus', 'error', 'Une photo est requise pour ajouter un produit.'); return; }
+  if (!isEdit && !photoSlots[0]) { showStatus('formStatus', 'error', 'La photo principale (Photo 1) est requise.'); return; }
 
   var btn = document.getElementById('submitBtn');
   btn.disabled = true;
   showProgress();
 
   try {
-    var imgUrl = editExistingImg;
+    // Upload any new blobs, keep existing URLs for unchanged slots
+    var urls = ['', '', '', ''];
+    var totalUploads = photoSlots.filter(function(b) { return b; }).length;
+    var uploaded = 0;
 
-    if (photoBlob) {
-      showStatus('formStatus', 'loading', '<span class="spin"></span> Envoi de la photo...');
-      imgUrl = await uploadPhoto();
+    for (var i = 0; i < 4; i++) {
+      if (photoSlots[i]) {
+        showStatus('formStatus', 'loading',
+          '<span class="spin"></span> Upload photo ' + (i + 1) + '/' + totalUploads + '...');
+        urls[i] = await uploadOnePhoto(photoSlots[i], 'product-' + (i + 1) + '.jpg');
+        uploaded++;
+        setProgress(20 + Math.round((uploaded / totalUploads) * 50));
+      } else {
+        urls[i] = existingImgs[i] || '';
+      }
     }
 
     showStatus('formStatus', 'loading',
       '<span class="spin"></span> ' + (isEdit ? 'Mise à jour en cours...' : 'Enregistrement...'));
 
-    // Row order must match Sheet columns: name, price, oldprice, category, mediaurl, badge, description, collection
+    // Row: name, price, oldprice, category, mediaurl, badge, description, collection, image2, image3, image4
     var row = [
       name,
       price,
       document.getElementById('fOld').value.trim(),
       document.getElementById('fCat').value,
-      imgUrl,
+      urls[0],
       document.getElementById('fBadge').value,
       document.getElementById('fDesc').value.trim(),
-      document.getElementById('fCol').value.trim()
+      document.getElementById('fCol').value.trim(),
+      urls[1],
+      urls[2],
+      urls[3]
     ];
 
     if (isEdit) {
@@ -649,7 +720,6 @@ async function submitProduct() {
 
   } catch(err) {
     var msg = 'Une erreur est survenue. Vérifiez votre connexion.';
-    if (err.message === 'NO_PHOTO')    msg = 'Aucune photo sélectionnée.';
     if (err.message === 'CLOUDINARY')  msg = "Échec de l'upload photo. Réessayez.";
     if (err.message === 'NETWORK')     msg = 'Impossible de joindre le serveur.';
     if (err.message.startsWith('SHEET')) msg = 'Erreur Google Sheet: ' + err.message;
@@ -717,8 +787,17 @@ async function startEdit(rowIndex) {
     var p    = (data.products || []).find(function(x) { return x._rowIndex === rowIndex; });
     if (!p) { showStatus('formStatus', 'error', 'Produit introuvable.'); return; }
 
-    editRowIndex    = rowIndex;
-    editExistingImg = p.mediaurl || p.image || '';
+    editRowIndex = rowIndex;
+
+    // Load existing image URLs into slots
+    var imgKeys = ['mediaurl', 'image2', 'image3', 'image4'];
+    existingImgs = imgKeys.map(function(k) { return p[k] || ''; });
+    photoSlots   = [null, null, null, null];
+    editExistingImg = existingImgs[0];
+
+    existingImgs.forEach(function(url, i) {
+      if (url) renderSlot(i, url);
+    });
 
     document.getElementById('fName').value  = p.name        || '';
     document.getElementById('fPrice').value = p.price       || '';
@@ -728,16 +807,8 @@ async function startEdit(rowIndex) {
     document.getElementById('fDesc').value  = p.description || '';
     document.getElementById('fCol').value   = p.collection  || '';
 
-    if (editExistingImg) {
-      var prev = document.getElementById('imgPreview');
-      prev.src = editExistingImg;
-      prev.style.display = 'block';
-      document.getElementById('photoArea').classList.add('has');
-    }
-
-    document.getElementById('photoAreaText').textContent = 'Changer la photo (optionnel)';
-    document.getElementById('submitTxt').textContent     = 'Mettre à jour';
-    document.getElementById('editBanner').style.display  = 'flex';
+    document.getElementById('submitTxt').textContent    = 'Mettre à jour';
+    document.getElementById('editBanner').style.display = 'flex';
 
     switchTab('add');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -750,9 +821,9 @@ async function startEdit(rowIndex) {
 function cancelEdit() {
   editRowIndex    = null;
   editExistingImg = '';
-  document.getElementById('editBanner').style.display  = 'none';
-  document.getElementById('photoAreaText').textContent = 'Aucune photo sélectionnée';
-  document.getElementById('submitTxt').textContent     = 'Ajouter le Produit';
+  existingImgs    = ['', '', '', ''];
+  document.getElementById('editBanner').style.display = 'none';
+  document.getElementById('submitTxt').textContent    = 'Ajouter le Produit';
   resetForm();
 }
 
@@ -788,12 +859,20 @@ function resetForm() {
   });
   document.getElementById('fCat').value   = 'Femme';
   document.getElementById('fBadge').value = '';
-  document.getElementById('photoInput').value  = '';
-  document.getElementById('cameraInput').value = '';
-  document.getElementById('imgPreview').style.display = 'none';
-  document.getElementById('photoArea').classList.remove('has');
-  document.getElementById('photoAreaText').textContent = 'Aucune photo sélectionnée';
-  photoBlob = null;
+  document.getElementById('photoInputFile').value  = '';
+  document.getElementById('cameraInputFile').value = '';
+
+  // Reset all 4 slots
+  photoSlots   = [null, null, null, null];
+  existingImgs = ['', '', '', ''];
+  for (var i = 0; i < 4; i++) {
+    var el = document.getElementById('slot' + i);
+    el.classList.remove('filled');
+    el.innerHTML =
+      '<i class="fas fa-plus slot-icon"></i>' +
+      '<span class="slot-num">Photo ' + (i + 1) + '</span>';
+    (function(idx) { el.onclick = function() { pickSlot(idx); }; })(i);
+  }
   clearStatus('formStatus');
 }
 

@@ -210,9 +210,9 @@ function _normalizeRow(raw, rowIndex) {
   const rawId = _get(raw, 'id');
   const price = _get(raw, 'price');
 
-  // Collect extra images: Image2, Image3, Image4 ... Image9
+  // Collect extra images: image2, image3, image4 (columns added by admin multi-upload)
   const extraImages = [];
-  for (let n = 2; n <= 9; n++) {
+  for (let n = 2; n <= 4; n++) {
     const key = Object.keys(raw).find(k =>
       k.trim().toLowerCase() === `image${n}` ||
       k.trim().toLowerCase() === `image ${n}` ||

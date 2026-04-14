@@ -913,7 +913,12 @@ function renderSheetProductCard(product, index) {
             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
        <div class="product-placeholder" style="background:${cardProduct.gradient};display:none;">
          <i class="${cardProduct.icon}"></i><span>${cardProduct.name}</span>
-       </div>`
+       </div>
+       ${cardProduct.images && cardProduct.images.length > 1
+         ? `<div style="position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:3px;z-index:2;">
+              ${cardProduct.images.map((_, i) => `<span style="width:${i===0?'14px':'6px'};height:6px;border-radius:3px;background:${i===0?'#fff':'rgba(255,255,255,0.5)'};transition:width .2s;display:block;"></span>`).join('')}
+            </div>`
+         : ''}`
     : `<div class="product-placeholder" style="background:${cardProduct.gradient};">
          <i class="${cardProduct.icon}"></i><span>${cardProduct.name}</span>
        </div>`;
