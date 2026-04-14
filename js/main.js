@@ -637,15 +637,47 @@ function initProductModal() {
 function openProductModal(product) {
   if (!product) return;
 
-  console.log('[Modal] Opening:', product.name, '| mediaUrl:', product.mediaUrl);
+  // Build the images array: mediaUrl + any extra images
+  const images = (product.images && product.images.length)
+    ? product.images
+    : (product.mediaUrl ? [product.mediaUrl] : []);
 
-  const img = document.getElementById('modalImage');
-  if (img) {
-    img.src = product.mediaUrl || '';
-    img.alt = product.name || '';
-    img.style.display = product.mediaUrl ? 'block' : 'none';
+  // ── Rebuild the image area dynamically ──
+  const imgWrap = document.querySelector('#productModal .modal-img-area');
+  if (imgWrap) {
+    if (images.length <= 1) {
+      // Single image — simple
+      imgWrap.innerHTML = images[0]
+        ? `<img src="${images[0]}" alt="${product.name || ''}" style="width:100%;max-height:420px;object-fit:contain;display:block;background:#111;">`
+        : '';
+    } else {
+      // Gallery — slides + arrows + dots + swipe
+      const slides = images.map((url, i) =>
+        `<div class="mg-slide" style="min-width:100%;display:${i===0?'flex':'none'};align-items:center;justify-content:center;background:#111;">
+           <img src="${url}" alt="${product.name} ${i+1}" loading="${i===0?'eager':'lazy'}"
+                style="width:100%;max-height:420px;object-fit:contain;display:block;">
+         </div>`
+      ).join('');
+
+      const dots = images.map((_, i) =>
+        `<button class="mg-dot" data-i="${i}" style="width:${i===0?'18px':'8px'};height:8px;border-radius:4px;border:none;background:${i===0?'#fff':'rgba(255,255,255,0.4)'};cursor:pointer;transition:all .25s;padding:0;"></button>`
+      ).join('');
+
+      imgWrap.innerHTML = `
+        <div class="mg-track" style="display:flex;overflow:hidden;position:relative;">
+          ${slides}
+        </div>
+        <button class="mg-prev" style="position:absolute;left:8px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.55);border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:14px;cursor:pointer;z-index:3;display:flex;align-items:center;justify-content:center;">&#8249;</button>
+        <button class="mg-next" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.55);border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:14px;cursor:pointer;z-index:3;display:flex;align-items:center;justify-content:center;">&#8250;</button>
+        <div class="mg-dots" style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:3;">${dots}</div>
+        <span class="mg-counter" style="position:absolute;top:10px;right:12px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:50px;z-index:3;">1 / ${images.length}</span>`;
+
+      // Wire up gallery controls
+      _initModalGallery(imgWrap, images.length);
+    }
   }
 
+  // ── Text fields ──
   const el = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
   el('modalName',        product.name || '');
   el('modalCategory',    product.category || '');
@@ -654,19 +686,51 @@ function openProductModal(product) {
   el('modalOldPrice',    product.oldPrice ? product.oldPrice.toLocaleString('fr-FR') + ' FCFA' : '');
 
   const cartBtn = document.getElementById('modalAddCart');
-  if (cartBtn) {
-    cartBtn.onclick = () => { cart.add(product.id); closeProductModal(); };
-  }
+  if (cartBtn) cartBtn.onclick = () => { cart.add(product.id); closeProductModal(); };
 
   const waBtn = document.getElementById('modalWhatsApp');
-  if (waBtn) {
-    waBtn.onclick = () => window.open(buildWhatsAppURL(product), '_blank', 'noopener');
-  }
+  if (waBtn) waBtn.onclick = () => window.open(buildWhatsAppURL(product), '_blank', 'noopener');
 
   document.getElementById('productModal').style.display = 'block';
   document.body.style.overflow = 'hidden';
 
   renderRelatedProducts(product);
+}
+
+function _initModalGallery(wrap, total) {
+  let current = 0;
+
+  const slides  = wrap.querySelectorAll('.mg-slide');
+  const dots    = wrap.querySelectorAll('.mg-dot');
+  const counter = wrap.querySelector('.mg-counter');
+  const prev    = wrap.querySelector('.mg-prev');
+  const next    = wrap.querySelector('.mg-next');
+
+  function goTo(index) {
+    slides[current].style.display = 'none';
+    dots[current].style.width = '8px';
+    dots[current].style.background = 'rgba(255,255,255,0.4)';
+
+    current = (index + total) % total;
+
+    slides[current].style.display = 'flex';
+    dots[current].style.width = '18px';
+    dots[current].style.background = '#fff';
+    if (counter) counter.textContent = (current + 1) + ' / ' + total;
+  }
+
+  prev?.addEventListener('click', () => goTo(current - 1));
+  next?.addEventListener('click', () => goTo(current + 1));
+  dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+
+  // Touch swipe
+  let touchStartX = 0;
+  const track = wrap.querySelector('.mg-track');
+  track?.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  track?.addEventListener('touchend', e => {
+    const dx = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 40) goTo(dx > 0 ? current + 1 : current - 1);
+  }, { passive: true });
 }
 
 function closeProductModal() {
