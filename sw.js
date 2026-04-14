@@ -3,8 +3,8 @@
 //   Bump version to force reinstall and clear old caches
 // ═══════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'mkshop-v5';
-const IMAGE_CACHE = 'mkshop-images-v5';
+const CACHE_NAME = 'mkshop-v6';
+const IMAGE_CACHE = 'mkshop-images-v6';
 
 // App shell — cached on install, served instantly forever
 const PRECACHE_URLS = [
@@ -86,7 +86,15 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // 4. Own app shell (HTML/CSS/JS) → stale-while-revalidate
+  // 4. Admin page — always network-first, never serve stale
+  if (url.pathname.endsWith('/admin.html') || url.pathname.endsWith('/admin')) {
+    event.respondWith(
+      fetch(request).catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  // 5. Own app shell (HTML/CSS/JS) → stale-while-revalidate
   if (url.origin === self.location.origin) {
     event.respondWith(staleWhileRevalidate(request));
     return;
