@@ -3,13 +3,14 @@
 //   Bump version to force reinstall and clear old caches
 // ═══════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'mkshop-v4';
-const IMAGE_CACHE = 'mkshop-images-v4';
+const CACHE_NAME = 'mkshop-v5';
+const IMAGE_CACHE = 'mkshop-images-v5';
 
 // App shell — cached on install, served instantly forever
 const PRECACHE_URLS = [
   '/',
   '/index.html',
+  '/admin.html',
   '/css/style.css',
   '/js/sheet-loader.js',
   '/js/products.js',
@@ -122,7 +123,20 @@ async function staleWhileRevalidate(request) {
     return response;
   }).catch(() => null);
 
-  return cached || await networkFetch || new Response('Offline', { status: 503 });
+  if (cached) {
+    // Revalidate in background, return cached immediately
+    networkFetch;
+    return cached;
+  }
+
+  const fresh = await networkFetch;
+  if (fresh) return fresh;
+
+  // Last resort: return index.html for document requests
+  if (request.destination === 'document') {
+    return caches.match(request.url) || caches.match('/index.html') || new Response('Offline', { status: 503 });
+  }
+  return new Response('Offline', { status: 503 });
 }
 
 // ─── Network with cache fallback ─────────────────────────
