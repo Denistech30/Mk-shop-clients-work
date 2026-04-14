@@ -103,9 +103,45 @@ hr.div{border:none;border-top:1px solid rgba(255,255,255,.06);margin:1.4rem 0}
 #imgPreview{width:100%;max-height:220px;object-fit:cover;border-radius:var(--rs);margin-top:.8rem;display:none;border:1px solid rgba(255,255,255,.08)}
 
 /* ── Tabs ── */
-.tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;background:var(--dk2);border-radius:var(--r);padding:.35rem}
-.tab-btn{flex:1;padding:.65rem;border:none;border-radius:var(--rs);background:none;color:var(--gr);font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s}
+.tabs{display:flex;gap:.4rem;margin-bottom:1.5rem;background:var(--dk2);border-radius:var(--r);padding:.35rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{flex:1;min-width:max-content;padding:.62rem .7rem;border:none;border-radius:var(--rs);background:none;color:var(--gr);font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
 .tab-btn.active{background:var(--dk3);color:var(--w);box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.tab-btn.tab-premium{color:#a07830}
+.tab-btn.tab-premium.active{color:var(--gold)}
+
+/* ── Premium lock screen ── */
+.premium-lock{display:flex;flex-direction:column;align-items:center;text-align:center;padding:2rem 1rem;gap:1.2rem}
+.premium-lock-icon{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.04));border:2px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-size:2.2rem;color:var(--gold);position:relative}
+.premium-lock-icon .crown{position:absolute;top:-10px;right:-6px;font-size:.9rem;color:var(--gold)}
+.premium-lock h2{font-size:1.2rem;font-weight:800}
+.premium-lock p{font-size:.83rem;color:var(--gr);line-height:1.65;max-width:300px}
+.premium-lock-card{background:var(--dk2);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:1.5rem;width:100%;max-width:340px}
+.btn-whatsapp{background:linear-gradient(135deg,#25d366,#128c7e);color:#fff}
+.btn-whatsapp:hover:not(:disabled){opacity:.88}
+
+/* ── Settings panel ── */
+.settings-section{background:var(--dk2);border:1px solid rgba(255,255,255,.06);border-radius:var(--r);padding:1.2rem;margin-bottom:1rem}
+.settings-section-title{font-size:.72rem;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.settings-section-title i{font-size:.85rem}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.toggle-row:last-child{border-bottom:none}
+.toggle-label{font-size:.85rem;color:rgba(255,255,255,.8)}
+.toggle-sub{font-size:.7rem;color:var(--gr);margin-top:.15rem}
+/* Toggle switch */
+.toggle-switch{position:relative;width:44px;height:24px;flex-shrink:0}
+.toggle-switch input{opacity:0;width:0;height:0;position:absolute}
+.toggle-slider{position:absolute;inset:0;background:rgba(255,255,255,.1);border-radius:50px;cursor:pointer;transition:.3s}
+.toggle-slider:before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.3s}
+.toggle-switch input:checked + .toggle-slider{background:var(--gold)}
+.toggle-switch input:checked + .toggle-slider:before{transform:translateX(20px)}
+/* Discount grid */
+.discount-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.discount-item label{font-size:.68rem;color:var(--gr);text-transform:none;letter-spacing:0;font-weight:500}
+.discount-item input{padding:.6rem .75rem;font-size:.88rem}
+/* Access badge */
+.access-badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);border-radius:50px;padding:.3rem .8rem;font-size:.72rem;color:var(--gold);font-weight:700;margin-bottom:1rem}
+.access-badge.lifetime{background:rgba(37,211,102,.08);border-color:rgba(37,211,102,.3);color:#69f0ae}
 
 /* ── Product list ── */
 .prod-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
@@ -200,6 +236,9 @@ hr.div{border:none;border-top:1px solid rgba(255,255,255,.06);margin:1.4rem 0}
       </button>
       <button class="tab-btn" id="tabList" onclick="switchTab('list')">
         <i class="fas fa-box-open"></i> Mes Produits
+      </button>
+      <button class="tab-btn tab-premium" id="tabSettings" onclick="switchTab('settings')">
+        <i class="fas fa-crown"></i> Paramètres du Site
       </button>
     </div>
 
@@ -302,6 +341,148 @@ hr.div{border:none;border-top:1px solid rgba(255,255,255,.06);margin:1.4rem 0}
       </div>
     </div>
 
+    <!-- ── TAB: SETTINGS ── -->
+    <div id="panelSettings" style="display:none">
+
+      <!-- LOCK SCREEN -->
+      <div id="settingsLock">
+        <div class="premium-lock">
+          <div class="premium-lock-icon">
+            <i class="fas fa-lock"></i>
+            <i class="fas fa-crown crown"></i>
+          </div>
+          <div>
+            <h2>Fonctionnalité Premium</h2>
+            <p>Cette fonctionnalité nécessite une activation. Contactez votre développeur pour obtenir votre code d'activation.</p>
+          </div>
+          <a href="https://wa.me/237682513941" target="_blank" rel="noopener" class="btn btn-whatsapp" style="max-width:300px">
+            <i class="fab fa-whatsapp"></i> Contacter le Développeur
+          </a>
+          <div class="premium-lock-card">
+            <div class="field" style="margin-bottom:.8rem">
+              <label for="activationCode">Code d'activation</label>
+              <input type="text" id="activationCode" placeholder="Entrez votre code d'activation" autocomplete="off"/>
+            </div>
+            <div id="activationStatus" class="status"></div>
+            <button class="btn btn-gold" onclick="activatePremium()">
+              <i class="fas fa-unlock-alt"></i> Activer
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS PANEL (shown after unlock) -->
+      <div id="settingsPanel" style="display:none">
+
+        <div id="settingsStatus" class="status"></div>
+
+        <!-- Access badge -->
+        <div id="accessBadge" class="access-badge">
+          <i class="fas fa-crown"></i> <span id="accessBadgeText">Accès Mensuel</span>
+        </div>
+
+        <!-- Hero Section -->
+        <div class="settings-section">
+          <div class="settings-section-title"><i class="fas fa-image"></i> Section Hero</div>
+          <div class="field">
+            <label for="sHeroTitle">Titre principal</label>
+            <input type="text" id="sHeroTitle" placeholder="Ex: Femme Élégante"/>
+          </div>
+          <div class="field">
+            <label for="sHeroSubtitle">Sous-titre</label>
+            <textarea id="sHeroSubtitle" placeholder="Ex: Découvrez les robes qui subliment chaque femme..." style="min-height:70px"></textarea>
+          </div>
+          <div class="field">
+            <label>Image de fond du Hero <span class="opt">– optionnel</span></label>
+            <input type="file" id="sHeroBgInput" accept="image/*" style="display:none" onchange="onHeroBgPhoto(event)"/>
+            <button type="button" class="btn btn-dark" style="padding:.65rem" onclick="document.getElementById('sHeroBgInput').click()">
+              <i class="fas fa-upload"></i> Choisir une image
+            </button>
+            <small id="sHeroBgName" style="color:var(--gr);font-size:.7rem;margin-top:.3rem"></small>
+          </div>
+        </div>
+
+        <!-- Flash Sale -->
+        <div class="settings-section">
+          <div class="settings-section-title"><i class="fas fa-fire"></i> Flash Sale</div>
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">Activer le Flash Sale</div>
+              <div class="toggle-sub">Affiche ou masque la section promo sur le site</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="sFlashActive"/>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="field" style="margin-top:.9rem">
+            <label for="sFlashTitle">Titre du Flash Sale</label>
+            <input type="text" id="sFlashTitle" placeholder="Ex: Flash Sale – Cette Semaine Seulement!"/>
+          </div>
+          <div class="discount-grid">
+            <div class="discount-item field">
+              <label for="sDiscPerruques">Perruques (%)</label>
+              <input type="number" id="sDiscPerruques" placeholder="40" min="0" max="100"/>
+            </div>
+            <div class="discount-item field">
+              <label for="sDiscSacs">Sacs (%)</label>
+              <input type="number" id="sDiscSacs" placeholder="30" min="0" max="100"/>
+            </div>
+            <div class="discount-item field">
+              <label for="sDiscChaussures">Chaussures (%)</label>
+              <input type="number" id="sDiscChaussures" placeholder="25" min="0" max="100"/>
+            </div>
+            <div class="discount-item field">
+              <label for="sDiscRobes">Robes (%)</label>
+              <input type="number" id="sDiscRobes" placeholder="35" min="0" max="100"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Social Media -->
+        <div class="settings-section">
+          <div class="settings-section-title"><i class="fas fa-share-alt"></i> Réseaux Sociaux</div>
+          <div class="field">
+            <label for="sInstagram">Instagram URL</label>
+            <input type="url" id="sInstagram" placeholder="https://instagram.com/mkshop"/>
+          </div>
+          <div class="field">
+            <label for="sFacebook">Facebook URL</label>
+            <input type="url" id="sFacebook" placeholder="https://facebook.com/mkshop"/>
+          </div>
+          <div class="field">
+            <label for="sTiktok">TikTok URL</label>
+            <input type="url" id="sTiktok" placeholder="https://tiktok.com/@mkshop"/>
+          </div>
+        </div>
+
+        <!-- Business Info -->
+        <div class="settings-section">
+          <div class="settings-section-title"><i class="fas fa-store"></i> Informations Boutique</div>
+          <div class="field">
+            <label for="sWhatsapp">Numéro WhatsApp</label>
+            <input type="text" id="sWhatsapp" placeholder="Ex: 237682513941"/>
+          </div>
+          <div class="field">
+            <label for="sHours">Horaires d'ouverture</label>
+            <input type="text" id="sHours" placeholder="Ex: Lun–Sam 08h–20h"/>
+          </div>
+          <div class="field">
+            <label for="sAddress">Adresse</label>
+            <input type="text" id="sAddress" placeholder="Ex: Douala, Cameroun"/>
+          </div>
+        </div>
+
+        <button class="btn btn-gold" onclick="saveSettings()">
+          <i class="fas fa-save"></i> Enregistrer les Paramètres
+        </button>
+        <button class="btn btn-dark" onclick="resetSettingsAccess()" style="margin-top:.6rem;font-size:.78rem;padding:.6rem">
+          <i class="fas fa-sign-out-alt"></i> Révoquer l'accès Premium
+        </button>
+      </div>
+
+    </div><!-- /panelSettings -->
+
   </div><!-- /dashboard -->
 </div><!-- /wrap -->
 
@@ -374,12 +555,16 @@ function getScriptUrl() {
 
 // ── Tabs ─────────────────────────────────────────────────
 function switchTab(tab) {
-  var isAdd = tab === 'add';
-  document.getElementById('panelAdd').style.display  = isAdd ? 'block' : 'none';
-  document.getElementById('panelList').style.display = isAdd ? 'none'  : 'block';
-  document.getElementById('tabAdd').classList.toggle('active', isAdd);
-  document.getElementById('tabList').classList.toggle('active', !isAdd);
-  if (!isAdd) loadProducts();
+  var panels = { add: 'panelAdd', list: 'panelList', settings: 'panelSettings' };
+  var tabBtns = { add: 'tabAdd', list: 'tabList', settings: 'tabSettings' };
+
+  Object.keys(panels).forEach(function(key) {
+    document.getElementById(panels[key]).style.display = (key === tab) ? 'block' : 'none';
+    document.getElementById(tabBtns[key]).classList.toggle('active', key === tab);
+  });
+
+  if (tab === 'list') loadProducts();
+  if (tab === 'settings') openSettingsTab();
 }
 
 // ── Photo handling ───────────────────────────────────────
@@ -671,6 +856,207 @@ function hideProgress() {
 
 function setProgress(v) {
   document.getElementById('progBar').style.width = v + '%';
+}
+
+// ════════════════════════════════════════════════════════
+//  PREMIUM SETTINGS
+// ════════════════════════════════════════════════════════
+var SETTINGS_KEY = 'mk_site_settings';
+var ACCESS_KEY   = 'mk_settings_access';
+var heroBgBlob   = null;
+
+// ── Generate expected monthly code ───────────────────────
+function getMonthlyCode() {
+  var now = new Date();
+  return 'MK-' + (now.getMonth() + 1) + now.getFullYear() + '-SHOP';
+}
+
+// ── Check if current access is valid ─────────────────────
+function isAccessValid() {
+  var stored = localStorage.getItem(ACCESS_KEY);
+  if (!stored) return false;
+  if (stored === 'lifetime') return true;
+  // Monthly: stored as "M-YYYY"
+  var now = new Date();
+  var expected = (now.getMonth() + 1) + '-' + now.getFullYear();
+  return stored === expected;
+}
+
+// ── Open settings tab ────────────────────────────────────
+function openSettingsTab() {
+  if (isAccessValid()) {
+    showSettingsPanel();
+  } else {
+    document.getElementById('settingsLock').style.display  = 'block';
+    document.getElementById('settingsPanel').style.display = 'none';
+    clearStatus('activationStatus');
+    document.getElementById('activationCode').value = '';
+  }
+}
+
+// ── Activate premium ─────────────────────────────────────
+function activatePremium() {
+  var code = document.getElementById('activationCode').value.trim();
+  if (!code) {
+    showStatus('activationStatus', 'error', 'Veuillez entrer un code.');
+    return;
+  }
+
+  if (code === 'MK-LIFETIME-2026-DENIS') {
+    localStorage.setItem(ACCESS_KEY, 'lifetime');
+    showStatus('activationStatus', 'success', '<i class="fas fa-check-circle"></i> Fonctionnalité activée avec succès!');
+    setTimeout(showSettingsPanel, 1200);
+    return;
+  }
+
+  if (code === getMonthlyCode()) {
+    var now = new Date();
+    localStorage.setItem(ACCESS_KEY, (now.getMonth() + 1) + '-' + now.getFullYear());
+    showStatus('activationStatus', 'success', '<i class="fas fa-check-circle"></i> Fonctionnalité activée avec succès!');
+    setTimeout(showSettingsPanel, 1200);
+    return;
+  }
+
+  showStatus('activationStatus', 'error', '<i class="fas fa-times-circle"></i> Code incorrect. Veuillez réessayer.');
+  document.getElementById('activationCode').value = '';
+  document.getElementById('activationCode').focus();
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && document.getElementById('activationCode') === document.activeElement) {
+    activatePremium();
+  }
+});
+
+// ── Show settings panel ───────────────────────────────────
+function showSettingsPanel() {
+  document.getElementById('settingsLock').style.display  = 'none';
+  document.getElementById('settingsPanel').style.display = 'block';
+
+  // Show access type badge
+  var stored = localStorage.getItem(ACCESS_KEY);
+  var badge  = document.getElementById('accessBadge');
+  var text   = document.getElementById('accessBadgeText');
+  if (stored === 'lifetime') {
+    badge.classList.add('lifetime');
+    text.textContent = 'Accès à Vie';
+  } else {
+    badge.classList.remove('lifetime');
+    var now = new Date();
+    var months = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+    text.textContent = 'Accès Mensuel – ' + months[now.getMonth()] + ' ' + now.getFullYear();
+  }
+
+  loadSettingsIntoForm();
+}
+
+// ── Save settings ─────────────────────────────────────────
+async function saveSettings() {
+  var btn = document.querySelector('#settingsPanel .btn-gold');
+  btn.disabled = true;
+
+  try {
+    var settings = loadSettings();
+
+    // Upload hero bg if a new one was selected
+    if (heroBgBlob) {
+      showStatus('settingsStatus', 'loading', '<span class="spin"></span> Upload de l\'image hero...');
+      var fd = new FormData();
+      fd.append('file', heroBgBlob, 'hero-bg.jpg');
+      fd.append('upload_preset', CDN_PRESET);
+      fd.append('folder', 'mkshop/settings');
+      var res  = await fetch(CDN_URL, { method: 'POST', body: fd });
+      var data = await res.json();
+      if (!res.ok || !data.secure_url) throw new Error('CLOUDINARY');
+      settings.heroBgUrl = data.secure_url;
+      heroBgBlob = null;
+      document.getElementById('sHeroBgName').textContent = 'Uploadée: ' + data.secure_url.split('/').pop();
+    }
+
+    settings.heroTitle      = document.getElementById('sHeroTitle').value.trim();
+    settings.heroSubtitle   = document.getElementById('sHeroSubtitle').value.trim();
+    settings.flashActive    = document.getElementById('sFlashActive').checked;
+    settings.flashTitle     = document.getElementById('sFlashTitle').value.trim();
+    settings.discPerruques  = document.getElementById('sDiscPerruques').value.trim();
+    settings.discSacs       = document.getElementById('sDiscSacs').value.trim();
+    settings.discChaussures = document.getElementById('sDiscChaussures').value.trim();
+    settings.discRobes      = document.getElementById('sDiscRobes').value.trim();
+    settings.instagram      = document.getElementById('sInstagram').value.trim();
+    settings.facebook       = document.getElementById('sFacebook').value.trim();
+    settings.tiktok         = document.getElementById('sTiktok').value.trim();
+    settings.whatsapp       = document.getElementById('sWhatsapp').value.trim();
+    settings.hours          = document.getElementById('sHours').value.trim();
+    settings.address        = document.getElementById('sAddress').value.trim();
+
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    showStatus('settingsStatus', 'success', '<i class="fas fa-check-circle"></i> Paramètres enregistrés! Les changements seront visibles sur le site.');
+    setTimeout(function() { clearStatus('settingsStatus'); }, 4000);
+
+  } catch(err) {
+    var msg = err.message === 'CLOUDINARY'
+      ? "Échec de l'upload de l'image hero."
+      : 'Erreur lors de la sauvegarde.';
+    showStatus('settingsStatus', 'error', msg);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ── Load settings from localStorage ──────────────────────
+function loadSettings() {
+  try { return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; } catch(e) { return {}; }
+}
+
+function loadSettingsIntoForm() {
+  var s = loadSettings();
+  document.getElementById('sHeroTitle').value      = s.heroTitle      || '';
+  document.getElementById('sHeroSubtitle').value   = s.heroSubtitle   || '';
+  document.getElementById('sFlashActive').checked  = s.flashActive    !== false;
+  document.getElementById('sFlashTitle').value     = s.flashTitle     || '';
+  document.getElementById('sDiscPerruques').value  = s.discPerruques  || '';
+  document.getElementById('sDiscSacs').value       = s.discSacs       || '';
+  document.getElementById('sDiscChaussures').value = s.discChaussures || '';
+  document.getElementById('sDiscRobes').value      = s.discRobes      || '';
+  document.getElementById('sInstagram').value      = s.instagram      || '';
+  document.getElementById('sFacebook').value       = s.facebook       || '';
+  document.getElementById('sTiktok').value         = s.tiktok         || '';
+  document.getElementById('sWhatsapp').value       = s.whatsapp       || '';
+  document.getElementById('sHours').value          = s.hours          || '';
+  document.getElementById('sAddress').value        = s.address        || '';
+  if (s.heroBgUrl) {
+    document.getElementById('sHeroBgName').textContent = 'Image actuelle: ' + s.heroBgUrl.split('/').pop();
+  }
+}
+
+// ── Hero bg photo ─────────────────────────────────────────
+function onHeroBgPhoto(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    var img = new Image();
+    img.onload = function() {
+      var MAX = 1400, w = img.width, h = img.height;
+      if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+      var canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      canvas.toBlob(function(blob) {
+        heroBgBlob = blob;
+        document.getElementById('sHeroBgName').textContent =
+          'Prête: ' + file.name + ' (' + (blob.size / 1024).toFixed(0) + ' KB)';
+      }, 'image/jpeg', 0.82);
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── Revoke access ─────────────────────────────────────────
+function resetSettingsAccess() {
+  if (!confirm('Révoquer l\'accès premium? Vous devrez entrer un nouveau code.')) return;
+  localStorage.removeItem(ACCESS_KEY);
+  openSettingsTab();
 }
 </script>
 </body>

@@ -891,6 +891,8 @@
         document.querySelectorAll('a[href*="wa.me/"]').forEach(a => {
           a.href = a.href.replace(/wa\.me\/\d+/, 'wa.me/' + s.whatsapp);
         });
+        // Also override the JS constant used by cart/product cards
+        if (typeof WHATSAPP_NUMBER !== 'undefined') window.WHATSAPP_NUMBER = s.whatsapp;
       }
 
       // Business hours
@@ -907,10 +909,13 @@
         });
       }
 
-      // Social links
-      if (s.socialIG) { const a = document.querySelector('.social-btn.ig'); if (a) a.href = s.socialIG; }
-      if (s.socialFB) { const a = document.querySelector('.social-btn.fb'); if (a) a.href = s.socialFB; }
-      if (s.socialTT) { const a = document.querySelector('.social-btn.tt'); if (a) a.href = s.socialTT; }
+      // Social links (support both old and new field names)
+      const ig = s.instagram || s.socialIG;
+      const fb = s.facebook  || s.socialFB;
+      const tt = s.tiktok    || s.socialTT;
+      if (ig) { const a = document.querySelector('.social-btn.ig'); if (a) a.href = ig; }
+      if (fb) { const a = document.querySelector('.social-btn.fb'); if (a) a.href = fb; }
+      if (tt) { const a = document.querySelector('.social-btn.tt'); if (a) a.href = tt; }
 
       // Flash sale section visibility
       if (s.flashActive === false) {
@@ -918,14 +923,18 @@
         if (promo) promo.style.display = 'none';
       }
 
-      // Flash sale discounts
-      if (s.discWigs || s.discBags || s.discShoes || s.discDresses) {
+      // Flash sale discounts (support both old and new field names)
+      const dWigs  = s.discPerruques  || s.discWigs;
+      const dBags  = s.discSacs       || s.discBags;
+      const dShoes = s.discChaussures || s.discShoes;
+      const dDress = s.discRobes      || s.discDresses;
+      if (dWigs || dBags || dShoes || dDress) {
         const tags = document.querySelectorAll('.promo-tags span');
         const map = [
-          { el: tags[0], val: s.discWigs,    label: 'Perruques' },
-          { el: tags[1], val: s.discBags,    label: 'Sacs' },
-          { el: tags[2], val: s.discShoes,   label: 'Chaussures' },
-          { el: tags[3], val: s.discDresses, label: 'Robes' },
+          { el: tags[0], val: dWigs,  label: 'Perruques' },
+          { el: tags[1], val: dBags,  label: 'Sacs' },
+          { el: tags[2], val: dShoes, label: 'Chaussures' },
+          { el: tags[3], val: dDress, label: 'Robes' },
         ];
         map.forEach(({ el, val, label }) => {
           if (el && val) el.textContent = label + ' -' + val + '%';
@@ -938,7 +947,7 @@
         if (h2) h2.textContent = s.flashTitle;
       }
 
-      // Hero title + subtitle (applied before sheet overrides)
+      // Hero title + subtitle
       if (s.heroTitle) {
         const el = document.getElementById('heroTitle1');
         if (el) el.innerHTML = s.heroTitle;
@@ -946,6 +955,16 @@
       if (s.heroSubtitle) {
         const el = document.getElementById('heroSubtitle1');
         if (el) el.textContent = s.heroSubtitle;
+      }
+
+      // Hero background image
+      if (s.heroBgUrl) {
+        const slide = document.querySelector('.hero-slide.active');
+        if (slide) {
+          slide.style.backgroundImage = 'url(' + s.heroBgUrl + ')';
+          slide.style.backgroundSize  = 'cover';
+          slide.style.backgroundPosition = 'center';
+        }
       }
 
     } catch(e) { console.warn('Settings apply error:', e); }
