@@ -604,6 +604,8 @@ function _getMediaType(url) {
   if (/youtube\.com\/watch|youtu\.be\/|youtube\.com\/shorts/.test(url)) return 'youtube';
   if (/tiktok\.com/.test(url)) return 'tiktok';
   if (/\.(mp4|webm|ogg|mov)$/.test(u)) return 'video';
+  // Cloudinary video URLs use /video/upload/ in the path
+  if (/cloudinary\.com/.test(u) && /\/video\/upload\//.test(u)) return 'video';
   if (/\.(jpg|jpeg|png|gif|webp|avif|svg)$/.test(u)) return 'image';
   // Default: treat as image (Google Drive, Cloudinary, etc.)
   return 'image';
@@ -815,22 +817,24 @@ const PRODUCTS_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT9W
 // Maps the "Category" column value in your sheet to the
 // correct HTML grid on the page. Add/rename as needed.
 const CATEGORY_GRID_MAP = {
-  'femme':      'womenGrid',
-  'women':      'womenGrid',
-  'woman':      'womenGrid',
-  'homme':      'menGrid',
-  'men':        'menGrid',
-  'man':        'menGrid',
-  'enfants':    'kidsGrid',
-  'kids':       'kidsGrid',
-  'children':   'kidsGrid',
-  'chaussures': 'shoesGrid',
-  'shoes':      'shoesGrid',
-  'sacs':       'bagsGrid',
-  'bags':       'bagsGrid',
-  'handbags':   'bagsGrid',
-  'perruques':  'wigsGrid',
-  'wigs':       'wigsGrid',
+  'femme':          'womenGrid',
+  'women':          'womenGrid',
+  'woman':          'womenGrid',
+  'homme':          'menGrid',
+  'men':            'menGrid',
+  'man':            'menGrid',
+  'enfants':        'kidsGrid',
+  'kids':           'kidsGrid',
+  'children':       'kidsGrid',
+  'chaussures':     'shoesGrid',
+  'shoes':          'shoesGrid',
+  'sacs':           'bagsGrid',
+  'sacs à main':    'bagsGrid',
+  'sacs a main':    'bagsGrid',
+  'bags':           'bagsGrid',
+  'handbags':       'bagsGrid',
+  'perruques':      'wigsGrid',
+  'wigs':           'wigsGrid',
 };
 
 // ─── Gradient palette (used when no image is provided) ────
@@ -1079,13 +1083,20 @@ function handleSheetProducts(products) {
   const groups = {};
 
   products.forEach((p, i) => {
-    const catKey = (p.category || '').toLowerCase().trim();
+    const catKey = (p.category || '').toLowerCase().trim()
+      // normalize accented chars so "sacs à main" → "sacs a main"
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+    // 1. exact match
+    // 2. partial: catKey contains a map key
+    // 3. partial: a map key contains catKey
     const gridId = CATEGORY_GRID_MAP[catKey]
       || Object.entries(CATEGORY_GRID_MAP).find(([k]) => catKey.includes(k))?.[1]
+      || Object.entries(CATEGORY_GRID_MAP).find(([k]) => k.includes(catKey))?.[1]
       || null;
 
     if (!gridId) {
-      console.warn(`[SheetLoader] No grid found for category "${p.category}" (row ${i + 1}). Skipping.`);
+      console.warn(`[SheetLoader] No grid found for category "${p.category}" (normalized: "${catKey}"). Skipping.`);
       return;
     }
 
@@ -1134,22 +1145,62 @@ function initSheetProducts() {
     handleSheetProducts,
     {
       onLoading() {
-        // Show skeleton cards immediately in all grids
         allGridIds.forEach(id => {
           const el = document.getElementById(id);
           if (el) el.innerHTML = renderSkeletonCards(4);
         });
       },
       onSuccess(products) {
-        console.info(`[SheetLoader] Loaded ${products.length} products from sheet.`);
+        console.info(`[SheetLoader] ✅ Loaded ${products.length} products from CSV sheet.`);
+        if (products.length === 0) {
+          console.warn('[SheetLoader] ⚠️ CSV returned 0 products. Check that your Google Sheet is published to web as CSV and has a header row.');
+        } else {
+          const cats = [...new Set(products.map(p => p.category))];
+          console.info('[SheetLoader] Categories found:', cats);
+        }
       },
       onError(err) {
-        console.warn('[SheetLoader] Sheet failed, falling back to static data.');
+        console.warn('[SheetLoader] ⚠️ CSV fetch failed, trying Apps Script JSON fallback...');
         allGridIds.forEach(_showGridError);
-        // Static data is already rendered by renderAllProducts() on page load
+        _fallbackToAppsScript();
       },
     }
   );
+}
+
+// ─── Fallback: load products directly from Apps Script JSON ──
+// Used when the CSV publish URL fails or returns nothing.
+function _fallbackToAppsScript() {
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxI1WfUQzuXp0vLIknrzXeEvceFg4h0_RdQM2tWIhMbovaZH_gb0jm7rZSrp9EFH5U7/exec';
+  fetch(APPS_SCRIPT_URL + '?action=getProducts')
+    .then(r => r.json())
+    .then(data => {
+      const raw = data.products || [];
+      if (!raw.length) {
+        console.warn('[SheetLoader] Apps Script fallback also returned 0 products.');
+        return;
+      }
+      console.info(`[SheetLoader] ✅ Apps Script fallback loaded ${raw.length} products.`);
+      // Convert Apps Script format → sheet-loader format
+      const products = raw.map((p, i) => ({
+        id:          p.id || `sheet-row-${i}`,
+        name:        String(p.name || '').trim(),
+        price:       p.price ? Number(p.price) : null,
+        oldPrice:    p.oldprice ? Number(p.oldprice) : null,
+        category:    String(p.category || '').trim(),
+        mediaUrl:    _optimizeImageUrl(String(p.mediaurl || p.image || '').trim()),
+        extraImages: [p.image2, p.image3, p.image4].filter(Boolean).map(u => _optimizeImageUrl(String(u).trim())),
+        description: String(p.description || '').trim(),
+        badge:       p.badge || null,
+        badgeText:   null,
+        rating:      null,
+        reviews:     null,
+        flags:       {},
+        raw:         p,
+      }));
+      handleSheetProducts(products);
+    })
+    .catch(err => console.error('[SheetLoader] Apps Script fallback failed:', err));
 }
 
 // ═══════════════════════════════════════════════════════════

@@ -54,6 +54,7 @@ function getSheet() {
 }
 
 function getProducts() {
+  ensureHeaders();
   const sheet = getSheet();
   const data  = sheet.getDataRange().getValues();
   if (data.length < 2) return { status: 'ok', products: [] };
@@ -63,9 +64,8 @@ function getProducts() {
 
   for (let i = 1; i < data.length; i++) {
     const row = data[i];
-    // Skip completely empty rows
     if (row.every(cell => cell === '' || cell === null)) continue;
-    const obj = { _rowIndex: i + 1 }; // 1-based sheet row
+    const obj = { _rowIndex: i + 1 };
     headers.forEach((h, idx) => { obj[h] = row[idx]; });
     products.push(obj);
   }
@@ -73,18 +73,31 @@ function getProducts() {
   return { status: 'ok', products };
 }
 
-function addProduct(row) {
+const HEADERS = [
+  'Name','Price','OldPrice','Category','MediaURL','Badge','Description',
+  'Subtitle','SalePercent','Stat1Num','Stat1Label','Stat2Num','Stat2Label',
+  'Stat3Num','Stat3Label','Card1Title','Card1Text','Card2Title','Card2Text',
+  'Collection','image2','image3','image4'
+];
+
+function ensureHeaders() {
   const sheet = getSheet();
-  // If sheet is empty (no header row), write headers first
   if (sheet.getLastRow() === 0) {
-    sheet.appendRow([
-      'Name','Price','OldPrice','Category','MediaURL','Badge','Description',
-      'Subtitle','SalePercent','Stat1Num','Stat1Label','Stat2Num','Stat2Label',
-      'Stat3Num','Stat3Label','Card1Title','Card1Text','Card2Title','Card2Text',
-      'Collection','image2','image3','image4'
-    ]);
+    sheet.appendRow(HEADERS);
+    return;
   }
-  sheet.appendRow(row);
+  // Check if first row looks like a header (first cell should be 'Name')
+  const firstCell = String(sheet.getRange(1, 1).getValue()).trim().toLowerCase();
+  if (firstCell !== 'name') {
+    // Insert a header row at the top without disturbing existing data
+    sheet.insertRowBefore(1);
+    sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
+  }
+}
+
+function addProduct(row) {
+  ensureHeaders();
+  getSheet().appendRow(row);
 }
 
 function deleteProduct(rowIndex) {

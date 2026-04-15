@@ -173,9 +173,9 @@ const HEADER_MAP = {
   reviews:   ['reviews', 'avis', 'review count'],
   id:        ['id', 'sku', 'ref', 'reference'],
   collection: ['collection', 'subtitle'],
-  image2:    ['image2', 'image 2', 'photo2', 'media2'],
-  image3:    ['image3', 'image 3', 'photo3', 'media3'],
-  image4:    ['image4', 'image 4', 'photo4', 'media4'],
+  image2:    ['image2', 'image 2', 'photo2', 'media2', 'image2'],
+  image3:    ['image3', 'image 3', 'photo3', 'media3', 'image3'],
+  image4:    ['image4', 'image 4', 'photo4', 'media4', 'image4'],
 };
 
 /**
@@ -268,9 +268,15 @@ function _optimizeImageUrl(url) {
       return u.toString();
     }
 
-    // Cloudinary – insert transformation before /upload/
+    // Cloudinary – insert transformation before /upload/ (images only, not videos)
     if (u.hostname.includes('cloudinary.com') && u.pathname.includes('/upload/')) {
-      return url.replace('/upload/', '/upload/w_480,q_75,f_webp,c_fill/');
+      // Don't transform videos or URLs that already have transformations
+      const isVideo = /\.(mp4|webm|mov|ogg)(\?|$)/i.test(url) || u.pathname.includes('/video/');
+      const alreadyTransformed = /\/upload\/[a-z_,0-9]+\//.test(url);
+      if (!isVideo && !alreadyTransformed) {
+        return url.replace('/upload/', '/upload/w_480,q_75,f_webp,c_fill/');
+      }
+      return url;
     }
 
     // Google Drive – convert share link to direct thumbnail
