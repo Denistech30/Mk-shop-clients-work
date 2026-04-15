@@ -172,6 +172,10 @@ const HEADER_MAP = {
   rating:    ['rating', 'note', 'stars'],
   reviews:   ['reviews', 'avis', 'review count'],
   id:        ['id', 'sku', 'ref', 'reference'],
+  collection: ['collection', 'subtitle'],
+  image2:    ['image2', 'image 2', 'photo2', 'media2'],
+  image3:    ['image3', 'image 3', 'photo3', 'media3'],
+  image4:    ['image4', 'image 4', 'photo4', 'media4'],
 };
 
 /**
@@ -210,17 +214,13 @@ function _normalizeRow(raw, rowIndex) {
   const rawId = _get(raw, 'id');
   const price = _get(raw, 'price');
 
-  // Collect extra images: image2, image3, image4 (columns added by admin multi-upload)
-  const extraImages = [];
-  for (let n = 2; n <= 4; n++) {
-    const key = Object.keys(raw).find(k =>
-      k.trim().toLowerCase() === `image${n}` ||
-      k.trim().toLowerCase() === `image ${n}` ||
-      k.trim().toLowerCase() === `photo${n}` ||
-      k.trim().toLowerCase() === `media${n}`
-    );
-    if (key && raw[key]) extraImages.push(_optimizeImageUrl(String(raw[key]).trim()));
-  }
+  // Collect extra images using the HEADER_MAP entries
+  const img2 = _get(raw, 'image2');
+  const img3 = _get(raw, 'image3');
+  const img4 = _get(raw, 'image4');
+  const extraImages = [img2, img3, img4]
+    .filter(Boolean)
+    .map(u => _optimizeImageUrl(String(u).trim()));
 
   return {
     id:          rawId !== null ? String(rawId) : `sheet-row-${rowIndex}`,

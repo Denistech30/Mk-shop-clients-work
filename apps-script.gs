@@ -77,7 +77,12 @@ function addProduct(row) {
   const sheet = getSheet();
   // If sheet is empty (no header row), write headers first
   if (sheet.getLastRow() === 0) {
-    sheet.appendRow(['name','price','oldprice','category','mediaurl','badge','description','collection','image2','image3','image4']);
+    sheet.appendRow([
+      'Name','Price','OldPrice','Category','MediaURL','Badge','Description',
+      'Subtitle','SalePercent','Stat1Num','Stat1Label','Stat2Num','Stat2Label',
+      'Stat3Num','Stat3Label','Card1Title','Card1Text','Card2Title','Card2Text',
+      'Collection','image2','image3','image4'
+    ]);
   }
   sheet.appendRow(row);
 }

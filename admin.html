@@ -247,11 +247,11 @@ hr.div{border:none;border-top:1px solid rgba(255,255,255,.06);margin:1.4rem 0}
       <div class="prog-wrap" id="progWrap"><div class="prog-bar" id="progBar"></div></div>
 
       <!-- Photos (up to 4) -->
-      <p class="sec-lbl">Photos du produit <span style="color:var(--gr);font-weight:400;text-transform:none;font-size:.68rem">– jusqu'à 4 photos</span></p>
+      <p class="sec-lbl">Photos & Vidéos du produit <span style="color:var(--gr);font-weight:400;text-transform:none;font-size:.68rem">– jusqu'à 4 médias</span></p>
 
-      <!-- Hidden file inputs -->
-      <input type="file" id="photoInputFile" accept="image/*" style="display:none" onchange="onPhotoFile(event)"/>
-      <input type="file" id="cameraInputFile" accept="image/*" capture="environment" style="display:none" onchange="onPhotoFile(event)"/>
+      <!-- Hidden file inputs — accept images AND videos -->
+      <input type="file" id="photoInputFile" accept="image/*,video/mp4,video/quicktime,video/webm" style="display:none" onchange="onPhotoFile(event)"/>
+      <input type="file" id="cameraInputFile" accept="image/*,video/mp4,video/quicktime,video/webm" capture="environment" style="display:none" onchange="onPhotoFile(event)"/>
 
       <!-- Thumbnail strip -->
       <div class="photo-slots" id="photoSlots">
@@ -507,11 +507,12 @@ var CDN_PRESET = 'mk_shop_uploads';
 var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxI1WfUQzuXp0vLIknrzXeEvceFg4h0_RdQM2tWIhMbovaZH_gb0jm7rZSrp9EFH5U7/exec';
 
 // ── State ────────────────────────────────────────────────
-var photoSlots      = [null, null, null, null]; // blobs for new uploads
+var photoSlots      = [null, null, null, null]; // blobs/files for new uploads
+var slotIsVideo     = [false, false, false, false]; // track which slots are videos
 var existingImgs    = ['', '', '', ''];          // URLs from sheet (edit mode)
-var activeSlot      = 0;                         // which slot the file picker targets
+var activeSlot      = 0;
 var editRowIndex    = null;
-var editExistingImg = ''; // kept for compat, mirrors existingImgs[0]
+var editExistingImg = '';
 
 // ── Boot ─────────────────────────────────────────────────
 document.getElementById('pwInput').addEventListener('keydown', function(e) {
@@ -587,33 +588,53 @@ function onPhotoFile(e) {
   var file = e.target.files[0];
   if (!file) return;
   var slot = activeSlot;
-  var reader = new FileReader();
-  reader.onload = function(ev) {
-    var img = new Image();
-    img.onload = function() {
-      var MAX = 900, w = img.width, h = img.height;
-      if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
-      var canvas = document.createElement('canvas');
-      canvas.width = w; canvas.height = h;
-      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      canvas.toBlob(function(blob) {
-        photoSlots[slot] = blob;
-        renderSlot(slot, URL.createObjectURL(blob));
-      }, 'image/jpeg', 0.78);
+  var isVideo = file.type.startsWith('video/');
+
+  if (isVideo) {
+    // Store raw file for video — no canvas compression
+    photoSlots[slot] = file;
+    slotIsVideo[slot] = true;
+    var videoUrl = URL.createObjectURL(file);
+    renderSlot(slot, videoUrl, true);
+  } else {
+    // Compress image via canvas
+    slotIsVideo[slot] = false;
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      var img = new Image();
+      img.onload = function() {
+        var MAX = 900, w = img.width, h = img.height;
+        if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+        var canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        canvas.toBlob(function(blob) {
+          photoSlots[slot] = blob;
+          renderSlot(slot, URL.createObjectURL(blob), false);
+        }, 'image/jpeg', 0.78);
+      };
+      img.src = ev.target.result;
     };
-    img.src = ev.target.result;
-  };
-  reader.readAsDataURL(file);
-  // Reset input so same file can be re-selected
+    reader.readAsDataURL(file);
+  }
   e.target.value = '';
 }
 
-function renderSlot(index, previewUrl) {
+function renderSlot(index, previewUrl, isVideo) {
   var el = document.getElementById('slot' + index);
-  var label = index === 0 ? 'Principal' : 'Photo ' + (index + 1);
+  var label = index === 0 ? 'Principal' : (isVideo ? 'Vidéo ' + (index + 1) : 'Photo ' + (index + 1));
   el.classList.add('filled');
+  var mediaHTML = isVideo
+    ? '<video src="' + previewUrl + '" style="width:100%;height:100%;object-fit:cover;" muted playsinline></video>' +
+      '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;">' +
+        '<div style="width:28px;height:28px;background:rgba(0,0,0,.6);border-radius:50%;display:flex;align-items:center;justify-content:center;">' +
+          '<i class="fas fa-play" style="color:#fff;font-size:.6rem;margin-left:2px;"></i>' +
+        '</div>' +
+      '</div>'
+    : '<img src="' + previewUrl + '" alt="Photo ' + (index + 1) + '" style="width:100%;height:100%;object-fit:cover;"/>';
+
   el.innerHTML =
-    '<img src="' + previewUrl + '" alt="Photo ' + (index + 1) + '"/>' +
+    mediaHTML +
     '<span class="slot-badge">' + label + '</span>' +
     '<button class="slot-remove" onclick="removeSlot(event,' + index + ')"><i class="fas fa-times"></i></button>';
 }
@@ -621,6 +642,7 @@ function renderSlot(index, previewUrl) {
 function removeSlot(e, index) {
   e.stopPropagation();
   photoSlots[index] = null;
+  slotIsVideo[index] = false;
   existingImgs[index] = '';
   var el = document.getElementById('slot' + index);
   el.classList.remove('filled');
@@ -630,13 +652,18 @@ function removeSlot(e, index) {
   el.onclick = function() { pickSlot(index); };
 }
 
-// ── Upload one blob to Cloudinary ────────────────────────
-async function uploadOnePhoto(blob, filename) {
+// ── Upload one file to Cloudinary (image or video) ───────
+async function uploadOnePhoto(file, filename) {
+  var isVideo = file.type ? file.type.startsWith('video/') : false;
+  var uploadUrl = isVideo
+    ? CDN_URL.replace('/image/upload', '/video/upload')
+    : CDN_URL;
   var fd = new FormData();
-  fd.append('file', blob, filename);
+  fd.append('file', file, filename);
   fd.append('upload_preset', CDN_PRESET);
   fd.append('folder', 'mkshop');
-  var res  = await fetch(CDN_URL, { method: 'POST', body: fd });
+  if (isVideo) fd.append('resource_type', 'video');
+  var res  = await fetch(uploadUrl, { method: 'POST', body: fd });
   var data = await res.json();
   if (!res.ok || !data.secure_url) throw new Error('CLOUDINARY');
   return data.secure_url;
@@ -678,9 +705,12 @@ async function submitProduct() {
 
     for (var i = 0; i < 4; i++) {
       if (photoSlots[i]) {
+        var isVid = slotIsVideo[i];
+        var ext = isVid ? '.mp4' : '.jpg';
+        var label = isVid ? 'vidéo' : 'photo';
         showStatus('formStatus', 'loading',
-          '<span class="spin"></span> Upload photo ' + (i + 1) + '/' + totalUploads + '...');
-        urls[i] = await uploadOnePhoto(photoSlots[i], 'product-' + (i + 1) + '.jpg');
+          '<span class="spin"></span> Upload ' + label + ' ' + (i + 1) + '/' + totalUploads + '...');
+        urls[i] = await uploadOnePhoto(photoSlots[i], 'product-' + (i + 1) + ext);
         uploaded++;
         setProgress(20 + Math.round((uploaded / totalUploads) * 50));
       } else {
@@ -691,19 +721,33 @@ async function submitProduct() {
     showStatus('formStatus', 'loading',
       '<span class="spin"></span> ' + (isEdit ? 'Mise à jour en cours...' : 'Enregistrement...'));
 
-    // Row: name, price, oldprice, category, mediaurl, badge, description, collection, image2, image3, image4
+    // Sheet columns: A=Name, B=Price, C=OldPrice, D=Category, E=MediaURL, F=Badge,
+    // G=Description, H=Subtitle, I=SalePercent, J-T=Hero columns (leave blank for products),
+    // U=image2, V=image3, W=image4
     var row = [
-      name,
-      price,
-      document.getElementById('fOld').value.trim(),
-      document.getElementById('fCat').value,
-      urls[0],
-      document.getElementById('fBadge').value,
-      document.getElementById('fDesc').value.trim(),
-      document.getElementById('fCol').value.trim(),
-      urls[1],
-      urls[2],
-      urls[3]
+      name,                                              // A - Name
+      price,                                             // B - Price
+      document.getElementById('fOld').value.trim(),     // C - OldPrice
+      document.getElementById('fCat').value,            // D - Category
+      urls[0],                                           // E - MediaURL
+      document.getElementById('fBadge').value,          // F - Badge
+      document.getElementById('fDesc').value.trim(),    // G - Description
+      '',                                                // H - Subtitle (hero only)
+      '',                                                // I - SalePercent (hero only)
+      '',                                                // J - Stat1Num (hero only)
+      '',                                                // K - Stat1Label (hero only)
+      '',                                                // L - Stat2Num (hero only)
+      '',                                                // M - Stat2Label (hero only)
+      '',                                                // N - Stat3Num (hero only)
+      '',                                                // O - Stat3Label (hero only)
+      '',                                                // P - Card1Title (hero only)
+      '',                                                // Q - Card1Text (hero only)
+      '',                                                // R - Card2Title (hero only)
+      '',                                                // S - Card2Text (hero only)
+      document.getElementById('fCol').value.trim(),     // T - Collection
+      urls[1],                                           // U - image2
+      urls[2],                                           // V - image3
+      urls[3]                                            // W - image4
     ];
 
     if (isEdit) {
@@ -790,13 +834,19 @@ async function startEdit(rowIndex) {
     editRowIndex = rowIndex;
 
     // Load existing image URLs into slots
+    // mediaurl=E(col4), image2=U(col20), image3=V(col21), image4=W(col22)
     var imgKeys = ['mediaurl', 'image2', 'image3', 'image4'];
     existingImgs = imgKeys.map(function(k) { return p[k] || ''; });
     photoSlots   = [null, null, null, null];
+    slotIsVideo  = [false, false, false, false];
     editExistingImg = existingImgs[0];
 
     existingImgs.forEach(function(url, i) {
-      if (url) renderSlot(i, url);
+      if (url) {
+        var isVid = /\.(mp4|webm|mov|ogg)(\?|$)/i.test(url);
+        slotIsVideo[i] = isVid;
+        renderSlot(i, url, isVid);
+      }
     });
 
     document.getElementById('fName').value  = p.name        || '';
@@ -822,6 +872,7 @@ function cancelEdit() {
   editRowIndex    = null;
   editExistingImg = '';
   existingImgs    = ['', '', '', ''];
+  slotIsVideo     = [false, false, false, false];
   document.getElementById('editBanner').style.display = 'none';
   document.getElementById('submitTxt').textContent    = 'Ajouter le Produit';
   resetForm();
@@ -864,6 +915,7 @@ function resetForm() {
 
   // Reset all 4 slots
   photoSlots   = [null, null, null, null];
+  slotIsVideo  = [false, false, false, false];
   existingImgs = ['', '', '', ''];
   for (var i = 0; i < 4; i++) {
     var el = document.getElementById('slot' + i);
