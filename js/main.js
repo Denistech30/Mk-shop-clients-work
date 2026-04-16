@@ -646,18 +646,49 @@ function openProductModal(product) {
   const imgWrap = document.querySelector('#productModal .modal-img-area');
   if (imgWrap) {
     if (images.length <= 1) {
-      // Single image — simple
-      imgWrap.innerHTML = images[0]
-        ? `<img src="${images[0]}" alt="${product.name || ''}" style="width:100%;max-height:420px;object-fit:contain;display:block;background:#111;">`
-        : '';
+      const url = images[0];
+      if (!url) {
+        imgWrap.innerHTML = '';
+      } else {
+        const type = _getMediaType(url);
+        if (type === 'video') {
+          imgWrap.innerHTML = `
+            <video controls playsinline preload="metadata"
+                   style="width:100%;max-height:420px;object-fit:contain;display:block;background:#000;">
+              <source src="${url}" type="video/mp4" />
+              <source src="${url}" />
+            </video>`;
+        } else if (type === 'youtube') {
+          const embed = _getYouTubeEmbedUrl(url);
+          imgWrap.innerHTML = `
+            <iframe src="${embed}" frameborder="0" allowfullscreen
+                    style="width:100%;height:420px;display:block;border:none;background:#000;"></iframe>`;
+        } else {
+          imgWrap.innerHTML = `<img src="${url}" alt="${product.name || ''}"
+            style="width:100%;max-height:420px;object-fit:contain;display:block;background:#111;">`;
+        }
+      }
     } else {
       // Gallery — slides + arrows + dots + swipe
-      const slides = images.map((url, i) =>
-        `<div class="mg-slide" style="min-width:100%;display:${i===0?'flex':'none'};align-items:center;justify-content:center;background:#111;">
-           <img src="${url}" alt="${product.name} ${i+1}" loading="${i===0?'eager':'lazy'}"
-                style="width:100%;max-height:420px;object-fit:contain;display:block;">
-         </div>`
-      ).join('');
+      const slides = images.map((url, i) => {
+        const type = _getMediaType(url);
+        let inner = '';
+        if (type === 'video') {
+          inner = `<video controls playsinline preload="metadata"
+                          style="width:100%;max-height:420px;object-fit:contain;display:block;background:#000;">
+                     <source src="${url}" type="video/mp4" />
+                     <source src="${url}" />
+                   </video>`;
+        } else if (type === 'youtube') {
+          const embed = _getYouTubeEmbedUrl(url);
+          inner = `<iframe src="${embed}" frameborder="0" allowfullscreen
+                           style="width:100%;height:420px;display:block;border:none;"></iframe>`;
+        } else {
+          inner = `<img src="${url}" alt="${product.name} ${i+1}" loading="${i===0?'eager':'lazy'}"
+                        style="width:100%;max-height:420px;object-fit:contain;display:block;">`;
+        }
+        return `<div class="mg-slide" style="min-width:100%;display:${i===0?'flex':'none'};align-items:center;justify-content:center;background:#111;">${inner}</div>`;
+      }).join('');
 
       const dots = images.map((_, i) =>
         `<button class="mg-dot" data-i="${i}" style="width:${i===0?'18px':'8px'};height:8px;border-radius:4px;border:none;background:${i===0?'#fff':'rgba(255,255,255,0.4)'};cursor:pointer;transition:all .25s;padding:0;"></button>`
@@ -672,7 +703,6 @@ function openProductModal(product) {
         <div class="mg-dots" style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:3;">${dots}</div>
         <span class="mg-counter" style="position:absolute;top:10px;right:12px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:50px;z-index:3;">1 / ${images.length}</span>`;
 
-      // Wire up gallery controls
       _initModalGallery(imgWrap, images.length);
     }
   }

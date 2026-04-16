@@ -908,21 +908,35 @@ function renderSheetProductCard(product, index) {
     ? Array.from({ length: 5 }, (_, i) => i < Math.floor(cardProduct.rating) ? '★' : '☆').join('')
     : '★★★★★';
 
+  const isVideo = _getMediaType(cardProduct.mediaUrl) === 'video';
+
   const mediaHTML = cardProduct.mediaUrl
-    ? `<img src="${cardProduct.mediaUrl}" alt="${cardProduct.name}"
-            loading="lazy" decoding="async"
-            width="480" height="640"
-            style="width:100%;height:100%;object-fit:cover;"
-            onload="this.classList.add('img-loaded')"
-            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
-       <div class="product-placeholder" style="background:${cardProduct.gradient};display:none;">
-         <i class="${cardProduct.icon}"></i><span>${cardProduct.name}</span>
-       </div>
-       ${cardProduct.images && cardProduct.images.length > 1
-         ? `<div style="position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:3px;z-index:2;">
-              ${cardProduct.images.map((_, i) => `<span style="width:${i===0?'14px':'6px'};height:6px;border-radius:3px;background:${i===0?'#fff':'rgba(255,255,255,0.5)'};transition:width .2s;display:block;"></span>`).join('')}
-            </div>`
-         : ''}`
+    ? isVideo
+      ? `<video src="${cardProduct.mediaUrl}" muted playsinline preload="metadata"
+               style="width:100%;height:100%;object-fit:cover;"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"></video>
+         <div class="product-placeholder" style="background:${cardProduct.gradient};display:none;">
+           <i class="${cardProduct.icon}"></i><span>${cardProduct.name}</span>
+         </div>
+         <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:2;">
+           <div style="width:48px;height:48px;background:rgba(0,0,0,.55);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+             <i class="fas fa-play" style="color:#fff;font-size:1.1rem;margin-left:3px;"></i>
+           </div>
+         </div>`
+      : `<img src="${cardProduct.mediaUrl}" alt="${cardProduct.name}"
+              loading="lazy" decoding="async"
+              width="480" height="640"
+              style="width:100%;height:100%;object-fit:cover;"
+              onload="this.classList.add('img-loaded')"
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+         <div class="product-placeholder" style="background:${cardProduct.gradient};display:none;">
+           <i class="${cardProduct.icon}"></i><span>${cardProduct.name}</span>
+         </div>
+         ${cardProduct.images && cardProduct.images.length > 1
+           ? `<div style="position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:3px;z-index:2;">
+                ${cardProduct.images.map((_, i) => `<span style="width:${i===0?'14px':'6px'};height:6px;border-radius:3px;background:${i===0?'#fff':'rgba(255,255,255,0.5)'};transition:width .2s;display:block;"></span>`).join('')}
+              </div>`
+           : ''}`
     : `<div class="product-placeholder" style="background:${cardProduct.gradient};">
          <i class="${cardProduct.icon}"></i><span>${cardProduct.name}</span>
        </div>`;
