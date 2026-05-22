@@ -593,6 +593,34 @@ function renderAllProducts() {
       el.innerHTML = products.map(renderProductCard).join('');
     }
   }
+
+  // Inject static product schema immediately (no sheet needed)
+  _injectStaticProductSchema();
+}
+
+// ── Static product schema — injected on first paint ───────
+function _injectStaticProductSchema() {
+  const container = document.getElementById('product-schema-container');
+  if (!container) return;
+
+  const allStatic = Object.values(PRODUCTS).flat();
+  const items = allStatic.map(p => ({
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    'name': p.name,
+    'description': p.desc || p.name,
+    'brand': { '@type': 'Brand', 'name': 'MK Shop' },
+    'offers': {
+      '@type': 'Offer',
+      'priceCurrency': 'XAF',
+      'price': String(p.price),
+      'availability': 'https://schema.org/InStock',
+      'seller': { '@type': 'Organization', 'name': 'MK Shop' },
+      'url': 'https://mkshop1.netlify.app/'
+    }
+  }));
+
+  container.textContent = JSON.stringify(items);
 }
 
 // ───── Modal content ─────
@@ -1145,6 +1173,40 @@ function _registerSheetProducts(products) {
   window.getProductById = function(id) {
     return _sheetProductRegistry[id] || _originalGetById(id);
   };
+
+  // Re-render cart UI now that sheet products are available
+  if (typeof updateCartUI === 'function') updateCartUI();
+
+  // Inject Product schema for Google rich results
+  _injectProductSchema(products);
+}
+
+// ── Inject Product JSON-LD schema after sheet loads ───────
+function _injectProductSchema(products) {
+  const container = document.getElementById('product-schema-container');
+  if (!container) return;
+
+  const items = products
+    .filter(p => p.name && p.price && (p.category || '').toLowerCase() !== 'hero')
+    .map(p => ({
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      'name': p.name,
+      'description': p.description || p.name,
+      'image': p.mediaUrl || '',
+      'brand': { '@type': 'Brand', 'name': 'MK Shop' },
+      'offers': {
+        '@type': 'Offer',
+        'priceCurrency': 'XAF',
+        'price': String(p.price),
+        'availability': 'https://schema.org/InStock',
+        'seller': { '@type': 'Organization', 'name': 'MK Shop' },
+        'url': 'https://mkshop1.netlify.app/'
+      }
+    }));
+
+  if (!items.length) return;
+  container.textContent = JSON.stringify(items.length === 1 ? items[0] : items);
 }
 
 // ─── Bootstrap: load from sheet or fall back to static ────

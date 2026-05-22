@@ -93,18 +93,22 @@ hr.div{border:none;border-top:1px solid rgba(255,255,255,.06);margin:1.4rem 0}
 .edit-banner{background:rgba(201,168,76,.08);border:1.5px solid rgba(201,168,76,.35);border-radius:var(--r);padding:.75rem 1rem;display:none;align-items:center;gap:.7rem;margin-bottom:1rem;font-size:.83rem;color:var(--gl);font-weight:600}
 .edit-banner button{margin-left:auto;background:none;border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:var(--rs);padding:.28rem .65rem;font-size:.72rem;cursor:pointer}
 
-/* ── Multi-photo uploader ── */
-.photo-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-bottom:.8rem}
-.photo-slot{aspect-ratio:1;border-radius:var(--rs);border:2px dashed rgba(201,168,76,.25);background:var(--dk3);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;transition:border-color .2s,background .2s}
-.photo-slot:hover{border-color:var(--gold);background:rgba(201,168,76,.06)}
-.photo-slot.filled{border-color:var(--gold);border-style:solid}
-.photo-slot.filled img{width:100%;height:100%;object-fit:cover;display:block}
-.photo-slot .slot-icon{font-size:1.3rem;color:rgba(201,168,76,.4);pointer-events:none}
-.photo-slot .slot-num{font-size:.6rem;color:var(--gr);margin-top:.25rem;pointer-events:none}
-.photo-slot .slot-badge{position:absolute;top:3px;left:4px;background:var(--gold);color:var(--dk);font-size:.55rem;font-weight:800;padding:1px 5px;border-radius:4px;line-height:1.4}
-.photo-slot .slot-remove{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:rgba(229,57,53,.9);border:none;color:#fff;font-size:.6rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2}
-.photo-add-btns{display:flex;gap:.5rem;flex-wrap:wrap}
-.photo-add-btns button{flex:1;min-width:120px;padding:.6rem;font-size:.8rem;width:auto}
+/* ── Drop zone uploader ── */
+.drop-zone{border:2px dashed rgba(201,168,76,.35);border-radius:var(--r);background:var(--dk3);padding:1.8rem 1rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;cursor:pointer;transition:border-color .2s,background .2s;text-align:center;position:relative}
+.drop-zone:hover,.drop-zone.drag-over{border-color:var(--gold);background:rgba(201,168,76,.06)}
+.drop-zone.drag-over{border-style:solid}
+.drop-zone-icon{font-size:2rem;color:rgba(201,168,76,.45)}
+.drop-zone-title{font-size:.88rem;font-weight:700;color:var(--w)}
+.drop-zone-sub{font-size:.72rem;color:var(--gr);line-height:1.5}
+.drop-zone-sub span{color:var(--gold);font-weight:600}
+/* Thumbnail strip */
+.thumb-strip{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.75rem}
+.thumb-item{position:relative;width:72px;height:72px;border-radius:var(--rs);overflow:hidden;border:2px solid rgba(201,168,76,.4);flex-shrink:0}
+.thumb-item img,.thumb-item video{width:100%;height:100%;object-fit:cover;display:block}
+.thumb-item .thumb-badge{position:absolute;top:2px;left:3px;background:var(--gold);color:var(--dk);font-size:.5rem;font-weight:800;padding:1px 4px;border-radius:3px;line-height:1.4;text-transform:uppercase}
+.thumb-item .thumb-remove{position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:50%;background:rgba(229,57,53,.9);border:none;color:#fff;font-size:.55rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2}
+.thumb-item .thumb-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.thumb-item .thumb-play i{font-size:.7rem;color:#fff;background:rgba(0,0,0,.55);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center}
 
 /* ── Tabs ── */
 .tabs{display:flex;gap:.4rem;margin-bottom:1.5rem;background:var(--dk2);border-radius:var(--r);padding:.35rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -164,7 +168,25 @@ hr.div{border:none;border-top:1px solid rgba(255,255,255,.06);margin:1.4rem 0}
 .prod-empty{text-align:center;padding:2.5rem 1rem;color:var(--gr);font-size:.85rem;border:1px dashed rgba(255,255,255,.07);border-radius:var(--r)}
 .prod-loading{text-align:center;padding:2.5rem;color:var(--gr);font-size:.84rem;display:flex;align-items:center;justify-content:center;gap:.6rem}
 
-/* ── Confirm overlay ── */
+/* ── AI Enhancement Preview ── */
+.ai-preview-wrap{margin-top:.9rem;margin-bottom:.5rem;display:none}
+.ai-preview-label{font-size:.64rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1.8px;margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem}
+.ai-preview-label i{font-size:.8rem}
+.ai-preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.ai-preview-card{border-radius:var(--rs);overflow:hidden;background:var(--dk3);border:1px solid rgba(255,255,255,.07);position:relative}
+.ai-preview-card img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.ai-preview-card .ai-card-lbl{position:absolute;bottom:0;left:0;right:0;padding:.3rem .5rem;font-size:.6rem;font-weight:700;text-align:center;letter-spacing:.8px;text-transform:uppercase}
+.ai-preview-card.original .ai-card-lbl{background:rgba(0,0,0,.65);color:rgba(255,255,255,.7)}
+.ai-preview-card.enhanced .ai-card-lbl{background:linear-gradient(90deg,rgba(201,168,76,.85),rgba(232,201,122,.85));color:var(--dk)}
+.ai-preview-card.enhanced{border-color:rgba(201,168,76,.4)}
+.ai-preview-loading{display:flex;align-items:center;justify-content:center;gap:.5rem;aspect-ratio:1;font-size:.72rem;color:var(--gr)}
+.ai-badge{display:inline-flex;align-items:center;gap:.3rem;background:linear-gradient(135deg,rgba(201,168,76,.15),rgba(201,168,76,.05));border:1px solid rgba(201,168,76,.3);border-radius:50px;padding:.2rem .6rem;font-size:.6rem;font-weight:700;color:var(--gold);margin-left:auto}
+/* AI prompt card */
+.ai-prompt-card{background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.03));border:1.5px solid rgba(201,168,76,.35);border-radius:var(--r);padding:1.1rem 1rem;margin-top:1rem;display:none}
+.ai-prompt-title{font-size:.88rem;font-weight:800;color:var(--gold);margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem}
+.ai-prompt-sub{font-size:.75rem;color:rgba(255,255,255,.55);margin-bottom:.9rem;line-height:1.55}
+.ai-prompt-btns{display:flex;gap:.6rem}
+.ai-prompt-btns .btn{flex:1;padding:.7rem}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9999;display:none;align-items:center;justify-content:center;padding:1.5rem;backdrop-filter:blur(4px)}
 .overlay.open{display:flex}
 .confirm-box{background:var(--dk2);border:1.5px solid rgba(229,57,53,.3);border-radius:18px;padding:2rem 1.5rem;max-width:300px;width:100%;text-align:center}
@@ -249,39 +271,48 @@ hr.div{border:none;border-top:1px solid rgba(255,255,255,.06);margin:1.4rem 0}
       <!-- Photos (up to 4) -->
       <p class="sec-lbl">Photos & Vidéos du produit <span style="color:var(--gr);font-weight:400;text-transform:none;font-size:.68rem">– jusqu'à 4 médias</span></p>
 
-      <!-- Hidden file inputs — accept images AND videos -->
-      <input type="file" id="photoInputFile" accept="image/*,video/mp4,video/quicktime,video/webm" style="display:none" onchange="onPhotoFile(event)"/>
-      <input type="file" id="cameraInputFile" accept="image/*,video/mp4,video/quicktime,video/webm" capture="environment" style="display:none" onchange="onPhotoFile(event)"/>
+      <!-- Hidden file inputs -->
+      <input type="file" id="photoInputFile" accept="image/*,video/mp4,video/quicktime,video/webm" multiple style="display:none" onchange="onDropZoneFiles(event.target.files)"/>
+      <input type="file" id="cameraInputFile" accept="image/*,video/mp4,video/quicktime,video/webm" capture="environment" style="display:none" onchange="onDropZoneFiles(event.target.files)"/>
 
-      <!-- Thumbnail strip -->
-      <div class="photo-slots" id="photoSlots">
-        <div class="photo-slot" id="slot0" onclick="pickSlot(0)">
-          <i class="fas fa-plus slot-icon"></i>
-          <span class="slot-num">Photo 1</span>
-        </div>
-        <div class="photo-slot" id="slot1" onclick="pickSlot(1)">
-          <i class="fas fa-plus slot-icon"></i>
-          <span class="slot-num">Photo 2</span>
-        </div>
-        <div class="photo-slot" id="slot2" onclick="pickSlot(2)">
-          <i class="fas fa-plus slot-icon"></i>
-          <span class="slot-num">Photo 3</span>
-        </div>
-        <div class="photo-slot" id="slot3" onclick="pickSlot(3)">
-          <i class="fas fa-plus slot-icon"></i>
-          <span class="slot-num">Photo 4</span>
+      <!-- Drop zone -->
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('photoInputFile').click()">
+        <i class="fas fa-cloud-upload-alt drop-zone-icon"></i>
+        <div class="drop-zone-title">Glissez vos photos ici</div>
+        <div class="drop-zone-sub">ou <span>cliquez pour parcourir</span> · jusqu'à 4 fichiers<br/>Images &amp; vidéos acceptées</div>
+      </div>
+
+      <!-- Thumbnail strip (filled dynamically) -->
+      <div class="thumb-strip" id="thumbStrip"></div>
+
+      <!-- Camera button for mobile -->
+      <button type="button" class="btn btn-dark" style="margin-top:.6rem;padding:.6rem" onclick="document.getElementById('cameraInputFile').click()">
+        <i class="fas fa-camera"></i> Prendre une photo
+      </button>
+      <small style="color:var(--gr);font-size:.7rem;margin-top:.4rem;display:block">Max 4 médias. Cliquez sur ✕ pour retirer. Compressés automatiquement.</small>
+
+      <!-- AI Enhancement Prompt (shown after successful save) -->
+      <div class="ai-prompt-card" id="aiPromptCard">
+        <div class="ai-prompt-title"><i class="fas fa-magic"></i> Amélioration IA disponible</div>
+        <div class="ai-prompt-sub">Voulez-vous améliorer automatiquement les photos de ce produit? L'IA va augmenter le contraste, affiner les détails et optimiser la qualité pour la boutique.</div>
+        <div class="ai-prompt-btns">
+          <button class="btn btn-gold" onclick="acceptAIEnhancement()">
+            <i class="fas fa-wand-magic-sparkles"></i> Oui, Améliorer
+          </button>
+          <button class="btn btn-dark" onclick="declineAIEnhancement()">
+            <i class="fas fa-times"></i> Non, Garder
+          </button>
         </div>
       </div>
 
-      <div class="photo-add-btns">
-        <button type="button" class="btn btn-gold" onclick="triggerCamera()">
-          <i class="fas fa-camera"></i> Caméra
-        </button>
-        <button type="button" class="btn btn-dark" onclick="triggerGallery()">
-          <i class="fas fa-images"></i> Galerie
-        </button>
+      <!-- AI Before/After Preview (shown after admin accepts) -->
+      <div class="ai-preview-wrap" id="aiPreviewWrap">
+        <div class="ai-preview-label">
+          <i class="fas fa-magic"></i> Amélioration IA – Résultat
+          <span class="ai-badge"><i class="fas fa-check"></i> Appliquée</span>
+        </div>
+        <div class="ai-preview-grid" id="aiPreviewGrid"></div>
       </div>
-      <small style="color:var(--gr);font-size:.7rem;margin-top:.5rem;display:block">Cliquez sur un emplacement pour changer sa photo. Compressées automatiquement.</small>
 
       <hr class="div"/>
       <p class="sec-lbl">Détails du produit</p>
@@ -332,7 +363,7 @@ hr.div{border:none;border-top:1px solid rgba(255,255,255,.06);margin:1.4rem 0}
         <i class="fas fa-plus-circle"></i>
         <span id="submitTxt">Ajouter le Produit</span>
       </button>
-      <button class="btn btn-dark" onclick="resetForm()" style="margin-top:.6rem">
+      <button class="btn btn-dark" onclick="resetForm();if(!_aiResolve)clearAIPreviews();" style="margin-top:.6rem">
         <i class="fas fa-redo"></i> Réinitialiser
       </button>
     </div>
@@ -567,37 +598,50 @@ function switchTab(tab) {
   if (tab === 'settings') openSettingsTab();
 }
 
-// ── Photo slot picking ───────────────────────────────────
-function pickSlot(index) {
-  activeSlot = index;
-  document.getElementById('photoInputFile').click();
-}
-function triggerCamera() {
-  // Find first empty slot, or slot 0
-  activeSlot = photoSlots.findIndex(function(b) { return !b; });
-  if (activeSlot === -1) activeSlot = 0;
-  document.getElementById('cameraInputFile').click();
-}
-function triggerGallery() {
-  activeSlot = photoSlots.findIndex(function(b) { return !b; });
-  if (activeSlot === -1) activeSlot = 0;
-  document.getElementById('photoInputFile').click();
+// ── Drop zone: drag & drop + click ───────────────────────
+(function() {
+  var zone = document.getElementById('dropZone');
+  if (!zone) return;
+
+  zone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    zone.classList.add('drag-over');
+  });
+  zone.addEventListener('dragleave', function() {
+    zone.classList.remove('drag-over');
+  });
+  zone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    onDropZoneFiles(e.dataTransfer.files);
+  });
+})();
+
+// ── Handle files from drop or file picker ─────────────────
+function onDropZoneFiles(fileList) {
+  var files = Array.from(fileList);
+  var remaining = 4 - photoSlots.filter(function(b) { return b; }).length;
+  if (remaining <= 0) { showStatus('formStatus', 'error', 'Maximum 4 médias atteint.'); return; }
+  files = files.slice(0, remaining);
+
+  files.forEach(function(file) {
+    var slot = photoSlots.findIndex(function(b) { return !b; });
+    if (slot === -1) return;
+    processFileIntoSlot(file, slot);
+  });
+
+  // Reset input so same file can be re-selected
+  document.getElementById('photoInputFile').value = '';
+  document.getElementById('cameraInputFile').value = '';
 }
 
-function onPhotoFile(e) {
-  var file = e.target.files[0];
-  if (!file) return;
-  var slot = activeSlot;
+function processFileIntoSlot(file, slot) {
   var isVideo = file.type.startsWith('video/');
-
   if (isVideo) {
-    // Store raw file for video — no canvas compression
     photoSlots[slot] = file;
     slotIsVideo[slot] = true;
-    var videoUrl = URL.createObjectURL(file);
-    renderSlot(slot, videoUrl, true);
+    renderThumb(slot, URL.createObjectURL(file), true);
   } else {
-    // Compress image via canvas
     slotIsVideo[slot] = false;
     var reader = new FileReader();
     reader.onload = function(ev) {
@@ -610,47 +654,174 @@ function onPhotoFile(e) {
         canvas.getContext('2d').drawImage(img, 0, 0, w, h);
         canvas.toBlob(function(blob) {
           photoSlots[slot] = blob;
-          renderSlot(slot, URL.createObjectURL(blob), false);
+          renderThumb(slot, URL.createObjectURL(blob), false);
         }, 'image/jpeg', 0.78);
       };
       img.src = ev.target.result;
     };
     reader.readAsDataURL(file);
   }
-  e.target.value = '';
 }
 
-function renderSlot(index, previewUrl, isVideo) {
-  var el = document.getElementById('slot' + index);
-  var label = index === 0 ? 'Principal' : (isVideo ? 'Vidéo ' + (index + 1) : 'Photo ' + (index + 1));
-  el.classList.add('filled');
-  var mediaHTML = isVideo
-    ? '<video src="' + previewUrl + '" style="width:100%;height:100%;object-fit:cover;" muted playsinline></video>' +
-      '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;">' +
-        '<div style="width:28px;height:28px;background:rgba(0,0,0,.6);border-radius:50%;display:flex;align-items:center;justify-content:center;">' +
-          '<i class="fas fa-play" style="color:#fff;font-size:.6rem;margin-left:2px;"></i>' +
-        '</div>' +
-      '</div>'
-    : '<img src="' + previewUrl + '" alt="Photo ' + (index + 1) + '" style="width:100%;height:100%;object-fit:cover;"/>';
+// ── Render thumbnail strip ────────────────────────────────
+function renderThumb(index, previewUrl, isVideo) {
+  var strip = document.getElementById('thumbStrip');
+  // Remove existing thumb for this slot
+  var existing = strip.querySelector('[data-slot="' + index + '"]');
+  if (existing) existing.remove();
 
-  el.innerHTML =
-    mediaHTML +
-    '<span class="slot-badge">' + label + '</span>' +
-    '<button class="slot-remove" onclick="removeSlot(event,' + index + ')"><i class="fas fa-times"></i></button>';
+  var item = document.createElement('div');
+  item.className = 'thumb-item';
+  item.setAttribute('data-slot', index);
+
+  var badge = index === 0 ? '<span class="thumb-badge">Principal</span>' : '';
+  var playIcon = isVideo
+    ? '<div class="thumb-play"><i class="fas fa-play"></i></div>' : '';
+  var media = isVideo
+    ? '<video src="' + previewUrl + '" muted playsinline style="width:100%;height:100%;object-fit:cover;display:block"></video>'
+    : '<img src="' + previewUrl + '" alt="Photo ' + (index + 1) + '"/>';
+
+  item.innerHTML = media + badge + playIcon +
+    '<button class="thumb-remove" onclick="removeThumb(event,' + index + ')" title="Retirer">✕</button>';
+  strip.appendChild(item);
 }
 
-function removeSlot(e, index) {
+function removeThumb(e, index) {
   e.stopPropagation();
   photoSlots[index] = null;
   slotIsVideo[index] = false;
   existingImgs[index] = '';
-  var el = document.getElementById('slot' + index);
-  el.classList.remove('filled');
-  el.innerHTML =
-    '<i class="fas fa-plus slot-icon"></i>' +
-    '<span class="slot-num">Photo ' + (index + 1) + '</span>';
-  el.onclick = function() { pickSlot(index); };
+  var item = document.querySelector('#thumbStrip [data-slot="' + index + '"]');
+  if (item) item.remove();
 }
+
+// ── Kept for edit mode: restore existing images as thumbs ─
+function renderSlot(index, previewUrl, isVideo) {
+  renderThumb(index, previewUrl, isVideo);
+}
+
+// ── Legacy stubs (kept so nothing else breaks) ────────────
+function pickSlot(index) { activeSlot = index; document.getElementById('photoInputFile').click(); }
+function triggerCamera() { document.getElementById('cameraInputFile').click(); }
+function triggerGallery() { document.getElementById('photoInputFile').click(); }
+function onPhotoFile(e) { onDropZoneFiles(e.target.files); }
+
+// ── AI Enhancement: insert Cloudinary transforms into image URL ──
+function applyAIEnhancement(url) {
+  if (!url || !url.includes('cloudinary.com') || !url.includes('/image/upload/')) return url;
+  if (url.includes('e_auto_contrast')) return url;
+  // Stronger transforms for visible product-shot improvement:
+  // - e_improve: auto tone/color correction (more aggressive than e_auto_contrast)
+  // - e_sharpen:100: strong sharpening
+  // - e_vibrance:40: boosts color saturation for product pop
+  // - e_auto_brightness: corrects exposure
+  // - q_auto:best: highest quality
+  // - f_auto: WebP for modern browsers
+  // - w_800,c_limit: cap width
+  var transforms = 'e_improve/e_sharpen:100/e_vibrance:40/q_auto:best/f_auto/w_800,c_limit';
+  return url.replace('/image/upload/', '/image/upload/' + transforms + '/');
+}
+
+// ── State ─────────────────────────────────────────────────
+var _aiOriginalUrls  = [];
+var _aiOriginalBlobs = [];
+var _aiResolve       = null;
+
+// ── Wait for admin decision — returns Promise<urls[]> ─────
+function waitForAIDecision(originalUrls, blobUrls) {
+  return new Promise(function(resolve) {
+    _aiResolve       = resolve;
+    _aiOriginalUrls  = originalUrls.slice();
+    _aiOriginalBlobs = blobUrls.slice();
+
+    var wrap = document.getElementById('aiPreviewWrap');
+    var grid = document.getElementById('aiPreviewGrid');
+    grid.innerHTML = '';
+
+    // Count how many images (non-video) we have
+    var imageCount = originalUrls.filter(function(url, i) {
+      return url && blobUrls[i] && !(/\.(mp4|webm|mov|ogg)/i.test(url) || url.includes('/video/'));
+    }).length;
+
+    // Show only the FIRST image as the before/after preview
+    // with a note if there are more — keeps the UI compact
+    var firstIdx = -1;
+    for (var i = 0; i < originalUrls.length; i++) {
+      if (originalUrls[i] && blobUrls[i]) { firstIdx = i; break; }
+    }
+
+    if (firstIdx === -1) { resolve(originalUrls.slice()); _aiResolve = null; return; }
+
+    var enhSrc = applyAIEnhancement(originalUrls[firstIdx]);
+    var loadId = 'aiLoad0';
+    var pair   = document.createElement('div');
+    pair.style.cssText = 'grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.5rem';
+    pair.innerHTML =
+      '<div>' +
+        '<div style="font-size:.58rem;color:var(--gr);text-align:center;margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.8px">Original</div>' +
+        '<div class="ai-preview-card original">' +
+          '<img src="' + blobUrls[firstIdx] + '" alt="Original" style="width:100%;aspect-ratio:1;object-fit:cover;display:block"/>' +
+          '<div class="ai-card-lbl">Original</div>' +
+        '</div>' +
+      '</div>' +
+      '<div>' +
+        '<div style="font-size:.58rem;color:var(--gold);text-align:center;margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.8px;font-weight:700">✨ Améliorée</div>' +
+        '<div class="ai-preview-card enhanced">' +
+          '<div class="ai-preview-loading" id="' + loadId + '"><span class="spin"></span> Aperçu...</div>' +
+          '<img src="' + enhSrc + '" alt="Améliorée" style="width:100%;aspect-ratio:1;object-fit:cover;display:none"' +
+            ' onload="this.style.display=\'block\';document.getElementById(\'' + loadId + '\').style.display=\'none\'"' +
+            ' onerror="document.getElementById(\'' + loadId + '\').innerHTML=\'<span style=\\\"color:#ff7070;font-size:.68rem;padding:.4rem;text-align:center;display:block\\\">Aperçu non disponible</span>\'"' +
+          '/>' +
+          '<div class="ai-card-lbl">Améliorée</div>' +
+        '</div>' +
+      '</div>';
+    grid.appendChild(pair);
+
+    // If more than 1 image, show a note
+    if (imageCount > 1) {
+      var note = document.createElement('p');
+      note.style.cssText = 'font-size:.7rem;color:var(--gr);text-align:center;margin-top:.2rem;grid-column:1/-1';
+      note.innerHTML = '<i class="fas fa-info-circle" style="color:var(--gold)"></i> L\'amélioration s\'appliquera aux ' + imageCount + ' photos si vous acceptez.';
+      grid.appendChild(note);
+    }
+
+    wrap.style.display = 'block';
+    document.getElementById('aiPromptCard').style.display = 'block';
+    setTimeout(function() {
+      document.getElementById('aiPromptCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+  });
+}
+
+// ── Admin clicked "Oui, Améliorer" ────────────────────────
+function acceptAIEnhancement() {
+  document.getElementById('aiPromptCard').style.display = 'none';
+  if (_aiResolve) {
+    _aiResolve(_aiOriginalUrls.map(function(url) { return applyAIEnhancement(url); }));
+    _aiResolve = null;
+  }
+}
+
+// ── Admin clicked "Non, Garder" ───────────────────────────
+function declineAIEnhancement() {
+  document.getElementById('aiPromptCard').style.display = 'none';
+  document.getElementById('aiPreviewWrap').style.display = 'none';
+  if (_aiResolve) {
+    _aiResolve(_aiOriginalUrls.slice());
+    _aiResolve = null;
+  }
+}
+
+// ── Clear AI previews ─────────────────────────────────────
+function clearAIPreviews() {
+  document.getElementById('aiPreviewWrap').style.display = 'none';
+  document.getElementById('aiPreviewGrid').innerHTML = '';
+  document.getElementById('aiPromptCard').style.display = 'none';
+  // Do NOT resolve _aiResolve here — only the two buttons should do that
+  _aiOriginalUrls  = [];
+  _aiOriginalBlobs = [];
+}
+
 
 // ── Upload one file to Cloudinary (image or video) ───────
 async function uploadOnePhoto(file, filename) {
@@ -668,8 +839,6 @@ async function uploadOnePhoto(file, filename) {
   if (!res.ok || !data.secure_url) throw new Error('CLOUDINARY');
   return data.secure_url;
 }
-
-// ── Call Apps Script ─────────────────────────────────────
 async function callScript(params) {
   var qs  = new URLSearchParams(params).toString();
   var res = await fetch(APPS_SCRIPT_URL + '?' + qs);
@@ -686,8 +855,6 @@ async function submitProduct() {
   var name   = document.getElementById('fName').value.trim();
   var price  = document.getElementById('fPrice').value.trim();
   var isEdit = editRowIndex !== null;
-  var hasAnyPhoto = photoSlots.some(function(b) { return b; }) ||
-                    existingImgs.some(function(u) { return u; });
 
   if (!name)  { showStatus('formStatus', 'error', 'Le nom du produit est requis.'); return; }
   if (!price) { showStatus('formStatus', 'error', 'Le prix est requis.'); return; }
@@ -698,19 +865,28 @@ async function submitProduct() {
   showProgress();
 
   try {
-    // Upload any new blobs, keep existing URLs for unchanged slots
+    // ── PHASE 1: Upload to Cloudinary ────────────────────
     var urls = ['', '', '', ''];
+    var blobUrls = [null, null, null, null];
     var totalUploads = photoSlots.filter(function(b) { return b; }).length;
     var uploaded = 0;
+    var hasNewImages = false;
+
+    for (var j = 0; j < 4; j++) {
+      if (photoSlots[j] && !slotIsVideo[j]) {
+        blobUrls[j] = URL.createObjectURL(photoSlots[j]);
+      }
+    }
 
     for (var i = 0; i < 4; i++) {
       if (photoSlots[i]) {
         var isVid = slotIsVideo[i];
         var ext = isVid ? '.mp4' : '.jpg';
-        var label = isVid ? 'vidéo' : 'photo';
+        var lbl = isVid ? 'vidéo' : 'photo';
         showStatus('formStatus', 'loading',
-          '<span class="spin"></span> Upload ' + label + ' ' + (i + 1) + '/' + totalUploads + '...');
+          '<span class="spin"></span> Upload ' + lbl + ' ' + (i + 1) + '/' + totalUploads + '...');
         urls[i] = await uploadOnePhoto(photoSlots[i], 'product-' + (i + 1) + ext);
+        if (!isVid) hasNewImages = true;
         uploaded++;
         setProgress(20 + Math.round((uploaded / totalUploads) * 50));
       } else {
@@ -718,55 +894,54 @@ async function submitProduct() {
       }
     }
 
+    // ── PHASE 2: AI prompt BEFORE saving ─────────────────
+    if (hasNewImages) {
+      showStatus('formStatus', 'loading',
+        '<span class="spin"></span> Photos prêtes. Choisissez une option ci-dessous...');
+      btn.disabled = false;
+      hideProgress();
+      urls = await waitForAIDecision(urls, blobUrls);
+      btn.disabled = true;
+      showProgress();
+      setProgress(70);
+    }
+
+    // ── PHASE 3: Save to Google Sheet ────────────────────
     showStatus('formStatus', 'loading',
       '<span class="spin"></span> ' + (isEdit ? 'Mise à jour en cours...' : 'Enregistrement...'));
 
-    // Sheet columns: A=Name, B=Price, C=OldPrice, D=Category, E=MediaURL, F=Badge,
-    // G=Description, H=Subtitle, I=SalePercent, J-T=Hero columns (leave blank for products),
-    // U=image2, V=image3, W=image4
     var row = [
-      name,                                              // A - Name
-      price,                                             // B - Price
-      document.getElementById('fOld').value.trim(),     // C - OldPrice
-      document.getElementById('fCat').value,            // D - Category
-      urls[0],                                           // E - MediaURL
-      document.getElementById('fBadge').value,          // F - Badge
-      document.getElementById('fDesc').value.trim(),    // G - Description
-      '',                                                // H - Subtitle (hero only)
-      '',                                                // I - SalePercent (hero only)
-      '',                                                // J - Stat1Num (hero only)
-      '',                                                // K - Stat1Label (hero only)
-      '',                                                // L - Stat2Num (hero only)
-      '',                                                // M - Stat2Label (hero only)
-      '',                                                // N - Stat3Num (hero only)
-      '',                                                // O - Stat3Label (hero only)
-      '',                                                // P - Card1Title (hero only)
-      '',                                                // Q - Card1Text (hero only)
-      '',                                                // R - Card2Title (hero only)
-      '',                                                // S - Card2Text (hero only)
-      document.getElementById('fCol').value.trim(),     // T - Collection
-      urls[1],                                           // U - image2
-      urls[2],                                           // V - image3
-      urls[3]                                            // W - image4
+      name,
+      price,
+      document.getElementById('fOld').value.trim(),
+      document.getElementById('fCat').value,
+      urls[0],
+      document.getElementById('fBadge').value,
+      document.getElementById('fDesc').value.trim(),
+      '', '', '', '', '', '', '', '', '', '', '', '',
+      document.getElementById('fCol').value.trim(),
+      urls[1], urls[2], urls[3]
     ];
 
     if (isEdit) {
       await callScript({ action: 'updateProduct', rowIndex: editRowIndex, row: JSON.stringify(row) });
-      setProgress(100);
-      showStatus('formStatus', 'success', '<i class="fas fa-check-circle"></i> Produit mis à jour avec succès!');
     } else {
       await callScript({ action: 'addProduct', row: JSON.stringify(row) });
-      setProgress(100);
-      showStatus('formStatus', 'success', '<i class="fas fa-check-circle"></i> Produit ajouté avec succès!');
     }
 
-    setTimeout(function() { resetForm(); clearStatus('formStatus'); }, 3000);
+    setProgress(100);
+    showStatus('formStatus', 'success',
+      '<i class="fas fa-check-circle"></i> Produit ' + (isEdit ? 'mis à jour' : 'ajouté') + ' avec succès!');
+    // Only auto-reset if no AI prompt is waiting for a decision
+    setTimeout(function() {
+      if (!_aiResolve) { resetForm(); clearStatus('formStatus'); }
+    }, 3000);
 
   } catch(err) {
     var msg = 'Une erreur est survenue. Vérifiez votre connexion.';
-    if (err.message === 'CLOUDINARY')  msg = "Échec de l'upload photo. Réessayez.";
-    if (err.message === 'NETWORK')     msg = 'Impossible de joindre le serveur.';
-    if (err.message.startsWith('SHEET')) msg = 'Erreur Google Sheet: ' + err.message;
+    if (err && err.message === 'CLOUDINARY')  msg = "Échec de l'upload photo. Réessayez.";
+    if (err && err.message === 'NETWORK')     msg = 'Impossible de joindre le serveur.';
+    if (err && err.message && err.message.startsWith('SHEET')) msg = 'Erreur Google Sheet: ' + err.message;
     showStatus('formStatus', 'error', msg);
   } finally {
     btn.disabled = false;
@@ -875,6 +1050,7 @@ function cancelEdit() {
   slotIsVideo     = [false, false, false, false];
   document.getElementById('editBanner').style.display = 'none';
   document.getElementById('submitTxt').textContent    = 'Ajouter le Produit';
+  clearAIPreviews();
   resetForm();
 }
 
@@ -917,18 +1093,11 @@ function resetForm() {
   photoSlots   = [null, null, null, null];
   slotIsVideo  = [false, false, false, false];
   existingImgs = ['', '', '', ''];
-  for (var i = 0; i < 4; i++) {
-    var el = document.getElementById('slot' + i);
-    el.classList.remove('filled');
-    el.innerHTML =
-      '<i class="fas fa-plus slot-icon"></i>' +
-      '<span class="slot-num">Photo ' + (i + 1) + '</span>';
-    (function(idx) { el.onclick = function() { pickSlot(idx); }; })(i);
-  }
+  document.getElementById('thumbStrip').innerHTML = '';
   clearStatus('formStatus');
+  // Don't clear AI previews here — clearAIPreviews() is called explicitly where needed
 }
 
-// ── UI helpers ───────────────────────────────────────────
 function showStatus(id, type, html) {
   var el = document.getElementById(id);
   el.className = 'status ' + type;

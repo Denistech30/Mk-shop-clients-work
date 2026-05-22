@@ -12,10 +12,16 @@
   <!-- ── Primary SEO ── -->
   <title>MK Shop – Mode Premium à Douala, Cameroun</title>
   <meta name="description" content="MK Shop – Votre boutique mode de confiance à Douala. Robes, ensembles, chaussures, sacs à main et perruques premium. Commandez facilement via WhatsApp, livraison dans tout Douala.">
-  <meta name="keywords" content="mode Douala, boutique Cameroun, robes africaines, perruques premium, chaussures femme, sacs à main, vêtements enfants, MK Shop">
+  <meta name="keywords" content="mode Douala, boutique Cameroun, robes africaines, perruques premium, chaussures femme, sacs à main, vêtements enfants, MK Shop, boutique mode Douala, fashion Cameroun">
   <meta name="author" content="MK Shop Douala">
-  <meta name="robots" content="index, follow">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <link rel="canonical" href="https://mkshop1.netlify.app/" />
+
+  <!-- ── Geo tags (local search signals) ── -->
+  <meta name="geo.region" content="CM-LT" />
+  <meta name="geo.placename" content="Douala, Cameroun" />
+  <meta name="geo.position" content="4.0511;9.7679" />
+  <meta name="ICBM" content="4.0511, 9.7679" />
 
   <!-- ── Open Graph (Facebook, WhatsApp, Instagram) ── -->
   <meta property="og:type" content="website" />
@@ -42,27 +48,74 @@
   <meta name="theme-color" content="#c9a84c" />
 
   <!-- ── Structured data (Google rich results) ── -->
+
+  <!-- 1. LocalBusiness / ClothingStore — local pack + knowledge panel -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "ClothingStore",
+    "@id": "https://mkshop1.netlify.app/#business",
     "name": "MK Shop",
+    "alternateName": "MK Shop Douala",
     "description": "Boutique mode premium à Douala, Cameroun. Robes, ensembles, chaussures, sacs à main et perruques.",
     "url": "https://mkshop1.netlify.app/",
+    "logo": "https://mkshop1.netlify.app/logo.jpeg",
     "image": "https://mkshop1.netlify.app/og-image.jpg",
     "telephone": "+237682513941",
+    "priceRange": "XAF",
+    "currenciesAccepted": "XAF",
+    "paymentAccepted": "Cash, Mobile Money",
     "address": {
       "@type": "PostalAddress",
+      "streetAddress": "Douala",
       "addressLocality": "Douala",
+      "addressRegion": "Littoral",
       "addressCountry": "CM"
     },
-    "openingHours": "Mo-Sa 08:00-20:00",
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 4.0511,
+      "longitude": 9.7679
+    },
+    "hasMap": "https://maps.google.com/?q=Douala,Cameroun",
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+        "opens": "08:00",
+        "closes": "20:00"
+      }
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+237682513941",
+      "contactType": "customer service",
+      "contactOption": "TollFree",
+      "availableLanguage": ["French"]
+    },
     "sameAs": [
       "https://wa.me/237682513941"
     ]
   }
   </script>
-  <!-- Product catalog structured data for Google rich results -->
+
+  <!-- 2. WebSite schema — enables sitelinks search box in Google -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://mkshop1.netlify.app/#website",
+    "url": "https://mkshop1.netlify.app/",
+    "name": "MK Shop",
+    "description": "Boutique mode premium à Douala, Cameroun",
+    "inLanguage": "fr-CM",
+    "publisher": {
+      "@id": "https://mkshop1.netlify.app/#business"
+    }
+  }
+  </script>
+
+  <!-- 3. ItemList of product categories — breadcrumb-style rich results -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -80,6 +133,9 @@
     ]
   }
   </script>
+
+  <!-- 4. Product schema injected dynamically after sheet loads (see products.js) -->
+  <script id="product-schema-container" type="application/ld+json">[]</script>
   <link rel="stylesheet" href="css/style.css" />
   <!-- Google Fonts – preconnect for faster DNS + TLS handshake -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
